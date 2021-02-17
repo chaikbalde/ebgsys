@@ -74,7 +74,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>2.3.8.RELEASE</version>
 				<configuration>
 					<excludes>
 						<exclude>
@@ -92,22 +91,6 @@
 				</dependencies>
 			</plugin>
 		</plugins>
-		<resources>
-			<resource>
-				<!--Load resource directory-->
-				<directory>src/main/resources</directory>
-				<includes>
-					<!--Load configuration file-->
-					<include>**/*.xml</include>
-					<include>**/*.properties</include>
-					<!--Load template file-->
-					<include>**/*.html</include>
-					<!--Load static files-->
-					<include>/static/</include>
-				</includes>
-
-			</resource>
-		</resources>
 	</build>
 
 </project>
