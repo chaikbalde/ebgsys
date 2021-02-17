@@ -1,0 +1,228 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>EBG | Bienvenue</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css">
+
+  <!-- Google Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<!-- ADD THE CLASS layout-top-nav TO REMOVE THE SIDEBAR. -->
+<body class="hold-transition skin-blue layout-top-nav">
+<div class="wrapper">
+
+  <header class="main-header">
+    <nav class="navbar navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="#" class="navbar-brand"><b>Sté</b> EBG</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse">
+            <i class="fa fa-bars"></i>
+          </button>
+        </div>
+
+
+        <!-- Navbar Right Menu -->
+        <div class="navbar-custom-menu">
+          <ul class="nav navbar-nav">
+
+            <!-- User Account Menu -->
+            <li class="dropdown user user-menu">
+              <!-- Menu Toggle Button -->
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <!-- The user image in the navbar-->
+                <img src="dist/img/images_amd.jpg" class="user-image" alt="User Image">
+                <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                <span class="hidden-xs">Bachir Diallo</span>
+              </a>
+              <ul class="dropdown-menu">
+                <!-- The user image in the menu -->
+                <li class="user-header">
+                  <img src="dist/img/images_amd.jpg" class="img-circle" alt="User Image">
+
+                  <p>
+                    Bachir Diallo - Entrepreneur
+                    <small>Gestionnaire du groupe EBG</small>
+                  </p>
+                </li>
+
+                <!-- Menu Footer-->
+                <li class="user-footer">
+                  <div class="pull-left">
+	                  <a href="#" class="btn btn-default btn-flat" title="Profile"><i class="fa fa-user"></i></a>
+	                  <a href="#" class="btn btn-default btn-flat" title="Mot de passe"><i class="fa fa-lock"></i> </a>
+                  </div>
+                  <div class="pull-right">
+                    <a href="login2.html" class="btn btn-default btn-flat"><i class="fa fa-sign-out"></i> Déconnexion</a>
+                  </div>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <!-- /.navbar-custom-menu -->
+      </div>
+      <!-- /.container-fluid -->
+    </nav>
+  </header>
+  <!-- Full Width Column -->
+  <div class="content-wrapper">
+    <div class="container">
+      <!-- Content Header (Page header) -->
+      <section class="content-header">
+        <h1>Accueil</h1>
+        <ol class="breadcrumb">
+          <li><a href="#"><i class="fa fa-home"></i> Accueil</a></li>
+        </ol>
+      </section>
+      
+      <!-- Main content -->
+      <section class="content">
+        
+        <div class="box box-default">
+          <div class="box-body">
+            Plateforme de gestion des operations de EBG.  
+          </div>
+          <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+        
+        
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+
+          <div class="col-lg-4 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-green">
+              <div class="inner">
+                <h3>Ventes</h3>
+    
+                <p>65 articles vendus le 04 Mai 2018</p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-tags"></i>
+              </div>
+              <a href="/salesintro" class="small-box-footer">En savoir plus... <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+
+          <div class="col-lg-4 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-aqua">
+              <div class="inner">
+                <h3>Achats</h3>
+                
+                <p>9 achats effectués le 07 Mai 2018</p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-shopping-cart"></i>
+              </div>
+              <a href="/purchases" class="small-box-footer">En savoir plus...  <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          
+          <div class="col-lg-4 col-xs-6">
+            <div class="small-box bg-orange">
+              <div class="inner">
+                <h3>Versements</h3>
+                
+                <p>8 versements le 07 Mai 2018</p>
+              </div>
+              <div class="icon">
+                <i class="fa fa-money"></i>
+              </div>
+            <a href="payments.html" class="small-box-footer">En savoir plus... <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        
+        
+        
+      </div>
+      <!-- /.row -->
+      
+      <!-- Small boxes (Stat box) -->
+      <div class="row">
+        
+        <div class="col-lg-4 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-yellow">
+            <div class="inner">
+              <h3>Stocks</h3>
+              <p>12 zones de stockage</p>
+            </div>
+            <div class="icon">
+              <i class="fa fa-cubes"></i>
+            </div>
+            <a href="stocksintro.html" class="small-box-footer">En savoir plus... <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        
+        <div class="col-lg-4 col-xs-6">
+          <div class="small-box bg-red">
+            <div class="inner">
+              <h3>Paramétrages</h3>
+              
+              <p>8 paramètres au 07 Mai 2018</p>
+            </div>
+            <div class="icon">
+              <i class="fa fa-gears"></i>
+            </div>
+            <a href="/settingsintro" class="small-box-footer">En savoir plus... <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        
+
+      </div>
+      <!-- /.row -->
+
+      </section>
+      <!-- /.content -->
+    </div>
+    <!-- /.container -->
+  </div>
+  <!-- /.content-wrapper -->
+  <footer class="main-footer">
+    <div class="container">
+      <div class="pull-right hidden-xs">
+        <b>Version</b> 0.8
+      </div>
+      <strong>Copyright &copy; 2017-2018 <a href="#">Hub4U</a>.</strong> All rights reserved.
+    </div>
+    <!-- /.container -->
+  </footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="bower_components/fastclick/lib/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="dist/js/demo.js"></script>
+</body>
+</html>

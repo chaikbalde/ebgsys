@@ -1,0 +1,95 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>EBG-Sys - Gestion de Stock</title>
+<link rel="stylesheet" href="styles.css" type="text/css" />
+<!--[if lt IE 9]>
+<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+</head>
+<body>
+<div id="container">
+    <header>
+    	<h1><a href="/">EBG<span> Group</span></a></h1>
+        <h2>Construisez correctement</h2>
+    </header>
+    <nav>
+    	<ul>
+        	<li class="start selected"><a href="index.html">Accueil</a></li>
+            <li class=""><a href="#">Clients</a></li>
+            <li><a href="#">Fournisseurs</a></li>
+            <li><a href="#">Produits</a></li>
+            <li class="end" style="float: right;"><a href="#">Admin</a></li>
+        </ul>
+    </nav>
+<!-- 
+	<img src="images/image.jpg" alt="Buildings" /> -->
+
+    <div id="body">
+
+		
+
+		<section id="content">
+
+    	    <article>
+
+                <a href="/settings" th:href="@{/settings}" class="button" style="float: right;">Paramétrages</a>
+
+                <p>&nbsp;</p>
+
+                <div th:if="${employees}">
+                    <h3>List des employés</h3>
+
+                    <table cellspacing="0">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Référence</th>
+                            <th>Téléphone</th>
+                        </tr>
+    
+                        <tr th:each="emp : ${employees}">
+                            <td th:text="${emp.id}">999</td>
+                            <td th:text="${emp.lastName}">Last</td>
+                            <td th:text="${emp.firstName}">First</td>
+                            <td th:text="${emp.reference}">Ref</td>
+                            <td th:text="${emp.phone}">666 666</td>
+                        </tr>
+        
+                    </table>
+                    
+                </div>
+
+    		</article>
+	
+        </section>
+        
+        <aside class="sidebar">
+	
+            <ul>	
+               <li>
+                    <h4>Activités</h4>
+                    <ul>
+                        <li><a href="index.html" th:href="@{/}">Accueil</a></li>
+                        <li><a href="#">Achats</a></li>
+                        <li><a href="#">Ventes</a></li>
+                        <li><a href="#">Stockage</a></li>
+                        <li><a href="#">Inventaire</a></li>
+                    </ul>
+                </li>
+                
+            </ul>
+		
+        </aside>
+    	<div class="clear"></div>
+    </div>
+    <footer>
+        <div class="footer-bottom">
+            <p>&copy; Hub4U 2021. By <a href="#">Chaikou Baldé</a></p>
+         </div>
+    </footer>
+</div>
+</body>
+</html>

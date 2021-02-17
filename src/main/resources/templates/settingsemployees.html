@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>EBG | Paramétrages Employés</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" >
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css" th:href="@{/bower_components/Ionicons/css/ionicons.min.css}" >
+
+    <!-- bootstrap datepicker -->
+  <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" th:href="@{/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}">
+   
+  <!-- DataTables -->
+  <link rel="stylesheet" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css" th:href="@{/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css}">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/AdminLTE.min.css" th:href="@{/dist/css/AdminLTE.min.css}">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css" th:href="@{/dist/css/skins/_all-skins.min.css}">
+
+  <!-- Google Font -->
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <div th:insert="fragments/header :: header"></div>
+
+  <!-- Left side column. contains the logo and sidebar -->
+  <div th:insert="fragments/aside :: aside"></div>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        <i class="fa fa-gears"></i> &nbsp; Paramétrage Employés
+        <small>Gestion des employés</small>
+      </h1>
+      
+      <ol class="breadcrumb">
+        <li><a href="index.html" th:href="@{/}"><i class="fa fa-home"></i> Accueil</a></li>
+        <li><a href="/settingsintro"><i class="fa fa-gears"></i>Paramétrage</a></li>
+        <li class="active">Employés</li>
+      </ol>
+      
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Info boxes -->
+      <div class="box box-default">
+        <div class="box-body">
+          Liste des employés, leurs contacts et leur occupation sur le site EBG.   
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+
+      <!-- Alert Created -->
+      <div th:if="${employeeCreated}" class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <i class="icon fa fa-check"></i> 
+        L'employé  <b th:text="${employeeCreated.lastName + ' ' + employeeCreated.firstName}">DIALLO</b> a été ajouté avec succès!
+      </div>
+      <!-- Alert Deleted -->
+      <div th:if="${employeeDeleted}" class="alert alert-danger alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <i class="icon fa fa-check"></i> 
+        L'employé avec l'identifiant <b th:text=${employeeDeleted}>999</b> a été supprimé avec succès!
+      </div>
+      
+      <div class="row">
+
+        <div class="col-xs-12">
+
+          <div class="box">
+
+            <div class="box-header">
+              <h3 class="box-title">Liste des employés</h3>
+
+              <div class="box-tools">
+              <button type="button" class="pull-right btn btn-primary" id="addemployee" data-toggle="modal" data-target="#modal-addemployee">
+              	Ajouter <i class="fa fa-plus-circle"></i></button>
+              </div>
+            </div>
+            <!-- /.box-header -->
+
+            <div class="box-body">
+              <table id="employeetable" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>Référence</th>
+                  <th>Nom</th>
+                  <th>Adresse</th>
+                  <th>Téléphone</th>
+                  <th>Poste</th>
+                  <th><i class="fa fa-gear"></i> Action</th>
+                </tr>
+                </thead>
+                
+                <tbody>
+                  <tr th:each="emp : ${employees}">
+                    <td th:text="${emp.reference}">EMPEBG007</td>
+                    <td th:text="${emp.lastName + ' ' + emp.firstName}">DOE JOHN</td>
+                    <td th:text="${emp.address}">MAIN STR. 31</td>
+                    <td th:text="${emp.phone}">666 666 666</td>
+                    <td th:text="${emp.position}">CEO</td>
+                    <td align="center">
+                      <a href="#" data-toggle="tooltip" data-placement="top" title="Editer" style="margin-right: 20px;"><i class="fa fa-pencil-square-o"></i></a> 
+                      <!-- <a href="#" title="Supprimer ce client "><i class="fa fa-trash"></i></a>  -->
+                      <a href="#" th:href="@{/employees/delete/{id}(id=${emp.id})}" data-toggle="tooltip" data-placement="top" title="Supprimer"><i class="fa fa-trash"></i></a> 
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th>Référence</th>
+                    <th>Nom</th>
+                    <th>Adresse</th>
+                    <th>Téléphone</th>
+                    <th>Poste</th>
+                    <th><i class="fa fa-gear"></i> Action</th>
+                    </tr>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+
+      <div class="modal fade" id="modal-addemployee">
+        <div class="modal-dialog">
+          <form role="form" action="#" th:action="@{/employees/create}" th:object="${employee}" method="post">
+              <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Ajout d'un employé</h4>
+              </div>
+              <div class="modal-body">
+                
+                <div class="form-group">
+                  <input type="text" th:field="*{lastName}" class="form-control" id="lastname" placeholder="Nom" style="width: 70%; background-color: #e6f2ff; font-weight: bold;">
+                </div>
+                <div class="form-group">
+                  <input type="text" th:field="*{firstName}" class="form-control" id="firstname" placeholder="Prénom" style="width: 70%; background-color: #e6f2ff; font-weight: bold;">
+                </div>
+                <div class="form-group">
+                  <input type="text" th:field="*{reference}" class="form-control" id="reference_" placeholder="Référence" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <input type="text" th:field="*{birthDate}" class="form-control" id="birthdate" placeholder="Date de Naissane" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <hr/>
+                <div class="form-group">
+                  <input type="text" th:field="*{address}" class="form-control" id="address" placeholder="Adresse" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <input type="text" th:field="*{phone}" class="form-control" id="phone" placeholder="Téléphone" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <input type="text" th:field="*{email}" class="form-control" id="email" placeholder="Email" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <hr/>
+                <div class="form-group">
+                  <input type="text" th:field="*{position}" class="form-control" id="position" placeholder="Poste" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" style="float: left;">Sauvegarder <i class="fa fa-check"></i> </button>
+                <button type="reset" class="btn btn-default">Effacer <i class="fa fa-trash"></i> </button> 
+                <button type="button" class="btn btn-default" data-dismiss="modal">Quitter <i class="fa fa-times"></i></button> 
+              </div>
+            </div>
+          </form>
+          
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->      
+ 
+
+        <div class="modal fade" id="modal-makepayment">
+          <div class="modal-dialog">
+	          <form role="form">
+	            <div class="modal-content">
+	              <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                  <span aria-hidden="true">&times;</span></button>
+	                <h4 class="modal-title">Versement à Orange</h4>
+	              </div>
+	              <div class="modal-body">
+	                <div class="form-group">
+	                  <input type="text" class="form-control" id="reference" placeholder="Référence" style="width: 60%"/>
+	                </div>
+		            <div class="form-group">
+		            	<div class="input-group date" style="width: 60%">
+		                	<div class="input-group-addon">
+		                    	<i class="fa fa-calendar"></i>
+		                  	</div>
+		                  	<input type="text" class="form-control pull-right" id="datepicker"/>
+		                </div>
+		                <!-- /.input group -->
+		            </div>
+	                
+					<div class="form-group">
+		              	<select class="form-control select2" id="bank" placeholder="Banque" style="width: 60%;">
+			              	<option>Choisissez une banque...</option>
+			              	<option value="1">BCI</option>
+			              	<option value="2">BICIGUI</option>
+			              	<option value="3">ECOBANK</option>
+			              	<option value="4">ORABANK</option>
+			              	<option value="6">SGBG</option>
+			              	<option value="6">UBA</option>
+						</select>
+	                </div>
+					<div class="form-group">
+		              	<select class="form-control select2" id="customer" placeholder="Client" style="width: 60%;">
+			              	<option>Choisissez un client...</option>
+			              	<option value="1">SCF</option>
+			              	<option value="2">BAH EL HAJ IBRAHIMA</option>
+			              	<option value="3">BAH MAMADOU BOBO</option>
+			              	<option value="4">BAH THIERNO OUMAR</option>
+			              	<option value="6">BAH THIERNO SOULEYMANE</option>
+			              	<option value="6">DIALLO ALHASSANE</option>
+			              	<option value="6">DIALLO AMADOU BAYA</option>
+						</select>
+	                </div>
+	                
+	                <div class="form-group">
+	                  <input type="text" name="amount" class="form-control" id="amount" placeholder="Montant" style="width: 60%"/>
+	                </div>
+	                
+	              </div>
+	              <div class="modal-footer">
+	                <button type="submit" class="btn btn-primary"  style="float: left;">Sauvegarder <i class="fa fa-check"></i> </button>
+	                <button type="reset" class="btn btn-default">Effacer <i class="fa fa-trash"></i> </button> 
+	                <button type="button" class="btn btn-default" data-dismiss="modal">Quitter <i class="fa fa-times"></i></button> 
+	              </div>
+	            </div>
+	          </form>
+            
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+      
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <div th:insert="fragments/footer :: footer"></div>
+  
+  <!-- Control Sidebar -->
+  <div th:insert="fragments/asidecontrol :: asidecontrol"></div>
+
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<!-- DataTables -->
+<script src="bower_components/datatables.net/js/jquery.dataTables.min.js" th:src="@{/bower_components/datatables.net/js/jquery.dataTables.min.js}"></script>
+<script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js" th:src="@{/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js}"></script>
+
+<!-- bootstrap datepicker -->
+<script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js" th:src="@{/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+
+<!-- SlimScroll -->
+<script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js" th:src="@{/bower_components/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
+<!-- FastClick -->
+<script src="bower_components/fastclick/lib/fastclick.js" th:src="@{/bower_components/fastclick/lib/fastclick.js}"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js" th:src="@{/dist/js/adminlte.min.js}"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="dist/js/demo.js" th:src="@{/dist/js/demo.js}"></script>
+<!-- page script -->
+<script>
+  $(function () {
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+    
+    
+    $('#employeetable').DataTable({
+
+   	 "oLanguage": {
+	         	"sProcessing":     "Traitement en cours...",
+        	"sSearch":         "Rechercher&nbsp;:",
+            "sLengthMenu":     "Afficher _MENU_ &eacute;l&eacute;ments",
+        	//"sInfo":           "Affichage de _TOTAL_ &eacute;l&eacute;ments",
+        	"sInfo":           "Affichage de _START_ &agrave _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+        	"sInfoEmpty":      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+        	"sInfoFiltered":   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+        	"sInfoPostFix":    "",
+        	"sLoadingRecords": "Chargement en cours...",
+            "sZeroRecords":    "Aucun &eacute;l&eacute;ment &agrave; afficher",
+        	"sEmptyTable":     "Aucune donn&eacute;e disponible dans le tableau",
+        	"oPaginate": {
+        		"sFirst":      "Premier",
+        		"sPrevious":   "Pr&eacute;c&eacute;dent",
+        		"sNext":       "Suivant",
+        		"sLast":       "Dernier"
+        	},
+        	"oAria": {
+        		"sSortAscending":  ": activer pour trier la colonne par ordre croissant",
+        		"sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
+        	}
+         },
+         'columnDefs': [ {
+          'targets': [5], /* column index */
+          'orderable': false /* true or false */
+        }]
+     });
+    
+
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+
+  //Date picker
+    $('#datepicker').datepicker({
+      autoclose: true
+    })
+    
+  })
+</script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body class="hold-transition skin-blue sidebar-mini">
+
+
+  <div th:fragment="header">
+
+    <header class="main-header">
+
+      <!-- Logo -->
+      <a href="index.html" th:href="@{/}"  class="logo">
+        <!-- mini logo for sidebar mini 50x50 pixels -->
+        <span class="logo-mini"><b>E</b>BG</span>
+        <!-- logo for regular state and mobile devices -->
+        <span class="logo-lg"><b>Sté</b> EBG</span>
+        <!-- <span class="logo-lg"><img src="static/dist/img/logoebg.png" alt="LogoEBG" th:src="@{/dist/img/logoebg.png} "> </span> -->
+      </a>
+  
+      <!-- Header Navbar: style can be found in header.less -->
+      <nav class="navbar navbar-static-top">
+        <!-- Sidebar toggle button-->
+        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+          <span class="sr-only">Toggle navigation</span>
+        </a>
+        <!-- Navbar Right Menu -->
+        <div class="navbar-custom-menu">
+          <ul class="nav navbar-nav">
+            <!-- Notifications: style can be found in dropdown.less -->
+            <li class="dropdown notifications-menu">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-bell-o"></i>
+                <span class="label label-warning">5</span>
+              </a>
+              <ul class="dropdown-menu">
+                <li class="header">Vous avez 5 notifications</li>
+                <li>
+                  <!-- inner menu: contains the actual data -->
+                  <ul class="menu">
+                    <li>
+                      <a href="#">
+                        <i class="fa fa-gear text-aqua"></i> 3 paramétrages effectués 
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="fa fa-warning text-yellow"></i> De l'argent débté sans explication
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="fa fa-money text-green"></i> 4 versements effectués
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="fa fa-shopping-cart text-aqua"></i> 13 articles vendus
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <i class="fa fa-user text-red"></i> Vous avez changé votre mot de passe
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li class="footer"><a href="#">Voir les autres</a></li>
+              </ul>
+            </li>
+  
+            <!-- User Account: style can be found in dropdown.less -->
+            <li class="dropdown user user-menu">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <img src="dist/img/images_amd.jpg" th:src="@{/dist/img/images_amd.jpg}" class="user-image" alt="User Image">
+                <span class="hidden-xs">Bachir Diallo</span>
+              </a>
+              <ul class="dropdown-menu">
+                <!-- User image -->
+                <li class="user-header">
+                  <img src="dist/img/images_amd.jpg" th:src="@{/dist/img/images_amd.jpg}" class="img-circle" alt="User Image">
+  
+                  <p>
+                    Bachir Diallo - Entrepreneur
+                    <small>Gestionnaire du groupe EBG</small>
+                  </p>
+                </li>
+                <!-- Menu Footer-->
+                <li class="user-footer">
+                  <div class="pull-left">
+                    <a href="#" class="btn btn-default btn-flat" title="Profile"><i class="fa fa-user"></i></a>
+                    <a href="#" class="btn btn-default btn-flat" title="Mot de passe"><i class="fa fa-lock"></i> </a>
+                  </div>
+                  <div class="pull-right">
+                    <a href="login2.html" class="btn btn-default btn-flat"><i class="fa fa-sign-out"></i> Déconnxion</a>
+                  </div>
+                </li>
+              </ul>
+            </li>
+            <!-- Control Sidebar Toggle Button -->
+            <li>
+              <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+            </li>
+          </ul>
+        </div>
+  
+      </nav>
+    </header>
+    
+    </div>
+
+</body>
+</html>

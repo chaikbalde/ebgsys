@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="aside">
+
+  <aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+      <!-- Sidebar user panel -->
+      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu" data-widget="tree">
+
+        <li th:class="${sidemenuPurchases != null ? 'active treeview menu-open' : 'treeview'}">
+          <a href="#">
+            <i class="fa fa-shopping-cart text-aqua"></i>
+            <span>Achats</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li th:class="${subSidemenuIntro != null ? 'active': ''}"><a href="#"><i class="fa fa-circle-o text-aqua"></i> Intro</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> CKY - KALOUM</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> CKY - MATAM</a></li>
+            <li><a href="purchases_matoto.html"><i class="fa fa-circle-o text-aqua"></i> CKY - MATOTO</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> CKY - RATOMA</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> BOKE</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> KINDIA</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> LABE</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> MAMOU</a></li>
+          </ul>
+        </li>
+
+        <!-- <li><a href="payments.html"><i class="fa fa-money text-orange"></i> <span>Versements</span></a></li> -->
+
+        <li th:class="${sidemenuSales != null ? 'active treeview menu-open' : 'treeview'}">
+        <!-- <li class="treeview"> -->
+          <a href="#">
+            <i class="fa fa-tags text-green"></i>
+            <span>Ventes</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li th:class="${subSidemenuSalesIntro != null ? 'active': ''}"><a href="/salesintro"><i class="fa fa-circle-o text-green"></i> Intro</a></li>
+            <!-- <li><a href="#"><i class="fa fa-tag text-green"></i> Intro</a></li> -->
+            <li th:class="${subSidemenuSalesCash != null ? 'active': ''}"><a href="/sales/cash"><i class="fa fa-tag text-green"></i> Comptant</a></li>
+            <li><a href="#"><i class="fa fa-tag text-green"></i> À Terme</a></li>
+          </ul>
+        </li>
+
+
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-money text-orange"></i>
+            <span>Versements</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="#"><i class="fa fa-circle-o text-green"></i> Intro</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-green"></i> Clients</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-green"></i> Camions</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-green"></i> Déposants</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-green"></i> Employés</a></li>
+          </ul>
+        </li>
+
+
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-cubes text-yellow"></i> <span>Stocks</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="stocksintro.html"><i class="fa fa-circle-o text-yellow"></i> Intro</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> CKY - KALOUM</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> CKY - MATAM</a></li>
+            <li><a href="stocks_matoto.html"><i class="fa fa-circle-o text-yellow"></i> CKY - MATOTO</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> CKY - RATOMA</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> BOKE</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> KINDIA</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> LABE</a></li>
+            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> MAMOU</a></li>
+          </ul>
+        </li>
+
+        <li>
+          <a href="#"></a>
+        </li>
+        
+
+        <!--${sidemenuSettings  ? 'active treeview menu-open' : 'treeview'}-->
+        <!-- <li class="active treeview menu-open"> -->
+        <li th:class="${sidemenuSettings != null ? 'active treeview menu-open' : 'treeview'}">
+          <a href="#">
+            <i class="fa fa-gears"></i>
+            <span>Paramétrage</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li th:class="${subSidemenuSettingsIntro != null ? 'active': ''}"><a href="/settingsintro"><i class="fa fa-circle-o"></i> Intro</a></li>
+            <li th:class="${subSidemenuProducts != null ? 'active': ''}"><a href="/products/settings"><i class="fa fa-product-hunt text-aqua"></i> Produits</a></li>
+            <li th:class="${subSidemenuSuppliers != null ? 'active': ''}"><a href="/suppliers/settings"><i class="fa fa-industry text-red"></i> Fournisseurs</a></li>
+            <li th:class="${subSidemenuCustomers != null ? 'active': ''}"><a href="/customers/settings"><i class="fa fa-user-circle text-yellow"></i> Clients</a></li>
+            <li th:class="${subSidemenuEmployees != null ? 'active': ''}"><a href="/employees/settings"><i class="fa fa-user text-aqua"></i> Employees</a></li>
+            <li><a href="#"><i class="fa fa-handshake-o text-green"></i> Partenaires</a></li>
+            <li><a href="#"><i class="fa fa-credit-card text-red"></i> Déposants</a></li>
+            <li th:class="${subSidemenuVehicles != null ? 'active': ''}"><a href="/vehicles/settings"><i class="fa fa-truck text-yellow"></i> Véhicules</a></li>
+            <li><a href="#"><i class="fa fa-users text-aqua"></i> Utilisateurs</a></li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-history"></i>
+            <span>Journal</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="#"><i class="fa fa-circle-o"></i> Activités</a></li>
+            <li><a href="#"><i class="fa fa-circle-o"></i> Transactions</a></li>
+          </ul>
+        </li>
+
+        <li><a href="#"><i class="fa fa-laptop"></i> <span>Tableau de bord</span></a></li>
+
+      </ul>
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+
+</div>
+
+
+</body>
+</html>
