@@ -7,6 +7,7 @@ import net.hub4u.ebgsys.entities.Product;
 import net.hub4u.ebgsys.entities.Sale;
 import net.hub4u.ebgsys.entities.SaleTxType;
 import net.hub4u.ebgsys.entities.SaleType;
+import net.hub4u.ebgsys.frwk.EbgSysUtils;
 import net.hub4u.ebgsys.services.ProductService;
 import net.hub4u.ebgsys.services.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,7 +141,7 @@ public class SaleController {
         model.addAttribute("productsForm", productService.fetchAllProducts());
         Sale cashSaleForm = new Sale();
         cashSaleForm.setSaleType(SaleType.RETAIL);
-        String nextRef = retrieveNextReference("VT-EBG-", cashSales.stream().map(s -> s.getReference()).collect(Collectors.toList()));
+        String nextRef = EbgSysUtils.retrieveNextReference("VT-EBG-", 7, cashSales.stream().map(s -> s.getReference()).collect(Collectors.toList()));
         cashSaleForm.setNextReferenceView(nextRef);
         model.addAttribute("cashSale", cashSaleForm);
 

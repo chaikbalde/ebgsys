@@ -48,12 +48,12 @@ public class EbgSysApplication {
 			).forEach(employeeService::createEmployee);
 
 			Arrays.asList(
-				new Customer("Hub4U", "Ref001", "Kouliwondi", "628 55 44 21"),
-				new Customer("Ref002", "Chaikou", "Baldé", "Bonfi Port", "628 85 30 21"),
-				new Customer("Cellcom", "Ref010", "Port En Ville", "655 55 55 22"),
-				new Customer("Rio Tinto", "Ref021", "Bellevue", "622 87 98 88"),
-				new Customer("Ref012", "Oumar", "Diallo", "Bellevue", "628 45 66 76"),
-				new Customer("Ref014", "Abdourahmane", "Diaby", "Kipé", "624 33 66 90")
+				new Customer("Hub4U", "SOC-EBG-000012", "Kouliwondi", "628 55 44 21"),
+				new Customer("CLT-EBG-000012", "Chaikou", "Baldé", "Bonfi Port", "628 85 30 21"),
+				new Customer("Cellcom", "SOC-EBG-000010", "Port En Ville", "655 55 55 22"),
+				new Customer("Rio Tinto", "SOC-EBG-000009", "Bellevue", "622 87 98 88"),
+				new Customer("CLT-EBG-000011", "Oumar", "Diallo", "Bellevue", "628 45 66 76"),
+				new Customer("CLT-EBG-000010", "Abdourahmane", "Diaby", "Kipé", "624 33 66 90")
 			).forEach(customerService::createCustomer);
 
 			Arrays.asList(

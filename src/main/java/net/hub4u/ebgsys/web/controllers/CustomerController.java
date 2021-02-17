@@ -5,11 +5,13 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import net.hub4u.ebgsys.entities.Customer;
 import net.hub4u.ebgsys.entities.CustomerType;
+import net.hub4u.ebgsys.frwk.EbgSysUtils;
 import net.hub4u.ebgsys.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +35,8 @@ public class CustomerController {
     }
 
     @PostMapping("/create")
-    public String createCustomer(Customer customer, Model model) {
+    public String createCustomer(@ModelAttribute Customer customer, Model model) {
+        customer.setReference(customer.getNextReferenceView());
         customerService.createCustomer(customer);
         log.info("createCustomer() - Created Customer with ID: " + customer.getId());
 
@@ -69,12 +72,16 @@ public class CustomerController {
         model.addAttribute("persons", persons);
         model.addAttribute("companies", companies);
 
-        Customer customer = new Customer();
-        customer.setCustomerType(CustomerType.PERSON);
-        model.addAttribute("customer", customer);
+        Customer person = new Customer();
+        person.setCustomerType(CustomerType.PERSON);
+        String personNextRef = EbgSysUtils.retrieveNextReference("CLT-EBG-", 7, persons.stream().map(p -> p.getReference()).collect(Collectors.toList()));
+        person.setNextReferenceView(personNextRef);
+        model.addAttribute("customer", person);
 
         Customer company = new Customer();
         company.setCustomerType(CustomerType.COMPANY);
+        String companyNextRef = EbgSysUtils.retrieveNextReference("SOC-EBG-", 7, companies.stream().map(c -> c.getReference()).collect(Collectors.toList()));
+        company.setNextReferenceView(companyNextRef);
         model.addAttribute("company", company);
 
         model.addAttribute("sidemenuSettings", true);

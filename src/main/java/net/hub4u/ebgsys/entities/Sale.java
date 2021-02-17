@@ -53,6 +53,8 @@ public class Sale {
     // Transient fields for the view
     @Transient
     String saleTypeView;
+    @Transient
     BigDecimal unitPriceView;
+    @Transient
     String nextReferenceView;
 }
