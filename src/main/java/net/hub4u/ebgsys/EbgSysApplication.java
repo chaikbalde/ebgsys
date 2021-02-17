@@ -57,23 +57,23 @@ public class EbgSysApplication {
 			).forEach(customerService::createCustomer);
 
 			Arrays.asList(
-				new Product("Clou 21", "VT-EBG-122", "Description Clou 21", new BigDecimal("500"), new BigDecimal("130000"), new BigDecimal("100000")),
-				new Product("Arrache clou", "VT-EBG-202", "Description Arrache clou", new BigDecimal("2000"),new BigDecimal("20000"), new BigDecimal("15000") ),
-				new Product("Barbelets 10m", "VT-EBG-154", "Description Barbelets 10 mmmm", new BigDecimal("105000"), new BigDecimal("1200000"), new BigDecimal("1000000")),
-				new Product("Fer 200", "VT-EBG-123", "Fer 200 pour béton armé", new BigDecimal("15000"), new BigDecimal("120000"), new BigDecimal("100000"))
+				new Product("Clou 21", "PR-EBG-122", "Description Clou 21", new BigDecimal("500"), new BigDecimal("130000"), new BigDecimal("100000")),
+				new Product("Arrache clou", "PR-EBG-202", "Description Arrache clou", new BigDecimal("2000"),new BigDecimal("20000"), new BigDecimal("15000") ),
+				new Product("Barbelets 10m", "PR-EBG-154", "Description Barbelets 10 mmmm", new BigDecimal("105000"), new BigDecimal("1200000"), new BigDecimal("1000000")),
+				new Product("Fer 200", "PR-EBG-123", "Fer 200 pour béton armé", new BigDecimal("15000"), new BigDecimal("120000"), new BigDecimal("100000"))
 			).forEach(productService::createProduct);
 
 			Arrays.asList(
-				new Vehicle("VHEBG0023", "RC 4553 AB", "Camion", "MERCEDES-BENZ Actros", "Camion de livraison pour la région forestière"),
-				new Vehicle("VHEBG0023", "RC 4553 AB", "Camion Poids Lourd", "MERCEDES-BENZ Atego", "Camion de livraison pour Conakry"),
-				new Vehicle("VHEBG0023", "RC 4553 AB", "Camion", "Volkswagen Transporter", "Camion de livraison Labé")
+				new Vehicle("VH-EBG-21", "RC 4553 AB", "Camion", "MERCEDES-BENZ Actros", "Camion de livraison pour la région forestière"),
+				new Vehicle("VH-EBG-22", "RC 4553 AB", "Camion Poids Lourd", "MERCEDES-BENZ Atego", "Camion de livraison pour Conakry"),
+				new Vehicle("VH-EBG-23", "RC 4553 AB", "Camion", "Volkswagen Transporter", "Camion de livraison Labé")
 			).forEach(vehicleService::createVehicle); ;
 
 			Arrays.asList(
-				new Supplier("TAFAGUI", "FR-EBG-0015", "Diallo Mamadou Aliou", "Km 36", "628 55 44 11", "info@tafagui.com", "www.tafagui.gn"),
-				new Supplier("EJICO", "FR-EBG-0017", "Bah Ibrahima", "Cimenterie", "622 55 33 22", "contact@ejico.com", "www.ejico.gn"),
-				new Supplier("Ets Mamadou Bhoye et Frère", "FR-EBG-0023", "Barry Mamadou Oury", "Kagbele", "623 56 35 11", "barry23@gmail.com", ""),
-				new Supplier("Walidian Quincailleries", "FR-EBG-0021", "Diallo Boubacar", "Sanoya", "622 67 67 67", "walidian@gmail.com", "www.walidian.com")
+				new Supplier("TAFAGUI", "FR-EBG-15", "Diallo Mamadou Aliou", "Km 36", "628 55 44 11", "info@tafagui.com", "www.tafagui.gn"),
+				new Supplier("EJICO", "FR-EBG-17", "Bah Ibrahima", "Cimenterie", "622 55 33 22", "contact@ejico.com", "www.ejico.gn"),
+				new Supplier("Ets Mamadou Bhoye et Frère", "FR-EBG-23", "Barry Mamadou Oury", "Kagbele", "623 56 35 11", "barry23@gmail.com", ""),
+				new Supplier("Walidian Quincailleries", "FR-EBG-21", "Diallo Boubacar", "Sanoya", "622 67 67 67", "walidian@gmail.com", "www.walidian.com")
 			).forEach(supplierService::createSupplier);
 		};
 	}

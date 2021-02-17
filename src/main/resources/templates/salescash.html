@@ -115,7 +115,7 @@
                   <th><i class="fa fa-calendar"></i>&nbsp;&nbsp; Date</th>
                   <th>Référence</th>
                   <th><i class="fa fa-product-hunt"></i>&nbsp;&nbsp; Produits</th>
-                  <th>Client</th>
+                  <th>Client / Téléphone</th>
                   <th>Type</th>
                   <th><i class="fa fa-money"></i>&nbsp;&nbsp;Prix U.</th>
                   <th>Quantité</th>
@@ -128,7 +128,7 @@
                   <td th:text="${#dates.format(sale.saleDate, 'dd/MM/yyyy')}">16/02/2013</td>
                   <td th:text="${sale.reference}" >FE12</td>
                   <td th:text="${sale.product.name}">FER 12</td>
-                  <td th:text="${sale.customerName + ' (' + sale.customerPhone + ')' } ">CLIENT</td>
+                  <td th:text="${sale.customerName + ' / ' + sale.customerPhone  } ">CLIENT</td>
                   <td th:text="${sale.saleTypeView}">RETAIL</td>
                   <td th:text="${#numbers.formatInteger(sale.unitPriceView,3,'WHITESPACE')}">8 999</td>
                   <td th:text="${sale.quantity}">999</td>
