@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.util.Date;
 
 @Entity
@@ -37,6 +38,10 @@ public class Employee {
     String createdBy;
     Date modificationDate;
     String modifiedBy;
+
+    // Transient fields for the view
+    @Transient
+    String nextReferenceView;
 
     public Employee(String reference, String firstName, String lastName, Date birthDate, String address, String phone, String email, String position) {
         this.reference = reference;

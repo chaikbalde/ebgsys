@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import net.hub4u.ebgsys.entities.Product;
+import net.hub4u.ebgsys.frwk.EbgSysUtils;
 import net.hub4u.ebgsys.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -33,6 +35,7 @@ public class ProductController {
 
     @PostMapping("/create")
     public String createProduct(Product product, Model model) {
+        product.setReference(product.getNextReferenceView());
         Product productCreated = productService.createProduct(product);
         model.addAttribute("productCreated", productCreated);
         loadProducts(model);
@@ -58,8 +61,12 @@ public class ProductController {
         model.addAttribute("sidemenuSettings", true);
         model.addAttribute("subSidemenuProducts", true);
 
+        Product product = new Product();
+        String productNextRef = EbgSysUtils.retrieveNextReference("PRD-EBG-", 7, products.stream().map(p -> p.getReference()).collect(Collectors.toList()));
+        product.setNextReferenceView(productNextRef);
+
         model.addAttribute("products", products);
-        model.addAttribute("product", new Product());
+        model.addAttribute("product", product);
     }
 
 }

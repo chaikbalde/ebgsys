@@ -69,7 +69,7 @@
       <div th:if="${productCreated}" class="alert alert-success alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <i class="icon fa fa-check"></i> 
-        Le produit <b th:text=${productCreated.reference}>MATERIEL</b> a été ajouté avec succès!
+        Le produit <b th:text="${productCreated.name + ' / ' + productCreated.reference}">MATERIEL</b> a été ajouté avec succès!
       </div>
       <!-- Alert Deleted -->
       <div th:if="${productDeleted}" class="alert alert-danger alert-dismissible">
@@ -113,9 +113,9 @@
                     <!-- <tr th:each="prod : ${products}" th:style="${createdProduct != null ? 'color: blue': ''} "> -->
                     <td th:text="${prod.reference}">CLEBG00267</td>
                     <td th:text="${prod.name}">PROD.NAME</td>
-                    <td th:text="${prod.unitPrice}">999.00</td>
-                    <td th:text="${prod.grossPrice}">9999.00</td>
-                    <td th:text="${prod.cost}">8888.00</td>
+                    <td th:text="${#numbers.formatInteger(prod.unitPrice,3,'WHITESPACE')}">999</td>
+                    <td th:text="${#numbers.formatInteger(prod.grossPrice,3,'WHITESPACE')}">9999</td>
+                    <td th:text="${#numbers.formatInteger(prod.cost,3,'WHITESPACE')}">8888</td>
                     <td th:text="${prod.description}">PROD.DESC</td>
                     <td align="center">
                       <a href="#" data-toggle="tooltip" data-placement="top" title="Editer" style="margin-right: 20px;"><i class="fa fa-pencil-square-o"></i></a> 
@@ -162,7 +162,7 @@
                   <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nom" style="width: 70%; background-color: #e6f2ff; font-weight: bold;">
                 </div>
                 <div class="form-group">
-                  <input type="text" th:field="*{reference}" class="form-control" id="reference_" placeholder="Référence" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="reference_" placeholder="Référence" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
                 <div class="form-group">
                   <input type="text" th:field="*{description}" class="form-control" id="description" placeholder="Description" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>

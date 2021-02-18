@@ -42,7 +42,7 @@ public class EbgSysApplication {
 						"Bonfi Port", "622 58 65 54", "dkelly@ebg.com", "DRH"),
 				new Employee("EMP-EBG-002", "Ali", "Jabber", asDate(1969, 4, 23),
 						"Dixinn Gare", "622 44 65 33", "ajabber@ebg.com", "Resp. Ventes"),
-			new Employee("EMP-EBG-011", "Diallo", "Binta", asDate(1982, 5, 29),
+			new Employee("EMP-EBG-003", "Diallo", "Binta", asDate(1982, 5, 29),
 					"Kagbelen", "628 78 95 03", "dbinta@ebg.com", "Comptable")
 
 			).forEach(employeeService::createEmployee);
@@ -57,10 +57,10 @@ public class EbgSysApplication {
 			).forEach(customerService::createCustomer);
 
 			Arrays.asList(
-				new Product("Clou 21", "PR-EBG-122", "Description Clou 21", new BigDecimal("500"), new BigDecimal("130000"), new BigDecimal("100000")),
-				new Product("Arrache clou", "PR-EBG-202", "Description Arrache clou", new BigDecimal("2000"),new BigDecimal("20000"), new BigDecimal("15000") ),
-				new Product("Barbelets 10m", "PR-EBG-154", "Description Barbelets 10 mmmm", new BigDecimal("105000"), new BigDecimal("1200000"), new BigDecimal("1000000")),
-				new Product("Fer 200", "PR-EBG-123", "Fer 200 pour béton armé", new BigDecimal("15000"), new BigDecimal("120000"), new BigDecimal("100000"))
+				new Product("Clou 21", "PRD-EBG-0000103", "Description Clou 21", new BigDecimal("500"), new BigDecimal("130000"), new BigDecimal("100000")),
+				new Product("Arrache clou", "PRD-EBG-0000102", "Description Arrache clou", new BigDecimal("2000"),new BigDecimal("20000"), new BigDecimal("15000") ),
+				new Product("Barbelets 10m", "PRD-EBG-0000114", "Description Barbelets 10 mmmm", new BigDecimal("105000"), new BigDecimal("1200000"), new BigDecimal("1000000")),
+				new Product("Fer 200", "PR-EBG-0000113", "Fer 200 pour béton armé", new BigDecimal("15000"), new BigDecimal("120000"), new BigDecimal("100000"))
 			).forEach(productService::createProduct);
 
 			Arrays.asList(

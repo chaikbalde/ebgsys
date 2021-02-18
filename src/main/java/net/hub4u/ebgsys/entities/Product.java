@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,11 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     List<Sale> sales = new ArrayList<>();
+
+
+    // Transient fields for the view
+    @Transient
+    String nextReferenceView;
 
     public Product(String name, String reference, String description, BigDecimal unitPrice, BigDecimal grossPrice, BigDecimal cost) {
         this.name = name;
