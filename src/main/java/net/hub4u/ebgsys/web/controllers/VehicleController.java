@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import net.hub4u.ebgsys.entities.Product;
 import net.hub4u.ebgsys.entities.Vehicle;
+import net.hub4u.ebgsys.frwk.EbgSysUtils;
 import net.hub4u.ebgsys.services.ProductService;
 import net.hub4u.ebgsys.services.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -35,6 +37,7 @@ public class VehicleController {
 
     @PostMapping("/create")
     public String createProduct(Vehicle vehicle, Model model) {
+        vehicle.setReference(vehicle.getNextReferenceView());
         Vehicle vehicleCreated = vehicleService.createVehicle(vehicle);
         model.addAttribute("vehicleCreated", vehicleCreated);
         loadVehicles(model);
@@ -61,7 +64,11 @@ public class VehicleController {
         model.addAttribute("subSidemenuVehicles", true);
 
         model.addAttribute("vehicles", vehicles);
-        model.addAttribute("vehicle", new Vehicle());
+
+        Vehicle vehicle = new Vehicle();
+        String vehicleNextRef = EbgSysUtils.retrieveNextReference("VH-EBG-", 3, vehicles.stream().map(v -> v.getReference()).collect(Collectors.toList()));
+        vehicle.setNextReferenceView(vehicleNextRef);
+        model.addAttribute("vehicle", vehicle);
     }
 
 }

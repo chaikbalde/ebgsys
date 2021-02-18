@@ -64,9 +64,10 @@ public class EbgSysApplication {
 			).forEach(productService::createProduct);
 
 			Arrays.asList(
-				new Vehicle("VH-EBG-21", "RC 4553 AB", "Camion", "MERCEDES-BENZ Actros", "Camion de livraison pour la région forestière"),
-				new Vehicle("VH-EBG-22", "RC 4553 AB", "Camion Poids Lourd", "MERCEDES-BENZ Atego", "Camion de livraison pour Conakry"),
-				new Vehicle("VH-EBG-23", "RC 4553 AB", "Camion", "Volkswagen Transporter", "Camion de livraison Labé")
+				new Vehicle("VH-EBG-001", "RC 4553 AB", "Camion", "MERCEDES-BENZ Actros", "Camion de livraison pour la région forestière"),
+				new Vehicle("VH-EBG-002", "RC 4554 AC", "Camion Poids Lourd", "MERCEDES-BENZ Atego", "Camion de livraison pour Conakry"),
+				new Vehicle("VH-EBG-003", "RC 4555 AD", "Camion", "Volkswagen Transporter", "Camion de livraison Labé"),
+				new Vehicle("VH-EBG-004", "RC 4534 AB", "Camion", "Renault Truck", "Camion de livraison")
 			).forEach(vehicleService::createVehicle); ;
 
 			Arrays.asList(

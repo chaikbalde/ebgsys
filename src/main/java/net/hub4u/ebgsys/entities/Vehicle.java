@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.math.BigDecimal;
 
 @Data
@@ -27,6 +28,10 @@ public class Vehicle {
     String type;
     String make;
     String description;
+
+    // Transient fields for the view
+    @Transient
+    String nextReferenceView;
 
     public Vehicle(String reference, String registrationNumber, String type, String make, String description) {
         this.reference = reference;

@@ -36,7 +36,6 @@ public class Product {
     @OneToMany(mappedBy = "product")
     List<Sale> sales = new ArrayList<>();
 
-
     // Transient fields for the view
     @Transient
     String nextReferenceView;
