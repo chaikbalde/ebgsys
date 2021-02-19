@@ -89,6 +89,54 @@ public class SaleController {
         return "salescash";
     }
 
+    ////////////////////////////////////////  START
+
+    @PostMapping("/createcreditsale")
+    public String createCreditSale(@ModelAttribute Sale creditSale,  BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            log.error("createCreditSale() -  Failed processing form. Errors: " + bindingResult.getAllErrors());
+        }
+
+        creditSale.setReference(creditSale.getNextReferenceView());
+
+//        Date saleDt = creditSale.getSaleDate();
+
+        if (creditSale.getProduct() == null) {
+            log.error("createCreditSale() - Failed creating Sale. Product CANNOT BE NULL !");
+            loadCreditSales(model);
+            return "salescredit";
+        }
+
+        long prodId = creditSale.getProduct().getId();
+        Product product = productService.fetchProduct(prodId);
+        product.getSales().add(creditSale);
+        creditSale.setProduct(product);
+
+        BigDecimal unitPrice = retrieveUnitPrice(creditSale, product);
+
+        BigDecimal totalPrice = unitPrice.multiply(new BigDecimal(creditSale.getQuantity()));
+        creditSale.setAmount(totalPrice);
+
+        creditSale.setUnitPriceView(unitPrice);
+
+        BigDecimal restToPay = totalPrice.subtract(creditSale.getPayment());
+        creditSale.setRest(restToPay);
+
+        creditSale.setPaid( (restToPay.intValue() > 0) ? false: true );
+
+        creditSale.setSaleTxType(SaleTxType.CREDIT);
+
+        Sale createdSale = saleService.createSale(creditSale);
+        log.info("createCreditSale() - Created sale '"+createdSale.getReference()+"' with Id '"+createdSale.getId()+"'");
+
+        loadCreditSales(model);
+
+        return "salescredit";
+    }
+
+
+    ////////////////////////////////////////  END
+
     //
     private BigDecimal retrieveUnitPrice(Sale sale, Product product) {
         BigDecimal unitPrice = BigDecimal.ZERO;
@@ -136,12 +184,13 @@ public class SaleController {
         }
 
         model.addAttribute("cashSales", cashSales);
+        model.addAttribute("cashSalesSize", cashSales.size());
 
         // For the Creation Form
         model.addAttribute("productsForm", productService.fetchAllProducts());
         Sale cashSaleForm = new Sale();
         cashSaleForm.setSaleType(SaleType.RETAIL);
-        String nextRef = EbgSysUtils.retrieveNextReference("VT-EBG-", 7, cashSales.stream().map(s -> s.getReference()).collect(Collectors.toList()));
+        String nextRef = EbgSysUtils.retrieveNextReference("VTC-EBG-", 7, cashSales.stream().map(s -> s.getReference()).collect(Collectors.toList()));
         cashSaleForm.setNextReferenceView(nextRef);
         model.addAttribute("cashSale", cashSaleForm);
 
@@ -158,11 +207,18 @@ public class SaleController {
                 .collect(Collectors.toList());
 
         model.addAttribute("creditSales", creditSales);
+        model.addAttribute("creditSalesSize", creditSales.size());
 
         model.addAttribute("productsForm", productService.fetchAllProducts());
         Sale creditSale = new Sale();
         creditSale.setSaleType(SaleType.RETAIL);
+        String nextRef = EbgSysUtils.retrieveNextReference("VTT-EBG-", 7, creditSales.stream().map(s -> s.getReference()).collect(Collectors.toList()));
+        creditSale.setNextReferenceView(nextRef);
         model.addAttribute("creditSale", creditSale);
+
+        // Side menu
+        model.addAttribute("sidemenuSales", true);
+        model.addAttribute("subSidemenuSalesCredit", true);
     }
 
     //

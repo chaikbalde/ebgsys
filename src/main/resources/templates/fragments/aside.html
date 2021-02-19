@@ -46,7 +46,7 @@
             <li th:class="${subSidemenuSalesIntro != null ? 'active': ''}"><a href="/salesintro"><i class="fa fa-circle-o text-green"></i> Intro</a></li>
             <!-- <li><a href="#"><i class="fa fa-tag text-green"></i> Intro</a></li> -->
             <li th:class="${subSidemenuSalesCash != null ? 'active': ''}"><a href="/sales/cash"><i class="fa fa-tag text-green"></i> Comptant</a></li>
-            <li><a href="#"><i class="fa fa-tag text-green"></i> À Terme</a></li>
+            <li th:class="${subSidemenuSalesCredit != null ? 'active': ''}"><a href="/sales/credit"><i class="fa fa-tag text-green"></i> À Terme</a></li>
           </ul>
         </li>
 
@@ -113,7 +113,7 @@
             <li><a href="#"><i class="fa fa-handshake-o text-green"></i> Partenaires</a></li>
             <li><a href="#"><i class="fa fa-credit-card text-red"></i> Déposants</a></li>
             <li th:class="${subSidemenuVehicles != null ? 'active': ''}"><a href="/vehicles/settings"><i class="fa fa-truck text-yellow"></i> Véhicules</a></li>
-            <li><a href="#"><i class="fa fa-users text-aqua"></i> Utilisateurs</a></li>
+            <li><a href="#"><i class="fa fa-users text-green"></i> Utilisateurs</a></li>
           </ul>
         </li>
         <li class="treeview">

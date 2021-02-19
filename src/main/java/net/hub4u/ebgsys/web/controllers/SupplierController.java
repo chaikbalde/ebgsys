@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import net.hub4u.ebgsys.entities.Supplier;
+import net.hub4u.ebgsys.entities.Vehicle;
+import net.hub4u.ebgsys.frwk.EbgSysUtils;
 import net.hub4u.ebgsys.services.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -33,6 +36,7 @@ public class SupplierController {
 
     @PostMapping("/create")
     public String createSupplier(Supplier supplier, Model model) {
+        supplier.setReference(supplier.getNextReferenceView());
         Supplier supplierCreated  = supplierService.createSupplier(supplier);
         model.addAttribute("supplierCreated", supplierCreated);
         loadSuppliers(model);
@@ -60,7 +64,12 @@ public class SupplierController {
         model.addAttribute("subSidemenuSuppliers", true);
 
         model.addAttribute("suppliers", suppliers);
-        model.addAttribute("supplier", new Supplier());
+
+        String supplierNextRef = EbgSysUtils.retrieveNextReference("FN-EBG-", 3, suppliers.stream().map(s -> s.getReference()).collect(Collectors.toList()));
+        Supplier supplier = new Supplier();
+        supplier.setNextReferenceView(supplierNextRef);
+
+        model.addAttribute("supplier", supplier);
     }
 
 }

@@ -71,10 +71,10 @@ public class EbgSysApplication {
 			).forEach(vehicleService::createVehicle); ;
 
 			Arrays.asList(
-				new Supplier("TAFAGUI", "FR-EBG-15", "Diallo Mamadou Aliou", "Km 36", "628 55 44 11", "info@tafagui.com", "www.tafagui.gn"),
-				new Supplier("EJICO", "FR-EBG-17", "Bah Ibrahima", "Cimenterie", "622 55 33 22", "contact@ejico.com", "www.ejico.gn"),
-				new Supplier("Ets Mamadou Bhoye et Frère", "FR-EBG-23", "Barry Mamadou Oury", "Kagbele", "623 56 35 11", "barry23@gmail.com", ""),
-				new Supplier("Walidian Quincailleries", "FR-EBG-21", "Diallo Boubacar", "Sanoya", "622 67 67 67", "walidian@gmail.com", "www.walidian.com")
+				new Supplier("TAFAGUI", "FN-EBG-015", "Diallo Mamadou Aliou", "Km 36", "628 55 44 11", "info@tafagui.com", "www.tafagui.gn"),
+				new Supplier("EJICO", "FN-EBG-017", "Bah Ibrahima", "Cimenterie", "622 55 33 22", "contact@ejico.com", "www.ejico.gn"),
+				new Supplier("Ets Mamadou Bhoye et Frère", "FN-EBG-023", "Barry Mamadou Oury", "Kagbele", "623 56 35 11", "barry23@gmail.com", ""),
+				new Supplier("Walidian Quincailleries", "FN-EBG-021", "Diallo Boubacar", "Sanoya", "622 67 67 67", "walidian@gmail.com", "www.walidian.com")
 			).forEach(supplierService::createSupplier);
 		};
 	}

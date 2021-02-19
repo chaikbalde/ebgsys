@@ -34,6 +34,12 @@ public class Sale {
     SaleTxType saleTxType;
     int quantity;
 
+    // Calculated fields
+    boolean paid;
+    BigDecimal rest;
+    BigDecimal balance;
+    BigDecimal payment;
+
     Date creationDate;
     String createdBy;
     Date modificationDate;

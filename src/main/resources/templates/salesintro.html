@@ -60,7 +60,7 @@
             
             <a href="/sales/cash">
 	            <div class="info-box-content">
-	              <span class="info-box-number">555</span>
+	              <span class="info-box-number" th:text="${cashSalesSize}">555</span>
 	              <span class="info-box-text"> Vente Comptant</span> 
 	            </div>
             </a>
@@ -78,7 +78,7 @@
 
             <a href="/sales/credit">
 	            <div class="info-box-content">
-	              <span class="info-box-number">666</span>
+	              <span class="info-box-number" th:text="${creditSalesSize}" >666</span>
 	              <span class="info-box-text">Ventes à Terme </span>
 	            </div>
             <a href="settingsproducts.html">

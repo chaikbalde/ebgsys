@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.util.Date;
 
 
@@ -37,6 +38,9 @@ public class Supplier {
     String createdBy;
     Date modificationDate;
     String modifiedBy;
+
+    @Transient
+    String nextReferenceView;
 
     public Supplier(String name, String reference, String contactPerson, String address, String phone, String email, String webSite) {
         this.name = name;

@@ -40,7 +40,7 @@
         <small>Vue d'ensemble</small>
       </h1>
       <ol class="breadcrumb">
-        <li><a href="intro.html"><i class="fa fa-home"></i> Accueil</a></li>
+        <li><a href="index.html" th:href="@{/}"><i class="fa fa-home"></i> Accueil</a></li>
         <li class="active">Paramétrage</li>
       </ol>
     </section>
@@ -81,7 +81,7 @@
 	              <span class="info-box-number"  th:text="${customers}">666</span>
 	              <span class="info-box-text">Clients </span>
 	            </div>
-            <a href="settingsproducts.html">
+            </a>
             <!-- /.info-box-content -->
           </div>
           <!-- /.info-box -->
@@ -129,6 +129,65 @@
       </div>
       <!-- /.row -->
 
+      <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-orange">
+                <i class="fa fa-truck"></i>
+            </span>
+            
+            <a href="/vehicles/settings">
+	            <div class="info-box-content">
+	              <span class="info-box-number" th:text="${vehicles}" >50</span>
+	              <span class="info-box-text"> Véhicules  </span> 
+	            </div>
+            </a>
+            
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-red">
+              <i class="fa fa-user-circle"></i>
+            </span>
+
+            <a href="#">
+	            <div class="info-box-content">
+	              <span class="info-box-number">66</span>
+	              <span class="info-box-text">Déposants </span>
+	            </div>
+            </a>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+        <!-- fix for small devices only -->
+        <div class="clearfix visible-sm-block"></div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-green">
+                <i class="fa fa-industry"></i>
+            </span>
+            </i>
+            <a href="#">
+              <div class="info-box-content">
+                <span class="info-box-number">17</span>
+                <span class="info-box-text">Utilisateurs</span>
+              </div>
+            </a>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+      </div>
       <!-- /.row -->
 
 

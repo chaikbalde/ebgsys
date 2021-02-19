@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>EBG | Ventes Comptant</title>
+  <title>EBG | Ventes Terme</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -41,20 +41,20 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <i class="fa fa-tag"></i> &nbsp; Ventes au Comptant
-        <small>Gestion de la vente au comptant</small>
+        <i class="fa fa-tag"></i> &nbsp; Ventes à Terme
+        <small>Gestion de la vente à terme</small>
       </h1>
       
       <ol class="breadcrumb">
         <li><a href="index.html" th:href="@{/}"><i class="fa fa-home"></i> Accueil</a></li>
         <li><a href="/salesintro"><i class="fa fa-tag"></i>Ventes</a></li>
-        <li class="active">Vente Comptant</li>
+        <li class="active">Vente à Terme</li>
       </ol>
       
     </section>
 
 
-    <!-- Main content  |   th:if="${not #lists.isEmpty(cashSales)}"  -->
+    <!-- Main content   -->
     <section class="content">
 	    
 	    <div class="row">
@@ -73,9 +73,9 @@
 	                <li class="list-group-item">
 	                  <b>Produits vendus</b> 
 	                  <a class="pull-right">
-	                  	<span class="label label-success">Fer 12</span> 
-	                  	<span class="label label-success">Madriers</span>
-	                  	<span class="label label-success">Tôles</span> 
+	                  	<span class="label label-primary">Fer 12</span> 
+	                  	<span class="label label-primary">Madriers</span>
+	                  	<span class="label label-primary">Tôles</span> 
 	                  </a>
 	                </li>
 	                
@@ -105,7 +105,7 @@
               <button type="button" class="pull-right btn btn-primary" id="addproduct" data-toggle="modal" data-target="#modal-createsale">
               	Vendre <i class="fa fa-plus-circle"></i></button>
               	
-              <h3 class="box-title">Liste des ventes au comptant</h3>
+              <h3 class="box-title">Liste des ventes à terme</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -120,11 +120,13 @@
                   <th><i class="fa fa-money"></i>&nbsp;&nbsp;Prix U.</th>
                   <th>Quantité</th>
                   <th><i class="fa fa-money"></i>&nbsp;&nbsp;Montant total</th>
+                  <th>Soldé</th>
+                  <th><i class="fa fa-money"></i>&nbsp;&nbsp;Reste</th>
                 </tr>
                 </thead>
 
                 <tbody>
-                 <tr th:each="sale : ${cashSales}">
+                 <tr th:each="sale : ${creditSales}">
                   <td th:text="${#dates.format(sale.saleDate, 'dd/MM/yyyy')}">16/02/2013</td>
                   <td th:text="${sale.reference}" >FE12</td>
                   <td th:text="${sale.product.name}">FER 12</td>
@@ -133,6 +135,8 @@
                   <td th:text="${#numbers.formatInteger(sale.unitPriceView,3,'WHITESPACE')}">8 999</td>
                   <td th:text="${sale.quantity}">999</td>
                   <td th:text="${#numbers.formatInteger(sale.amount,3,'WHITESPACE')}">1 999 888 777</td>
+                  <td th:text="${sale.paid}">FALSE</td>
+                  <td th:text="${#numbers.formatInteger(sale.rest,3,'WHITESPACE')}">777 666</td>
                 </tr>
                 
                 </tbody>
@@ -146,6 +150,8 @@
                   <th><i class="fa fa-money"></i>&nbsp;&nbsp;Prix U.</th>
                   <th>Quantité</th>
                   <th><i class="fa fa-money"></i>&nbsp;&nbsp;Montant total</th>
+                  <th>Soldé</th>
+                  <th><i class="fa fa-money"></i>&nbsp;&nbsp;Reste</th>
                 </tr>
                 </tfoot>
               </table>
@@ -161,12 +167,12 @@
 
         <div class="modal fade" id="modal-createsale">
           <div class="modal-dialog">
-            <form role="form" action="#" th:action="@{/sales/createcashsale}" th:object="${cashSale}" method="post">
+            <form role="form" action="#" th:action="@{/sales/createcreditsale}" th:object="${creditSale}" method="post">
 	            <div class="modal-content">
 	              <div class="modal-header">
 	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	                  <span aria-hidden="true">&times;</span></button>
-	                <h4 class="modal-title">Vente de produits au comptant</h4>
+	                <h4 class="modal-title">Vente de produits à terme</h4>
 	              </div>
 	              <div class="modal-body">
                   <div class="form-group">
@@ -204,6 +210,9 @@
 	                <div class="form-group">
                     <label for="quantity">Quantité</label>
 	                  <input type="text" th:field="*{quantity}" name="quantity" class="form-control" id="quantity" placeholder="Quantité" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
+	                </div>
+	                <div class="form-group">
+	                  <input type="text" th:field="*{payment}" name="payment" class="form-control" id="payment" placeholder="Acompte" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
 	                </div>
 	                <div class="form-group">
 	                  <input type="text" th:field="*{customerName}" name="customerName" class="form-control" id="customername" placeholder="Nom Client" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
