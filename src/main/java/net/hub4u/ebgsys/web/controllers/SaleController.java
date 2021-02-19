@@ -125,6 +125,7 @@ public class SaleController {
         BigDecimal restToPay = totalPrice.subtract(creditSale.getPayment());
         creditSale.setRest(restToPay);
         creditSale.setPaid( (restToPay.intValue() > 0) ? false: true );
+        creditSale.setBalance(creditSale.getPayment());
 
         if (creditSale.getCustomer() == null) {
             log.error("createCreditSale() - Failed creating Sale. Customer CANNOT BE NULL !");
@@ -136,12 +137,6 @@ public class SaleController {
         Customer customer = customerService.fetchCustomer(customerId);
         customer.getSales().add(creditSale);
         creditSale.setCustomer(customer);
-
-//        if (customer.getCustomerType().equals(CustomerType.PERSON)) {
-//            creditSale.setCustomerNameView(customer.getLastName() + ' ' + customer.getFirstName());
-//        } else {
-//            creditSale.setCustomerNameView(customer.getName());
-//        }
 
         creditSale.setSaleTxType(SaleTxType.CREDIT);
 
@@ -193,7 +188,6 @@ public class SaleController {
             } else if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.WHOLESALE)) {
                 sale.setSaleTypeView(SALE_TYPE_WHOLESALE);
             }
-
 
             if (sale.getSaleTxType() != null && sale.getSaleTxType().equals(SaleTxType.CASH)) {
                 cashSales.add(sale);

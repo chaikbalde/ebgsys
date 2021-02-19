@@ -135,7 +135,7 @@
                   <td th:text="${#numbers.formatInteger(sale.unitPriceView,3,'WHITESPACE')}">8 999</td>
                   <td th:text="${sale.quantity}">999</td>
                   <td th:text="${#numbers.formatInteger(sale.amount,3,'WHITESPACE')}">1 999 888 777</td>
-                  <td th:text="${sale.paid}">FALSE</td>
+                  <td align="center"><img src="dist/img/checked_green.png" th:src="${ (sale.paid) ? '/dist/img/checked_green.png' : '/dist/img/checked_red.png'}"  class="user-image" alt="av1 Image" height="14" data-toggle="tooltip" data-placement="top" title="Payé" th:title="${'Payé: ' +  #numbers.formatInteger(sale.balance,3,'WHITESPACE')} " /></td>
                   <td th:text="${#numbers.formatInteger(sale.rest,3,'WHITESPACE')}">777 666</td>
                 </tr>
                 
