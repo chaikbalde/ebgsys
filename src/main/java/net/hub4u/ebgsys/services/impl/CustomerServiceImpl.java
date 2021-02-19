@@ -3,6 +3,7 @@ package net.hub4u.ebgsys.services.impl;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import net.hub4u.ebgsys.entities.Customer;
+import net.hub4u.ebgsys.entities.Product;
 import net.hub4u.ebgsys.repositories.CustomerRepository;
 import net.hub4u.ebgsys.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,4 +37,11 @@ public class CustomerServiceImpl implements CustomerService {
     public void deleteCustomer(Long id) {
         customerRepository.deleteById(id);
     }
+
+    @Override
+    public Customer fetchCustomer(Long id) {
+        return customerRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("fetchCustomer() - Failed finding Customer with Id:" + id) );
+    }
+
 }

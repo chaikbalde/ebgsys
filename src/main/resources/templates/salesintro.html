@@ -44,44 +44,45 @@
         <li class="active">Ventes</li>
       </ol>
     </section>
-
+    
     <br/>
-
+    
     <!-- Main content -->
     <section class="content">
       <!-- Info boxes -->
+      
+      <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="info-box">
+          <span class="info-box-icon bg-green">
+            <i class="fa fa-tag"></i>
+          </span>
+  
+          <a href="/sales/credit">
+            <div class="info-box-content">
+              <span class="info-box-number" th:text="${#lists.size(creditSales)}" >666</span>
+              <span class="info-box-text">Ventes à Terme </span>
+            </div>
+          <a href="settingsproducts.html">
+          <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+      </div>
+      <!-- /.col -->
 
       <div class="row">
         <div class="col-md-4 col-sm-6 col-xs-12">
           <div class="info-box">
-            <span class="info-box-icon bg-green">
+            <span class="info-box-icon bg-aqua">
                 <i class="fa fa-tag"></i>
             </span>
             
             <a href="/sales/cash">
 	            <div class="info-box-content">
-	              <span class="info-box-number" th:text="${cashSalesSize}">555</span>
+	              <span class="info-box-number" th:text="${#lists.size(cashSales)}">555</span>
 	              <span class="info-box-text"> Vente Comptant</span> 
 	            </div>
             </a>
             
-            <!-- /.info-box-content -->
-          </div>
-          <!-- /.info-box -->
-        </div>
-        <!-- /.col -->
-        <div class="col-md-4 col-sm-6 col-xs-12">
-          <div class="info-box">
-            <span class="info-box-icon bg-aqua">
-              <i class="fa fa-tag"></i>
-            </span>
-
-            <a href="/sales/credit">
-	            <div class="info-box-content">
-	              <span class="info-box-number" th:text="${creditSalesSize}" >666</span>
-	              <span class="info-box-text">Ventes à Terme </span>
-	            </div>
-            <a href="settingsproducts.html">
             <!-- /.info-box-content -->
           </div>
           <!-- /.info-box -->

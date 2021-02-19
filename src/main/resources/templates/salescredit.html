@@ -73,9 +73,9 @@
 	                <li class="list-group-item">
 	                  <b>Produits vendus</b> 
 	                  <a class="pull-right">
-	                  	<span class="label label-primary">Fer 12</span> 
-	                  	<span class="label label-primary">Madriers</span>
-	                  	<span class="label label-primary">Tôles</span> 
+	                  	<span class="label label-success">Fer 12</span> 
+	                  	<span class="label label-success">Madriers</span>
+	                  	<span class="label label-success">Tôles</span> 
 	                  </a>
 	                </li>
 	                
@@ -130,7 +130,7 @@
                   <td th:text="${#dates.format(sale.saleDate, 'dd/MM/yyyy')}">16/02/2013</td>
                   <td th:text="${sale.reference}" >FE12</td>
                   <td th:text="${sale.product.name}">FER 12</td>
-                  <td th:text="${sale.customerName + ' / ' + sale.customerPhone  } ">CLIENT</td>
+                  <td th:text="${sale.customerNameView + ' / ' + sale.customer.phone  } ">CLIENT</td>
                   <td th:text="${sale.saleTypeView}">RETAIL</td>
                   <td th:text="${#numbers.formatInteger(sale.unitPriceView,3,'WHITESPACE')}">8 999</td>
                   <td th:text="${sale.quantity}">999</td>
@@ -176,6 +176,7 @@
 	              </div>
 	              <div class="modal-body">
                   <div class="form-group">
+                    <label for="product">Produit</label>
 		              	<select th:field="*{product.id}" class="form-control select2" id="product" placeholder="Produit" style="width: 60%; background-color: #DAFDED; font-weight: bold;">
 			              	<option value="">...</option>
                       <option th:each="prod : ${productsForm}" th:value="${prod.id}" th:text="${prod.name}"></option>
@@ -197,6 +198,7 @@
                     Vente en Gros
                   </div>
 		              <div class="form-group">
+                    <label for="datepicker">Date de Vente</label>
 		                <div class="input-group date" style="width: 60%">
 		                  <div class="input-group-addon">
 		                    <i class="fa fa-calendar"></i>
@@ -214,12 +216,22 @@
 	                <div class="form-group">
 	                  <input type="text" th:field="*{payment}" name="payment" class="form-control" id="payment" placeholder="Acompte" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
 	                </div>
+
+                  <div class="form-group">
+                    <label for="customer">Client</label>
+                    <select class="form-control select2" id="type" th:field="*{customer.id}"  style="width: 60%; background-color: #DAFDED; font-weight: bold;">
+                      <option value="">...</option>
+                      <option th:each="cust : ${customers}" th:value="${cust.id}" th:text="${( cust.customerType == T(net.hub4u.ebgsys.entities.CustomerType).COMPANY ) ?  cust.name : cust.lastName + ' ' + cust.firstName}"></option>
+                    </select>
+                  </div>
+<!--   
 	                <div class="form-group">
 	                  <input type="text" th:field="*{customerName}" name="customerName" class="form-control" id="customername" placeholder="Nom Client" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
 	                </div>
 	                <div class="form-group">
 	                  <input type="text" th:field="*{customerPhone}" name="customerPhone" class="form-control" id="customerphone" placeholder="Téléphone Client" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
 	                </div>
+                   -->
 	              </div>
 	              <div class="modal-footer">
 	                <button type="submit" class="btn btn-primary"  style="float: left;">Sauvegarder <i class="fa fa-check"></i> </button>

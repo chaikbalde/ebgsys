@@ -3,11 +3,14 @@ package net.hub4u.ebgsys.web.controllers;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import net.hub4u.ebgsys.entities.Customer;
+import net.hub4u.ebgsys.entities.CustomerType;
 import net.hub4u.ebgsys.entities.Product;
 import net.hub4u.ebgsys.entities.Sale;
 import net.hub4u.ebgsys.entities.SaleTxType;
 import net.hub4u.ebgsys.entities.SaleType;
 import net.hub4u.ebgsys.frwk.EbgSysUtils;
+import net.hub4u.ebgsys.services.CustomerService;
 import net.hub4u.ebgsys.services.ProductService;
 import net.hub4u.ebgsys.services.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +40,12 @@ public class SaleController {
     final static String SALE_TYPE_RETAIL = "En Détails";
     final static String SALE_TYPE_WHOLESALE = "En Gros";
 
-    @Autowired SaleService saleService;
-    @Autowired ProductService productService;
+    @Autowired
+    SaleService saleService;
+    @Autowired
+    ProductService productService;
+    @Autowired
+    CustomerService customerService;
 
     @GetMapping("/cash")
     public String getCashSales(Model model) {
@@ -99,8 +106,6 @@ public class SaleController {
 
         creditSale.setReference(creditSale.getNextReferenceView());
 
-//        Date saleDt = creditSale.getSaleDate();
-
         if (creditSale.getProduct() == null) {
             log.error("createCreditSale() - Failed creating Sale. Product CANNOT BE NULL !");
             loadCreditSales(model);
@@ -113,16 +118,30 @@ public class SaleController {
         creditSale.setProduct(product);
 
         BigDecimal unitPrice = retrieveUnitPrice(creditSale, product);
-
         BigDecimal totalPrice = unitPrice.multiply(new BigDecimal(creditSale.getQuantity()));
         creditSale.setAmount(totalPrice);
-
         creditSale.setUnitPriceView(unitPrice);
 
         BigDecimal restToPay = totalPrice.subtract(creditSale.getPayment());
         creditSale.setRest(restToPay);
-
         creditSale.setPaid( (restToPay.intValue() > 0) ? false: true );
+
+        if (creditSale.getCustomer() == null) {
+            log.error("createCreditSale() - Failed creating Sale. Customer CANNOT BE NULL !");
+            loadCreditSales(model);
+            return "salescredit";
+        }
+
+        long customerId = creditSale.getCustomer().getId();
+        Customer customer = customerService.fetchCustomer(customerId);
+        customer.getSales().add(creditSale);
+        creditSale.setCustomer(customer);
+
+//        if (customer.getCustomerType().equals(CustomerType.PERSON)) {
+//            creditSale.setCustomerNameView(customer.getLastName() + ' ' + customer.getFirstName());
+//        } else {
+//            creditSale.setCustomerNameView(customer.getName());
+//        }
 
         creditSale.setSaleTxType(SaleTxType.CREDIT);
 
@@ -201,13 +220,34 @@ public class SaleController {
     }
 
     private void loadCreditSales(Model model) {
-        List<Sale> creditSales = saleService.fetchAllSales()
+        List<Sale> sales = saleService.fetchAllSales()
                 .stream()
                 .filter(sale -> sale.getSaleTxType().equals(SaleTxType.CREDIT))
                 .collect(Collectors.toList());
 
+        List<Sale> creditSales = new ArrayList<>();
+        for (Sale sale: sales) {
+            Customer customer = sale.getCustomer();
+            if (customer != null) {
+                if (customer.getCustomerType().equals(CustomerType.PERSON)) {
+                    sale.setCustomerNameView(customer.getLastName() + ' ' + customer.getFirstName());
+                } else {
+                    sale.setCustomerNameView(customer.getName());
+                }
+            }
+
+            if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.RETAIL)) {
+                sale.setSaleTypeView(SALE_TYPE_RETAIL);
+
+            } else if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.WHOLESALE)) {
+                sale.setSaleTypeView(SALE_TYPE_WHOLESALE);
+            }
+
+            creditSales.add(sale);
+        }
+
         model.addAttribute("creditSales", creditSales);
-        model.addAttribute("creditSalesSize", creditSales.size());
+        model.addAttribute("customers", customerService.fetchAllCustomers());
 
         model.addAttribute("productsForm", productService.fetchAllProducts());
         Sale creditSale = new Sale();
@@ -219,22 +259,6 @@ public class SaleController {
         // Side menu
         model.addAttribute("sidemenuSales", true);
         model.addAttribute("subSidemenuSalesCredit", true);
-    }
-
-    //
-    String retrieveNextReference(String prefix, List<String> references) {
-
-        List<Integer> refDigits = references.stream()
-                .map(ref -> Integer.valueOf(ref.substring(ref.lastIndexOf("-")+1, ref.length())) )
-                .collect(Collectors.toList());
-
-        int nextInt = 0;
-        if (refDigits != null && !refDigits.isEmpty()) {
-            nextInt = Collections.max(refDigits);
-        }
-        nextInt++;
-
-        return prefix + nextInt;
     }
 
 }

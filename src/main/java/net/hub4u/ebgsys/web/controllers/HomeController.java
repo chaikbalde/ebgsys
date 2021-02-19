@@ -68,13 +68,14 @@ public class HomeController {
 
         List<Sale> cashSales = saleService.fetchAllSales()
                 .stream()
-                .filter(sale -> SaleTxType.CASH.equals(sale.getSaleType()))
+                .filter(sale -> sale.getSaleTxType().equals(SaleTxType.CASH))
                 .collect(Collectors.toList());
 
         List<Sale> creditSales = saleService.fetchAllSales()
                 .stream()
-                .filter(sale -> SaleTxType.CREDIT.equals(sale.getSaleType()))
+                .filter(sale -> sale.getSaleTxType().equals(SaleTxType.CREDIT))
                 .collect(Collectors.toList());
+
 
         model.addAttribute("cashSales", cashSales);
         model.addAttribute("creditSales", creditSales);

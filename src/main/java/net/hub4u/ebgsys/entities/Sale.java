@@ -63,4 +63,7 @@ public class Sale {
     BigDecimal unitPriceView;
     @Transient
     String nextReferenceView;
+    @Transient
+    String customerNameView;
+
 }

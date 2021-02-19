@@ -49,7 +49,6 @@ public class Customer {
     @Transient
     String nextReferenceView;
 
-
     @OneToMany(mappedBy = "customer")
     List<Sale> sales = new ArrayList<>();
 
