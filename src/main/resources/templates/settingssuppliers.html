@@ -119,7 +119,6 @@
                     <td th:text="${supplier.email}">EMAIL@HOME</td>
                     <td align="center">
                       <a href="#" data-toggle="tooltip" data-placement="top" title="Editer" style="margin-right: 20px;"><i class="fa fa-pencil-square-o"></i></a> 
-                      <!-- <a href="#" title="Supprimer ce client "><i class="fa fa-trash"></i></a>  -->
                       <a href="#" th:href="@{/suppliers/delete/{id}(id=${supplier.id})}" data-toggle="tooltip" data-placement="top" title="Supprimer"><i class="fa fa-trash"></i></a> 
                     </td>
                   </tr>

@@ -95,7 +95,15 @@
 	        <!-- /.col -->
 	    
 	    </div>
-    
+
+      <!-- Alert Created -->
+      <div th:if="${saleCreated}" class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <i class="icon fa fa-check"></i> 
+        La vente <b th:text="${saleCreated.reference}">MATERIEL</b> a été saisie avec succès!
+      </div>
+      
+
       <div class="row">
         <div class="col-xs-12">
 
@@ -177,10 +185,14 @@
 	              <div class="modal-body">
                   <div class="form-group">
                     <label for="product">Produit</label>
-		              	<select th:field="*{product.id}" class="form-control select2" id="product" placeholder="Produit" style="width: 60%; background-color: #DAFDED; font-weight: bold;">
+		              	<select th:field="*{product.id}" class="form-control select2" id="product" onchange="find_prodprice();"   style="width: 60%; background-color: #DAFDED; font-weight: bold;">
 			              	<option value="">...</option>
                       <option th:each="prod : ${productsForm}" th:value="${prod.id}" th:text="${prod.name}"></option>
 				            </select>
+	                </div>
+	                <div class="form-group">
+                    <input type="text" class="form-control" id="productpriceunit" placeholder="Prix en detail" readonly="readonly" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
+                    <input type="text" class="form-control" id="productpricegross" placeholder="Prix en gros" readonly="readonly" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
 	                </div>
 	                <div class="form-group">
 	                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="reference" placeholder="Référence" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
@@ -188,12 +200,12 @@
 
                   <div class="form-group">
                     <label>
-                      <input type="radio" th:field="*{saleType}" name="saletype" class="flat-red" value="RETAIL">
+                      <input type="radio" th:field="*{saleType}" name="saletype" class="flat-red" value="RETAIL"/>
                     </label>
                     Vente en Détail
                     
                     <label style="margin-left: 50px;">
-                      <input type="radio" th:field="*{saleType}" name="saletype" class="flat-red" value="WHOLESALE" >
+                      <input type="radio" th:field="*{saleType}" name="saletype" class="flat-red" value="WHOLESALE"/>
                     </label>
                     Vente en Gros
                   </div>
@@ -323,6 +335,8 @@
         		"sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
         	}
          }
+
+
         //  ,
         //  'columnDefs': [ {
         //   'targets': [5], /* column index */
@@ -343,6 +357,28 @@ $(function () {
     })
     
   })
+  
+  function find_prodprice() {
+			 $.ajax({
+				  type: "get",
+				  url: "http://localhost:8080/products/findproductpice/" + $("#product").val(),
+				  dataType: "json",
+				  cache: false,    
+				  //data:'product=' + $("#product").val(),
+				  success: function(response){
+            if(response !== null) {
+              var unit = response[0].toLocaleString('fr-FR');
+              var gross = response[1].toLocaleString('fr-FR');
+              $('#productpriceunit').val(unit);
+              $('#productpricegross').val(gross);
+            }
+				  },
+				  error: function(e){      
+				   	alert('Error while request.. : ' + e);
+				  }
+			});
+		}
+
 </script>
 </body>
 </html>

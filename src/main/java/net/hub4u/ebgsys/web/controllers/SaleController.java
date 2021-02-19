@@ -143,6 +143,9 @@ public class SaleController {
         Sale createdSale = saleService.createSale(creditSale);
         log.info("createCreditSale() - Created sale '"+createdSale.getReference()+"' with Id '"+createdSale.getId()+"'");
 
+        model.addAttribute("saleCreated", createdSale);
+
+
         loadCreditSales(model);
 
         return "salescredit";

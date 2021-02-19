@@ -13,8 +13,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 
@@ -23,6 +27,9 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Slf4j
 public class ProductController {
+
+    static final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance(new Locale("fr", "FR"));
+
 
     @Autowired
     ProductService productService;
@@ -53,6 +60,19 @@ public class ProductController {
         return "settingsproducts";
     }
 
+    /**
+     *
+     * */
+    @GetMapping("/findproductpice/{productId}")
+    public @ResponseBody String[] getProductPrice(@PathVariable Long productId) {
+        Product product = productService.fetchProduct(productId);
+        log.debug("getProductPrice() - Getting price from Product : " + product.getName());
+
+//        return NUMBER_FORMAT.format(product.getUnitPrice()) + " | "+ NUMBER_FORMAT.format(product.getGrossPrice()) ;
+
+        return new String[] {""+NUMBER_FORMAT.format(product.getUnitPrice()), ""+NUMBER_FORMAT.format(product.getGrossPrice())} ;
+    }
+
 
     // HELPERS
     private void loadProducts(Model model) {
@@ -68,5 +88,4 @@ public class ProductController {
         model.addAttribute("products", products);
         model.addAttribute("product", product);
     }
-
 }
