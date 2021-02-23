@@ -133,8 +133,6 @@
                 </tr>
                 </thead>
 
-                <a href="#" th:href="@{/customers/delete/{id}(id=${person.id})}" data-toggle="tooltip" data-placement="top" title="Supprimer">
-
                 <tbody>
                  <tr th:each="sale : ${creditSales}">
                   <td th:text="${#dates.format(sale.saleDate, 'dd/MM/yyyy')}">16/02/2013</td>
@@ -367,7 +365,7 @@ function find_prodprice() {
 
     $.ajax({
 				  type: "get",
-				  url: local_host + "/products/findproductpice/" + $("#product").val(),
+				  url: remote_host + "/products/findproductpice/" + $("#product").val(),
 				  dataType: "json",
 				  cache: false,    
 				  //data:'product=' + $("#product").val(),

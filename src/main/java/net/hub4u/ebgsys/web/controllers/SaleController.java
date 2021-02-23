@@ -140,6 +140,7 @@ public class SaleController {
         creditSale.setCustomer(customer);
 
         creditSale.setSaleTxType(SaleTxType.CREDIT);
+        creditSale.setCreationDate(new Date());
 
         Sale createdSale = saleService.createSale(creditSale);
         log.info("createCreditSale() - Created sale '"+createdSale.getReference()+"' with Id '"+createdSale.getId()+"'");
@@ -161,6 +162,11 @@ public class SaleController {
         Sale sale = saleService.fetchSale(saleId);
 
         model.addAttribute("sale", sale);
+
+        // Side menu
+        model.addAttribute("sidemenuSales", true);
+        model.addAttribute("subSidemenuSalesCredit", true);
+
 
         return "salescreditdetails";
     }

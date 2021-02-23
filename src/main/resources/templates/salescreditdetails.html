@@ -43,7 +43,7 @@
       <ol class="breadcrumb">
         <li><a href="index.html" th:href="@{/}"><i class="fa fa-home"></i> Accueil</a></li>
         <li><a href="/salesintro"><i class="fa fa-tag"></i>Ventes</a></li>
-        <li class="active">Infos Vente <span th:text="${sale.reference}"></span> VT-EBG-000000</li>
+        <li class="active">Infos sur la vente </li>
       </ol>
       
     </section>
@@ -58,118 +58,87 @@
 
           <div class="box">
             <div class="box-header">
-            	
-              <button type="button" class="pull-right btn btn-primary" id="addproduct" data-toggle="modal" data-target="#modal-createsale">
-              	Vendre <i class="fa fa-plus-circle"></i></button>
-              	
-              <h3 class="box-title">Vente <span th:text="${sale.reference}"></span> VTT-EBG-000000</h3>
+              <button class="label-primary" style="float: right;"><i class="fa fa-print"></i>&nbsp;&nbsp; Imprimer</button>
+              Informations sur la vente <b th:text="${sale.reference}">SALE.REF</b> pour le client <b th:text="${sale.customer.reference}">CUSTOMER.REF</b>  
             </div>
             <!-- /.box-header -->
-            <div class="box-body">
-
-
-            </div>
-            <!-- /.box-body -->
-
-
           </div>
           <!-- /.box -->
-          
         </div>
         <!-- /.col -->
-
-
-
       </div>
       <!-- /.row -->
       
 
-        <div class="modal fade" id="modal-createsale">
-          <div class="modal-dialog">
-            <form role="form" action="#" th:action="@{/sales/createcreditsale}" th:object="${creditSale}" method="post">
-	            <div class="modal-content">
-	              <div class="modal-header">
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                  <span aria-hidden="true">&times;</span></button>
-	                <h4 class="modal-title">Vente de produits à terme</h4>
-	              </div>
-	              <div class="modal-body">
-                  <div class="form-group">
-                    <label for="product">Produit</label>
-		              	<select th:field="*{product.id}" class="form-control select2" id="product" onchange="find_prodprice();"   style="width: 60%; background-color: #DAFDED; font-weight: bold;">
-			              	<option value="">...</option>
-                      <option th:each="prod : ${productsForm}" th:value="${prod.id}" th:text="${prod.name}"></option>
-				            </select>
-	                </div>
-	                <div class="form-group">
-                    <input type="text" class="form-control" id="productpriceunit" placeholder="Prix en detail" readonly="readonly" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
-                    <input type="text" class="form-control" id="productpricegross" placeholder="Prix en gros" readonly="readonly" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
-	                </div>
-	                <div class="form-group">
-	                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="reference" placeholder="Référence" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
-	                </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="box box-solid">
+            <div class="box-header with-border">
+              <!-- <i class="fa fa-text-width"></i> -->
 
-                  <div class="form-group">
-                    <label>
-                      <input type="radio" th:field="*{saleType}" name="saletype" class="flat-red" value="RETAIL"/>
-                    </label>
-                    Vente en Détail
-                    
-                    <label style="margin-left: 50px;">
-                      <input type="radio" th:field="*{saleType}" name="saletype" class="flat-red" value="WHOLESALE"/>
-                    </label>
-                    Vente en Gros
-                  </div>
-		              <div class="form-group">
-                    <label for="datepicker">Date de Vente</label>
-		                <div class="input-group date" style="width: 60%">
-		                  <div class="input-group-addon">
-		                    <i class="fa fa-calendar"></i>
-		                  </div>
-                      <!-- data-date-format="dd/mm/yyyy" -->
-		                  <input type="text"  th:field="*{saleDate}" class="form-control pull-right" id="datepicker" style="background-color: #DAFDED; font-weight: bold;"/>
-		                </div>
-		                <!-- /.input group -->
-
-		              </div>
-	                <div class="form-group">
-                    <label for="quantity">Quantité</label>
-	                  <input type="text" th:field="*{quantity}" name="quantity" class="form-control" id="quantity" placeholder="Quantité" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
-	                </div>
-	                <div class="form-group">
-	                  <input type="text" th:field="*{payment}" name="payment" class="form-control" id="payment" placeholder="Acompte" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
-	                </div>
-
-                  <div class="form-group">
-                    <label for="customer">Client</label>
-                    <select class="form-control select2" id="type" th:field="*{customer.id}"  style="width: 60%; background-color: #DAFDED; font-weight: bold;">
-                      <option value="">...</option>
-                      <option th:each="cust : ${customers}" th:value="${cust.id}" th:text="${( cust.customerType == T(net.hub4u.ebgsys.entities.CustomerType).COMPANY ) ?  cust.name : cust.lastName + ' ' + cust.firstName}"></option>
-                    </select>
-                  </div>
-<!--   
-	                <div class="form-group">
-	                  <input type="text" th:field="*{customerName}" name="customerName" class="form-control" id="customername" placeholder="Nom Client" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
-	                </div>
-	                <div class="form-group">
-	                  <input type="text" th:field="*{customerPhone}" name="customerPhone" class="form-control" id="customerphone" placeholder="Téléphone Client" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
-	                </div>
-                   -->
-	              </div>
-	              <div class="modal-footer">
-	                <button type="submit" class="btn btn-primary"  style="float: left;">Sauvegarder <i class="fa fa-check"></i> </button>
-	                <button type="reset" class="btn btn-default">Effacer <i class="fa fa-trash"></i> </button> 
-	                <button type="button" class="btn btn-default" data-dismiss="modal">Quitter <i class="fa fa-times"></i></button> 
-	              </div>
-	            </div>
-	          </form>
-            
-            <!-- /.modal-content -->
+              <h3>Vente</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <dl class="dl-horizontal">
+                <dt style="background-color: #EFEFFE;">Date de vente</dt>
+                <dd th:text="${#dates.format(sale.saleDate, 'dd/MM/yyyy')}">18/02/2021</dd>
+                <dt style="background-color: #EFEFFE;">Référence de vente</dt>
+                <dd th:text="${sale.reference}">VTC-EBG-000000</dd>
+                <dt style="background-color: #EFEFFE;">Client</dt>
+                <dd><b>Chaikou Sylla</b> </dd>
+                <dd th:text="${'Tel: ' + sale.customer.phone}">Tel: 622 63 01 23 </dd>
+                <dd th:text="${'Email: ' + sale.customer.email}">Email: cbalde@gmail.com</dd>
+                <dt style="background-color: #EFEFFE;">Date de saisie</dt>
+                <dd th:text="${#dates.format(sale.creationDate, 'dd/MM/yyyy HH:mm')}">22/02/2021</dd>
+              </dl>
+            </div>
+            <!-- /.box-body -->
           </div>
-          <!-- /.modal-dialog -->
+          <!-- /.box -->
         </div>
-        <!-- /.modal -->
-      
+        <!-- ./col -->
+        <div class="col-md-6">
+          <div class="box box-solid">
+            <div class="box-header with-border">
+              <!-- <i class="fa fa-text-width"></i> -->
+
+              <h3>Produits / Transaction</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <dl class="dl-horizontal">
+                <dt style="background-color: #EFEFFE;">Produits	achetés</dt>
+                <dd th:text="${sale.product.name}">Cloud 21 (5 En Gros)</dd>
+                <!-- <dd>Arrache clouds (2 En Details)</dd> -->  
+                <dt style="background-color: #EFEFFE;">Type	de transaction</dt>
+                <dd th:text="${sale.saleType}">En Gros</dd>
+                <dt style="background-color: #EFEFFE;">Prix Unitaire</dt>
+                <dd th:text="${#numbers.formatInteger(sale.unitPriceView,3,'WHITESPACE')}">200 000</dd>
+                <dt style="background-color: #EFEFFE;">Quantité</dt>
+                <dd th:text="${sale.quantity}">10</dd>
+                <dt style="background-color: #EFEFFE;">Montant total</dt>
+                <dd th:text="${#numbers.formatInteger(sale.amount,3,'WHITESPACE')}">2 000 000</dd>
+                <dt style="background-color: #EFEFFE;">Soldé</dt>
+                <dd th:text="${sale.paid}">Non</dd>
+                <dt style="background-color: #EFEFFE;">Paiements</dt>
+                <dd th:text="${#numbers.formatInteger(sale.balance,3,'WHITESPACE')}">1 000 000  (18/02/2021) </dd>
+                <!-- <dd>500 000  (18/02/2021) </dd> -->
+                <dt style="background-color: #EFEFFE;">Reste</dt>
+                <dd th:text="${#numbers.formatInteger(sale.rest,3,'WHITESPACE')}">500 000</dd>
+                <dt style="background-color: #EFEFFE;">Payer</dt>
+                <dd th:if="${sale.rest > 0 } " >
+                  <input type="text"> <button>Payer</button> 
+                </dd>
+              </dl>
+            </div>
+            <!-- /.box-body -->
+          </div>
+          <!-- /.box -->
+        </div>
+        <!-- ./col -->
+      </div>
+      <!-- /.row -->              
 
     </section>
     <!-- /.content -->
@@ -204,8 +173,6 @@
 <!-- page script -->
 <script>
 
-  $(function () {
-    
 
 
 $(function () {
@@ -236,7 +203,6 @@ function find_prodprice() {
 				  }
 			});
 	}
-
 
 
 </script>
