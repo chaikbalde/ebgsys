@@ -35,4 +35,10 @@ public class SaleServiceImpl implements SaleService {
     public void deleteSale(Long id) {
         saleRepository.deleteById(id);
     }
+
+    @Override
+    public Sale fetchSale(Long id) {
+        return saleRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("fetchSale() - Failed finding Sale with Id:" + id) );
+    }
 }

@@ -11,4 +11,7 @@ public interface SaleService {
     List<Sale> fetchAllSales();
 
     void deleteSale(Long id);
+
+    Sale fetchSale(Long id);
+
 }

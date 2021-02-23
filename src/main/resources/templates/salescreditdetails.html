@@ -13,11 +13,6 @@
   <!-- Ionicons -->
   <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css" th:href="@{/bower_components/Ionicons/css/ionicons.min.css}" >
 
-    <!-- bootstrap datepicker -->
-  <link rel="stylesheet" href="bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" th:href="@{/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}">
-   
-  <!-- DataTables -->
-  <link rel="stylesheet" href="bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css" th:href="@{/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css}">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/AdminLTE.min.css" th:href="@{/dist/css/AdminLTE.min.css}">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
@@ -48,7 +43,7 @@
       <ol class="breadcrumb">
         <li><a href="index.html" th:href="@{/}"><i class="fa fa-home"></i> Accueil</a></li>
         <li><a href="/salesintro"><i class="fa fa-tag"></i>Ventes</a></li>
-        <li class="active">Vente à Terme</li>
+        <li class="active">Infos Vente <span th:text="${sale.reference}"></span> VT-EBG-000000</li>
       </ol>
       
     </section>
@@ -57,52 +52,6 @@
     <!-- Main content   -->
     <section class="content">
 	    
-	    <div class="row">
-	    
-	        <div class="col-md-6">
-	
-	          <!-- Profile Image -->
-	          <div class="box box-primary">
-	            <div class="box-body box-profile">
-	            
-	              <h3 class="profile-username text-center" title="Dernier jour de vente" >Résumé</h3>
-	              <ul class="list-group list-group-unbordered">
-	                <li class="list-group-item">
-	                  <b>Date</b> <a class="pull-right">11/02/2021</a>
-	                </li>
-	                <li class="list-group-item">
-	                  <b>Produits vendus</b> 
-	                  <a class="pull-right">
-	                  	<span class="label label-success">Fer 12</span> 
-	                  	<span class="label label-success">Madriers</span>
-	                  	<span class="label label-success">Tôles</span> 
-	                  </a>
-	                </li>
-	                
-	                <li class="list-group-item">
-	                  <b>Prix total</b> <a class="pull-right">1 222 950 000 GNF</a>
-	                </li>
-	                <li class="list-group-item">
-	                  <b>Solde</b> <a class="pull-right">4 405 487 GNF</a>
-	                </li>
-	              </ul>
-	
-	            </div>
-	            <!-- /.box-body -->
-	          </div>
-	          <!-- /.box -->
-	        </div>
-	        <!-- /.col -->
-	    
-	    </div>
-
-      <!-- Alert Created -->
-      <div th:if="${saleCreated}" class="alert alert-success alert-dismissible">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <i class="icon fa fa-check"></i> 
-        La vente <b th:text="${saleCreated.reference}">MATERIEL</b> a été saisie avec succès!
-      </div>
-      
 
       <div class="row">
         <div class="col-xs-12">
@@ -113,64 +62,24 @@
               <button type="button" class="pull-right btn btn-primary" id="addproduct" data-toggle="modal" data-target="#modal-createsale">
               	Vendre <i class="fa fa-plus-circle"></i></button>
               	
-              <h3 class="box-title">Liste des ventes à terme</h3>
+              <h3 class="box-title">Vente <span th:text="${sale.reference}"></span> VTT-EBG-000000</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table id="salestable" class="table table-bordered table-striped">
-                <thead>
-                <tr>
-                  <th><i class="fa fa-calendar"></i>&nbsp;&nbsp; Date</th>
-                  <th>Référence</th>
-                  <th><i class="fa fa-product-hunt"></i>&nbsp;&nbsp; Produits</th>
-                  <th>Client / Téléphone</th>
-                  <th>Type</th>
-                  <th><i class="fa fa-money"></i>&nbsp;&nbsp;Prix U.</th>
-                  <th>Quantité</th>
-                  <th><i class="fa fa-money"></i>&nbsp;&nbsp;Montant total</th>
-                  <th>Soldé</th>
-                  <th><i class="fa fa-money"></i>&nbsp;&nbsp;Reste</th>
-                </tr>
-                </thead>
 
-                <a href="#" th:href="@{/customers/delete/{id}(id=${person.id})}" data-toggle="tooltip" data-placement="top" title="Supprimer">
 
-                <tbody>
-                 <tr th:each="sale : ${creditSales}">
-                  <td th:text="${#dates.format(sale.saleDate, 'dd/MM/yyyy')}">16/02/2013</td>
-                  <td><a href="#" th:href="@{/sales/credit/{id}(id=${sale.id})}"  th:text="${sale.reference}" >FE12</a></td>
-                  <td th:text="${sale.product.name}">FER 12</td>
-                  <td th:text="${sale.customerNameView + ' / ' + sale.customer.phone  } ">CLIENT</td>
-                  <td th:text="${sale.saleTypeView}">RETAIL</td>
-                  <td th:text="${#numbers.formatInteger(sale.unitPriceView,3,'WHITESPACE')}">8 999</td>
-                  <td th:text="${sale.quantity}">999</td>
-                  <td th:text="${#numbers.formatInteger(sale.amount,3,'WHITESPACE')}">1 999 888 777</td>
-                  <td align="center"><img src="dist/img/checked_green.png" th:src="${ (sale.paid) ? '/dist/img/checked_green.png' : '/dist/img/checked_red.png'}"  class="user-image" alt="av1 Image" height="14" data-toggle="tooltip" data-placement="top" title="Payé" th:title="${'Payé: ' +  #numbers.formatInteger(sale.balance,3,'WHITESPACE')} " /></td>
-                  <td th:text="${#numbers.formatInteger(sale.rest,3,'WHITESPACE')}">777 666</td>
-                </tr>
-                
-                </tbody>
-                <tfoot>
-                <tr>
-                  <th><i class="fa fa-calendar"></i>&nbsp;&nbsp; Date</th>
-                  <th>Référence</th>
-                  <th><i class="fa fa-product-hunt"></i>&nbsp;&nbsp; Produits</th>
-                  <th>Client</th>
-                  <th>Type</th>
-                  <th><i class="fa fa-money"></i>&nbsp;&nbsp;Prix U.</th>
-                  <th>Quantité</th>
-                  <th><i class="fa fa-money"></i>&nbsp;&nbsp;Montant total</th>
-                  <th>Soldé</th>
-                  <th><i class="fa fa-money"></i>&nbsp;&nbsp;Reste</th>
-                </tr>
-                </tfoot>
-              </table>
             </div>
             <!-- /.box-body -->
+
+
           </div>
           <!-- /.box -->
+          
         </div>
         <!-- /.col -->
+
+
+
       </div>
       <!-- /.row -->
       
@@ -283,12 +192,6 @@
 <script src="bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
-<!-- DataTables -->
-<script src="bower_components/datatables.net/js/jquery.dataTables.min.js" th:src="@{/bower_components/datatables.net/js/jquery.dataTables.min.js}"></script>
-<script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js" th:src="@{/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js}"></script>
-
-<!-- bootstrap datepicker -->
-<script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js" th:src="@{/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
 
 <!-- SlimScroll -->
 <script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js" th:src="@{/bower_components/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
@@ -302,64 +205,13 @@
 <script>
 
   $(function () {
-    $('#example1').DataTable()
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
-    })
     
-    
-    $('#salestable').DataTable({
 
-   	 "oLanguage": {
-	         	"sProcessing":     "Traitement en cours...",
-        	"sSearch":         "Rechercher&nbsp;:",
-            "sLengthMenu":     "Afficher _MENU_ &eacute;l&eacute;ments",
-        	//"sInfo":           "Affichage de _TOTAL_ &eacute;l&eacute;ments",
-        	"sInfo":           "Affichage de _START_ &agrave _END_ sur _TOTAL_ &eacute;l&eacute;ments",
-        	"sInfoEmpty":      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
-        	"sInfoFiltered":   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-        	"sInfoPostFix":    "",
-        	"sLoadingRecords": "Chargement en cours...",
-            "sZeroRecords":    "Aucun &eacute;l&eacute;ment &agrave; afficher",
-        	"sEmptyTable":     "Aucune donn&eacute;e disponible dans le tableau",
-        	"oPaginate": {
-        		"sFirst":      "Premier",
-        		"sPrevious":   "Pr&eacute;c&eacute;dent",
-        		"sNext":       "Suivant",
-        		"sLast":       "Dernier"
-        	},
-        	"oAria": {
-        		"sSortAscending":  ": activer pour trier la colonne par ordre croissant",
-        		"sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
-        	}
-         }
-
-
-        //  ,
-        //  'columnDefs': [ {
-        //   'targets': [5], /* column index */
-        //   'orderable': false /* true or false */
-        // }]
-     });
-    
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
 
-//Date picker
-    $('#datepicker').datepicker({
-      // format: 'dd/mm/yyyy',
-      language: 'fr',
-      autoclose: true
-    })
-    
-  })
 
 function find_prodprice() {
     let local_host = "http://localhost:8080"; 
