@@ -14,7 +14,6 @@ import net.hub4u.ebgsys.services.CustomerService;
 import net.hub4u.ebgsys.services.ProductService;
 import net.hub4u.ebgsys.services.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.context.LifecycleAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -123,10 +121,17 @@ public class SaleController {
         creditSale.setAmount(totalPrice);
         creditSale.setUnitPriceView(unitPrice);
 
-        BigDecimal restToPay = totalPrice.subtract(creditSale.getPayment());
-        creditSale.setRest(restToPay);
-        creditSale.setPaid( (restToPay.intValue() > 0) ? false: true );
-        creditSale.setBalance(creditSale.getPayment());
+        BigDecimal payment = creditSale.getPayment();
+        if (payment != null) {
+            BigDecimal restToPay = totalPrice.subtract(payment);
+            creditSale.setRest(restToPay);
+            creditSale.setPaid( (restToPay.intValue() > 0) ? false: true );
+            creditSale.setBalance(payment);
+        } else {
+            creditSale.setRest(totalPrice);
+            creditSale.setPaid(false);
+            creditSale.setBalance(new BigDecimal("0"));
+        }
 
         if (creditSale.getCustomer() == null) {
             log.error("createCreditSale() - Failed creating Sale. Customer CANNOT BE NULL !");
@@ -147,7 +152,6 @@ public class SaleController {
 
         model.addAttribute("saleCreated", createdSale);
 
-
         loadCreditSales(model);
 
         return "salescredit";
@@ -161,6 +165,9 @@ public class SaleController {
 
         Sale sale = saleService.fetchSale(saleId);
 
+        setCustomerNameView(sale);
+        setSaleTypeView(sale);
+
         model.addAttribute("sale", sale);
 
         // Side menu
@@ -169,6 +176,62 @@ public class SaleController {
 
 
         return "salescreditdetails";
+    }
+
+    /**
+     *
+     * */
+    @GetMapping("/invoiceprint/{saleId}")
+    public String saleInvoicePrint(@PathVariable Long saleId, Model model) {
+        // Side menu
+        model.addAttribute("sidemenuSales", true);
+        model.addAttribute("subSidemenuSalesCredit", true);
+
+        if (saleId != null) {
+
+            Sale sale = saleService.fetchSale(saleId);
+
+            setCustomerNameView(sale);
+            setSaleTypeView(sale);
+
+            model.addAttribute("sale", sale);
+
+        } else {
+
+            return "redirect:/salesintro";
+        }
+
+        return "salesinvoice_print";
+    }
+
+    /**
+     *
+     * */
+    @GetMapping("/makepayment")
+    public String makePayment(HttpServletRequest request, Model model) {
+        // TODO - Validate saleId, paymamount (integer)
+
+        String payAmountStr = request.getParameter("payamount");
+        BigDecimal payAmount = new BigDecimal(payAmountStr);
+
+        Long saleId = Long.valueOf(request.getParameter("saleId"));
+        Sale sale = saleService.fetchSale(saleId);
+        BigDecimal currentBalance = sale.getBalance().add(payAmount);
+        sale.setBalance(currentBalance);
+        sale.setRest(sale.getAmount().subtract(currentBalance));
+        if (currentBalance.compareTo(sale.getAmount()) >= 0 ) {
+
+            // OR - if (rest <= 0) ==> paid=true !!
+            sale.setPaid(true);
+        }
+
+        sale.setModificationDate(new Date());
+
+        Sale updatedSale = saleService.updateSale(sale);
+        log.info("makePayment() - Payment has been made with amount: " + payAmount);
+
+        loadCreditSales(model);
+        return "salescredit";
     }
 
 
@@ -205,18 +268,11 @@ public class SaleController {
 
         for (Sale sale: sales) {
 
-            if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.RETAIL)) {
-                sale.setSaleTypeView(SALE_TYPE_RETAIL);
-
-            } else if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.WHOLESALE)) {
-                sale.setSaleTypeView(SALE_TYPE_WHOLESALE);
-            }
+            setSaleTypeView(sale);
 
             if (sale.getSaleTxType() != null && sale.getSaleTxType().equals(SaleTxType.CASH)) {
                 cashSales.add(sale);
             }
-
-
         }
 
         model.addAttribute("cashSales", cashSales);
@@ -244,22 +300,8 @@ public class SaleController {
 
         List<Sale> creditSales = new ArrayList<>();
         for (Sale sale: sales) {
-            Customer customer = sale.getCustomer();
-            if (customer != null) {
-                if (customer.getCustomerType().equals(CustomerType.PERSON)) {
-                    sale.setCustomerNameView(customer.getLastName() + ' ' + customer.getFirstName());
-                } else {
-                    sale.setCustomerNameView(customer.getName());
-                }
-            }
-
-            if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.RETAIL)) {
-                sale.setSaleTypeView(SALE_TYPE_RETAIL);
-
-            } else if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.WHOLESALE)) {
-                sale.setSaleTypeView(SALE_TYPE_WHOLESALE);
-            }
-
+            setCustomerNameView(sale);
+            setSaleTypeView(sale);
             creditSales.add(sale);
         }
 
@@ -276,6 +318,27 @@ public class SaleController {
         // Side menu
         model.addAttribute("sidemenuSales", true);
         model.addAttribute("subSidemenuSalesCredit", true);
+    }
+
+    private void setCustomerNameView(Sale sale) {
+        Customer customer = sale.getCustomer();
+        if (customer != null) {
+            if (customer.getCustomerType().equals(CustomerType.PERSON)) {
+                sale.setCustomerNameView(customer.getLastName() + ' ' + customer.getFirstName());
+            } else {
+                sale.setCustomerNameView(customer.getName());
+            }
+        }
+    }
+
+    private void setSaleTypeView(Sale sale) {
+        if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.RETAIL)) {
+            sale.setSaleTypeView(SALE_TYPE_RETAIL);
+
+        } else if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.WHOLESALE)) {
+            sale.setSaleTypeView(SALE_TYPE_WHOLESALE);
+        }
+
     }
 
 }

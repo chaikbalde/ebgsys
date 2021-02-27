@@ -41,4 +41,30 @@ public class SaleServiceImpl implements SaleService {
         return saleRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("fetchSale() - Failed finding Sale with Id:" + id) );
     }
+
+    @Override
+    public Sale updateSale(Sale sale) {
+
+        Sale currentSale = fetchSale(sale.getId());
+        currentSale.setAmount(sale.getAmount());
+        currentSale.setBalance(sale.getBalance());
+        currentSale.setCreatedBy(sale.getCreatedBy());
+        currentSale.setCreationDate(sale.getCreationDate());
+        currentSale.setCustomer(sale.getCustomer());
+        currentSale.setCustomerName(sale.getCustomerName());
+        currentSale.setCustomerPhone(sale.getCustomerPhone());
+        currentSale.setModificationDate(sale.getModificationDate());
+        currentSale.setModifiedBy(sale.getModifiedBy());
+        currentSale.setPaid(sale.isPaid());
+        currentSale.setPayment(sale.getPayment());
+        currentSale.setProduct(sale.getProduct());
+        currentSale.setQuantity(sale.getQuantity());
+        currentSale.setReference(sale.getReference());
+        currentSale.setRest(sale.getRest());
+        currentSale.setSaleType(sale.getSaleType());
+        currentSale.setSaleTxType(sale.getSaleTxType());
+        currentSale.setSaleDate(sale.getSaleDate());
+
+        return saleRepository.save(currentSale);
+    }
 }

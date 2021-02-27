@@ -14,4 +14,6 @@ public interface SaleService {
 
     Sale fetchSale(Long id);
 
+    Sale updateSale(Sale sale);
+
 }

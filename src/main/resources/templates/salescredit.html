@@ -191,8 +191,10 @@
 				            </select>
 	                </div>
 	                <div class="form-group">
-                    <input type="text" class="form-control" id="productpriceunit" placeholder="Prix en detail" readonly="readonly" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
-                    <input type="text" class="form-control" id="productpricegross" placeholder="Prix en gros" readonly="readonly" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
+                    <input type="text" class="form-control" id="productpriceunit" placeholder="Prix en detail" readonly="readonly" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/><p id="totalprice_retail" style="width: 30%; background-color: #EEEEFE"></p>
+                    <input type="text" class="form-control" id="productpricegross" placeholder="Prix en gros" readonly="readonly" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/><p id="totalprice_gross" style="width: 30%; background-color: #EEEEFE"></p>
+                    <input type="hidden" class="form-control" id="productpriceunitraw"/>
+                    <input type="hidden" class="form-control" id="productpricegrossraw"/>
 	                </div>
 	                <div class="form-group">
 	                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="reference" placeholder="Référence" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
@@ -209,6 +211,15 @@
                     </label>
                     Vente en Gros
                   </div>
+                  
+	                <div class="form-group">
+                    <label for="quantity">Quantité</label>
+	                  <input type="text" th:field="*{quantity}" name="quantity" class="form-control" id="quantity" onchange="show_total_prices(this.value);" placeholder="Quantité" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
+	                </div>
+	                <div class="form-group">
+	                  <input type="text" th:field="*{payment}" name="payment" class="form-control" id="payment" placeholder="Acompte" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
+	                </div>
+
 		              <div class="form-group">
                     <label for="datepicker">Date de Vente</label>
 		                <div class="input-group date" style="width: 60%">
@@ -219,15 +230,7 @@
 		                  <input type="text"  th:field="*{saleDate}" class="form-control pull-right" id="datepicker" style="background-color: #DAFDED; font-weight: bold;"/>
 		                </div>
 		                <!-- /.input group -->
-
 		              </div>
-	                <div class="form-group">
-                    <label for="quantity">Quantité</label>
-	                  <input type="text" th:field="*{quantity}" name="quantity" class="form-control" id="quantity" placeholder="Quantité" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
-	                </div>
-	                <div class="form-group">
-	                  <input type="text" th:field="*{payment}" name="payment" class="form-control" id="payment" placeholder="Acompte" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
-	                </div>
 
                   <div class="form-group">
                     <label for="customer">Client</label>
@@ -236,15 +239,8 @@
                       <option th:each="cust : ${customers}" th:value="${cust.id}" th:text="${( cust.customerType == T(net.hub4u.ebgsys.entities.CustomerType).COMPANY ) ?  cust.name : cust.lastName + ' ' + cust.firstName}"></option>
                     </select>
                   </div>
-<!--   
-	                <div class="form-group">
-	                  <input type="text" th:field="*{customerName}" name="customerName" class="form-control" id="customername" placeholder="Nom Client" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
-	                </div>
-	                <div class="form-group">
-	                  <input type="text" th:field="*{customerPhone}" name="customerPhone" class="form-control" id="customerphone" placeholder="Téléphone Client" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
-	                </div>
-                   -->
 	              </div>
+                
 	              <div class="modal-footer">
 	                <button type="submit" class="btn btn-primary"  style="float: left;">Sauvegarder <i class="fa fa-check"></i> </button>
 	                <button type="reset" class="btn btn-default">Effacer <i class="fa fa-trash"></i> </button> 
@@ -371,17 +367,57 @@ function find_prodprice() {
 				  //data:'product=' + $("#product").val(),
 				  success: function(response){
             if(response !== null) {
-              var unit = response[0].toLocaleString('fr-FR');
-              var gross = response[1].toLocaleString('fr-FR');
-              $('#productpriceunit').val(unit);
-              $('#productpricegross').val(gross);
+              // var unit = response[0].toLocaleString('fr-FR');
+              // var gross = response[1].toLocaleString('fr-FR');
+              $('#productpriceunitraw').val(response[0]);
+              $('#productpricegrossraw').val(response[1]);
+              $('#productpriceunit').val(response[2]);
+              $('#productpricegross').val(response[3]);
+
+              let qty = $('#quantity').val();
+              if(qty>0) {
+                show_total_prices(qty);
+              } 
+              
             }
 				  },
 				  error: function(e){      
 				   	alert('Error while request.. : ' + e.statusText);
 				  }
 			});
+
+
 	}
+
+  function show_total_prices(value) {
+    let qty = $('#quantity').val();
+    let unitprc = $('#productpriceunitraw').val();
+    let grossprc = $('#productpricegrossraw').val();
+
+    if (qty > 0) {
+      let totalunit = unitprc * qty;
+      let totalgross = grossprc * qty;
+      document.getElementById("totalprice_retail").innerHTML = totalunit.toLocaleString('fr-FR');
+      document.getElementById("totalprice_gross").innerHTML = totalgross.toLocaleString('fr-FR');
+    } else {
+      hide();
+    }
+
+  }
+
+  function hide() {
+    let qty = $('#quantity').val();
+    alert('QTY: ' + qty)
+    alert('QTY: ' + (typeof qty) )
+    if (qty==0) {
+      document.getElementById("totalprice_retail").style.display = "none";
+      document.getElementById("totalprice_gross").style.display = "none";
+    } 
+    // else {
+    //   document.getElementById("totalprice_retail").style.display = "block";
+    //   document.getElementById("totalprice_gross").style.display = "block";
+    // }
+  }
 
 
 

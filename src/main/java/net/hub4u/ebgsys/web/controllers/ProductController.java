@@ -70,7 +70,9 @@ public class ProductController {
 
 //        return NUMBER_FORMAT.format(product.getUnitPrice()) + " | "+ NUMBER_FORMAT.format(product.getGrossPrice()) ;
 
-        return new String[] {""+NUMBER_FORMAT.format(product.getUnitPrice()), ""+NUMBER_FORMAT.format(product.getGrossPrice())} ;
+        return new String[] {""+product.getUnitPrice(), ""+product.getGrossPrice(), ""+NUMBER_FORMAT.format(product.getUnitPrice()), ""+NUMBER_FORMAT.format(product.getGrossPrice())} ;
+
+//        return new String[] {""+NUMBER_FORMAT.format(product.getUnitPrice()), ""+NUMBER_FORMAT.format(product.getGrossPrice())} ;
     }
 
 
