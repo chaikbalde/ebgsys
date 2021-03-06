@@ -40,6 +40,29 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product fetchProduct(Long id) {
         return productRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("fetchProduct() - Failed finding Product with Id:" + id) );
+                () -> new IllegalArgumentException("fetchProduct() - Failed finding Product with Id: " + id) );
+    }
+
+    @Override
+    public Product fetchProductByReference(String reference) {
+        return productRepository.findByReference(reference).orElseThrow(
+                () -> new IllegalArgumentException("fetchProductByReference() - Failed finding Product with reference: " + reference) );
+    }
+
+    @Override
+    public Product updateProduct(Product product) {
+
+        Product currentProduct = fetchProduct(product.getId());
+
+        currentProduct.setReference(product.getReference());
+        currentProduct.setCost(product.getCost());
+        currentProduct.setSaleProducts(product.getSaleProducts());
+        currentProduct.setDescription(product.getDescription());
+        currentProduct.setGrossPrice(product.getGrossPrice());
+        currentProduct.setName(product.getName());
+        currentProduct.setUnitPrice(product.getUnitPrice());
+        currentProduct.setNextReferenceView(product.getNextReferenceView());
+
+        return productRepository.save(currentProduct);
     }
 }

@@ -56,12 +56,12 @@ public class SaleServiceImpl implements SaleService {
         currentSale.setModificationDate(sale.getModificationDate());
         currentSale.setModifiedBy(sale.getModifiedBy());
         currentSale.setPaid(sale.isPaid());
-        currentSale.setPayment(sale.getPayment());
-        currentSale.setProduct(sale.getProduct());
-        currentSale.setQuantity(sale.getQuantity());
+        currentSale.setPaidAmount(sale.getPaidAmount());
+        currentSale.setSaleProducts(sale.getSaleProducts());
+//        currentSale.setQuantity(sale.getQuantity());
         currentSale.setReference(sale.getReference());
         currentSale.setRest(sale.getRest());
-        currentSale.setSaleType(sale.getSaleType());
+//        currentSale.setSaleType(sale.getSaleType());
         currentSale.setSaleTxType(sale.getSaleTxType());
         currentSale.setSaleDate(sale.getSaleDate());
 

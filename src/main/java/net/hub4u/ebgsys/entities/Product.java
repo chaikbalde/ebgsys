@@ -34,7 +34,7 @@ public class Product {
     BigDecimal cost;
 
     @OneToMany(mappedBy = "product")
-    List<Sale> sales = new ArrayList<>();
+    List<SaleProduct> saleProducts = new ArrayList<>();
 
     // Transient fields for the view
     @Transient

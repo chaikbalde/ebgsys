@@ -1,14 +1,19 @@
 package net.hub4u.ebgsys.web.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import net.hub4u.ebgsys.entities.Customer;
 import net.hub4u.ebgsys.entities.CustomerType;
+import net.hub4u.ebgsys.entities.Payment;
 import net.hub4u.ebgsys.entities.Product;
 import net.hub4u.ebgsys.entities.Sale;
+import net.hub4u.ebgsys.entities.SaleProduct;
 import net.hub4u.ebgsys.entities.SaleTxType;
 import net.hub4u.ebgsys.entities.SaleType;
+import net.hub4u.ebgsys.entities.ShopCartItem;
 import net.hub4u.ebgsys.frwk.EbgSysUtils;
 import net.hub4u.ebgsys.services.CustomerService;
 import net.hub4u.ebgsys.services.ProductService;
@@ -22,12 +27,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Controller
@@ -64,31 +74,31 @@ public class SaleController {
             log.error("createCashSale() -  Failed processing form. Errors: " + bindingResult.getAllErrors());
         }
 
-        cashSale.setReference(cashSale.getNextReferenceView());
-
-        Date saleDt = cashSale.getSaleDate();
-
-        if (cashSale.getProduct() == null) {
-            log.error("createCashSale() - Failed creating Sale. Product is CANNOT BE NULL !");
-            loadCashSales(model);
-            return "salescash";
-        }
-
-        long prodId = cashSale.getProduct().getId();
-        Product product = productService.fetchProduct(prodId);
-        product.getSales().add(cashSale);
-        cashSale.setProduct(product);
-
-        BigDecimal unitPrice = retrieveUnitPrice(cashSale, product);
-
-        BigDecimal totalPrice = unitPrice.multiply(new BigDecimal(cashSale.getQuantity()));
-        cashSale.setAmount(totalPrice);
-
-        cashSale.setUnitPriceView(unitPrice);
-
-        cashSale.setSaleTxType(SaleTxType.CASH);
-        Sale createdSale = saleService.createSale(cashSale);
-        log.info("createCashSale() - Created sale '"+createdSale.getReference()+"' with Id '"+createdSale.getId()+"'");
+//        cashSale.setReference(cashSale.getNextReferenceView());
+//
+//        Date saleDt = cashSale.getSaleDate();
+//
+//        if (cashSale.getProduct() == null) {
+//            log.error("createCashSale() - Failed creating Sale. Product is CANNOT BE NULL !");
+//            loadCashSales(model);
+//            return "salescash";
+//        }
+//
+//        long prodId = cashSale.getProduct().getId();
+//        Product product = productService.fetchProduct(prodId);
+//        product.getSales().add(cashSale);
+//        cashSale.setProduct(product);
+//
+//        BigDecimal unitPrice = retrieveUnitPrice(cashSale, product);
+//
+//        BigDecimal totalPrice = unitPrice.multiply(new BigDecimal(cashSale.getQuantity()));
+//        cashSale.setAmount(totalPrice);
+//
+//        cashSale.setUnitPriceView(unitPrice);
+//
+//        cashSale.setSaleTxType(SaleTxType.CASH);
+//        Sale createdSale = saleService.createSale(cashSale);
+//        log.info("createCashSale() - Created sale '"+createdSale.getReference()+"' with Id '"+createdSale.getId()+"'");
 
         loadCashSales(model);
 
@@ -98,40 +108,17 @@ public class SaleController {
     ////////////////////////////////////////  START
 
     @PostMapping("/createcreditsale")
-    public String createCreditSale(@ModelAttribute Sale creditSale,  BindingResult bindingResult, Model model) {
+    public String createCreditSale(@ModelAttribute Sale creditSale,  BindingResult bindingResult, Model model, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             log.error("createCreditSale() -  Failed processing form. Errors: " + bindingResult.getAllErrors());
-        }
-
-        creditSale.setReference(creditSale.getNextReferenceView());
-
-        if (creditSale.getProduct() == null) {
-            log.error("createCreditSale() - Failed creating Sale. Product CANNOT BE NULL !");
             loadCreditSales(model);
             return "salescredit";
         }
 
-        long prodId = creditSale.getProduct().getId();
-        Product product = productService.fetchProduct(prodId);
-        product.getSales().add(creditSale);
-        creditSale.setProduct(product);
+        // [1] Get Sale Meta:
+        // REF, [Date], Customer, Total_amount, Rest_2_pay, Paid:?
 
-        BigDecimal unitPrice = retrieveUnitPrice(creditSale, product);
-        BigDecimal totalPrice = unitPrice.multiply(new BigDecimal(creditSale.getQuantity()));
-        creditSale.setAmount(totalPrice);
-        creditSale.setUnitPriceView(unitPrice);
-
-        BigDecimal payment = creditSale.getPayment();
-        if (payment != null) {
-            BigDecimal restToPay = totalPrice.subtract(payment);
-            creditSale.setRest(restToPay);
-            creditSale.setPaid( (restToPay.intValue() > 0) ? false: true );
-            creditSale.setBalance(payment);
-        } else {
-            creditSale.setRest(totalPrice);
-            creditSale.setPaid(false);
-            creditSale.setBalance(new BigDecimal("0"));
-        }
+        creditSale.setReference(creditSale.getNextReferenceView());
 
         if (creditSale.getCustomer() == null) {
             log.error("createCreditSale() - Failed creating Sale. Customer CANNOT BE NULL !");
@@ -144,6 +131,55 @@ public class SaleController {
         customer.getSales().add(creditSale);
         creditSale.setCustomer(customer);
 
+        // [2] Get CartContent:
+        // Products:
+        // id, name, reference, unit_price, sale_type, qty, sub_total
+
+        BigDecimal totalAmount = new BigDecimal("0");
+
+        List<ShopCartItem> cartItems = (List<ShopCartItem>) request.getSession().getAttribute(EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_SELL);
+        for (ShopCartItem cartItem: cartItems) {
+            Product product = productService.fetchProductByReference(cartItem.getProductReference());
+
+            SaleProduct saleProduct = new SaleProduct();
+            saleProduct.setSaleType(cartItem.getSaleType());
+            saleProduct.setSubTotalPrice(cartItem.getTotalPrice());
+            saleProduct.setQuantity(cartItem.getQuantity());
+            saleProduct.setUnitPrice(cartItem.getUnitPrice());
+
+
+            product.getSaleProducts().add(saleProduct);
+            saleProduct.setProduct(product);
+//            productService.updateProduct(product);
+            creditSale.getSaleProducts().add(saleProduct);
+            saleProduct.setSale(creditSale);
+
+            totalAmount = totalAmount.add(cartItem.getTotalPrice());
+
+        }
+
+        creditSale.setAmount(totalAmount);
+
+        BigDecimal paidAmount = creditSale.getPaidAmount();
+        if (paidAmount != null) {
+            Payment payment = new Payment();
+            payment.setAmount(paidAmount);
+            payment.setPayDate(creditSale.getSaleDate());
+
+            payment.setSale(creditSale);
+            creditSale.getPayments().add(payment);
+
+            BigDecimal restToPay = totalAmount.subtract(paidAmount);
+            creditSale.setRest(restToPay);
+            creditSale.setPaid( (restToPay.intValue() > 0) ? false: true );
+            creditSale.setBalance(paidAmount);
+        } else {
+            creditSale.setRest(totalAmount);
+            creditSale.setPaid(false);
+            creditSale.setBalance(new BigDecimal("0"));
+        }
+
+
         creditSale.setSaleTxType(SaleTxType.CREDIT);
         creditSale.setCreationDate(new Date());
 
@@ -152,10 +188,84 @@ public class SaleController {
 
         model.addAttribute("saleCreated", createdSale);
 
+        // clear the shopping cart session
+        request.getSession().removeAttribute(EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_SELL);
+
         loadCreditSales(model);
+
 
         return "salescredit";
     }
+
+
+
+
+//    @PostMapping("/createcreditsale_prev")
+//    public String createCreditSale_prev(@ModelAttribute Sale creditSale,  BindingResult bindingResult, Model model) {
+//        if (bindingResult.hasErrors()) {
+//            log.error("createCreditSale() -  Failed processing form. Errors: " + bindingResult.getAllErrors());
+//        }
+//
+//        creditSale.setReference(creditSale.getNextReferenceView());
+//
+//        if (creditSale.getProduct() == null) {
+//            log.error("createCreditSale() - Failed creating Sale. Product CANNOT BE NULL !");
+//            loadCreditSales(model);
+//            return "salescredit";
+//        }
+//
+//        long prodId = creditSale.getProduct().getId();
+//        Product product = productService.fetchProduct(prodId);
+//        product.getSales().add(creditSale);
+//        creditSale.setProduct(product);
+//
+//        BigDecimal unitPrice = retrieveUnitPrice(creditSale, product);
+//        BigDecimal totalPrice = unitPrice.multiply(new BigDecimal(creditSale.getQuantity()));
+//        creditSale.setAmount(totalPrice);
+//        creditSale.setUnitPriceView(unitPrice);
+//
+//        BigDecimal paidAmount = creditSale.getPaidAmount();
+//        if (paidAmount != null) {
+//            Payment payment = new Payment();
+//            payment.setAmount(paidAmount);
+//            payment.setPayDate(creditSale.getSaleDate());
+//
+//            payment.setSale(creditSale);
+//            creditSale.getPayments().add(payment);
+//
+//            BigDecimal restToPay = totalPrice.subtract(paidAmount);
+//            creditSale.setRest(restToPay);
+//            creditSale.setPaid( (restToPay.intValue() > 0) ? false: true );
+//            creditSale.setBalance(paidAmount);
+//        } else {
+//            creditSale.setRest(totalPrice);
+//            creditSale.setPaid(false);
+//            creditSale.setBalance(new BigDecimal("0"));
+//        }
+//
+//        if (creditSale.getCustomer() == null) {
+//            log.error("createCreditSale() - Failed creating Sale. Customer CANNOT BE NULL !");
+//            loadCreditSales(model);
+//            return "salescredit";
+//        }
+//
+//        long customerId = creditSale.getCustomer().getId();
+//        Customer customer = customerService.fetchCustomer(customerId);
+//        customer.getSales().add(creditSale);
+//        creditSale.setCustomer(customer);
+//
+//        creditSale.setSaleTxType(SaleTxType.CREDIT);
+//        creditSale.setCreationDate(new Date());
+//
+//        Sale createdSale = saleService.createSale(creditSale);
+//        log.info("createCreditSale() - Created sale '"+createdSale.getReference()+"' with Id '"+createdSale.getId()+"'");
+//
+//        model.addAttribute("saleCreated", createdSale);
+//
+//        loadCreditSales(model);
+//
+//        return "salescredit";
+//    }
 
     /**
      *
@@ -166,14 +276,16 @@ public class SaleController {
         Sale sale = saleService.fetchSale(saleId);
 
         setCustomerNameView(sale);
-        setSaleTypeView(sale);
+//        setSaleTypeView(sale);
+
+//        BigDecimal unitPrice = retrieveUnitPrice(sale, sale.getProduct());
+//        sale.setUnitPriceView(unitPrice);
 
         model.addAttribute("sale", sale);
 
         // Side menu
         model.addAttribute("sidemenuSales", true);
         model.addAttribute("subSidemenuSalesCredit", true);
-
 
         return "salescreditdetails";
     }
@@ -190,10 +302,7 @@ public class SaleController {
         if (saleId != null) {
 
             Sale sale = saleService.fetchSale(saleId);
-
             setCustomerNameView(sale);
-            setSaleTypeView(sale);
-
             model.addAttribute("sale", sale);
 
         } else {
@@ -211,43 +320,123 @@ public class SaleController {
     public String makePayment(HttpServletRequest request, Model model) {
         // TODO - Validate saleId, paymamount (integer)
 
-        String payAmountStr = request.getParameter("payamount");
-        BigDecimal payAmount = new BigDecimal(payAmountStr);
+        String paidAmountStr = request.getParameter("payamount");
+        BigDecimal paidAmount = new BigDecimal(paidAmountStr);
 
         Long saleId = Long.valueOf(request.getParameter("saleId"));
         Sale sale = saleService.fetchSale(saleId);
-        BigDecimal currentBalance = sale.getBalance().add(payAmount);
+        BigDecimal currentBalance = sale.getBalance().add(paidAmount);
         sale.setBalance(currentBalance);
         sale.setRest(sale.getAmount().subtract(currentBalance));
         if (currentBalance.compareTo(sale.getAmount()) >= 0 ) {
-
             // OR - if (rest <= 0) ==> paid=true !!
             sale.setPaid(true);
         }
 
+        Payment payment = new Payment();
+        payment.setAmount(paidAmount);
+        payment.setPayDate(new Date());
+        payment.setSale(sale);
+        sale.getPayments().add(payment);
+
         sale.setModificationDate(new Date());
 
-        Sale updatedSale = saleService.updateSale(sale);
-        log.info("makePayment() - Payment has been made with amount: " + payAmount);
+        saleService.updateSale(sale);
+        log.info("makePayment() - Payment has been made with amount: " + paidAmount);
+
+        model.addAttribute("madePayment", payment);
 
         loadCreditSales(model);
+
         return "salescredit";
     }
 
+    /**
+     *				  data:"prodId=" + prodId + '&saleType=' + saleType + '&qty=' + qty,
+     * */
+    @GetMapping("/add2cart/{productId}")
+    public @ResponseBody String addToCart(
+            @PathVariable Long productId,
+            @RequestParam String cartType,
+            @RequestParam String saleType,
+            @RequestParam Integer qty,
+            HttpServletRequest request) {
 
-    ////////////////////////////////////////  END
+        Product product = productService.fetchProduct(productId);
+        log.debug("addToCart() - Adding Product '"+product.getName()+"' to Cart");
 
-    //
-    private BigDecimal retrieveUnitPrice(Sale sale, Product product) {
-        BigDecimal unitPrice = BigDecimal.ZERO;
-        if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.RETAIL)) {
-            unitPrice = product.getUnitPrice();
-        } else  if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.WHOLESALE)) {
-            unitPrice = product.getGrossPrice();
+        List<ShopCartItem> cartItems = null;
+        if (EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_SELL.equals(cartType)) {
+            cartItems = (List<ShopCartItem>) request.getSession().getAttribute(EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_SELL);
+        } else {
+            cartItems = (List<ShopCartItem>) request.getSession().getAttribute(EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_BUY);
         }
 
-        return unitPrice;
+        if (cartItems == null) {
+            cartItems = new ArrayList<ShopCartItem>();
+            ShopCartItem item = buildCartItem(product, saleType, qty);
+            cartItems.add(item);
+
+            if (EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_SELL.equals(cartType)) {
+                request.getSession().setAttribute(EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_SELL, cartItems);
+            } else {
+                request.getSession().setAttribute(EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_BUY, cartItems);
+            }
+
+        }  else {
+            ShopCartItem item = buildCartItem(product, saleType, qty);
+            cartItems.add(item);
+        }
+
+        String itemsListAsjson = "";
+        try {
+            itemsListAsjson  = new ObjectMapper().writeValueAsString(cartItems);
+            log.debug("addToCart() - itemsListAsjson: \n" + itemsListAsjson) ;
+
+        } catch (JsonProcessingException e) {
+            log.error(">>> ERROR - Failed getting JSON object from Java List: " + cartItems);
+        }
+
+        return itemsListAsjson;
+
     }
+
+    /**
+     *
+     * */
+    static final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance(new Locale("fr", "FR"));
+
+    /**
+     *
+     * */
+    private ShopCartItem buildCartItem(Product product, String saleType, int quantity) {
+        ShopCartItem cartItem = new ShopCartItem();
+        cartItem.setProductName(product.getName());
+        cartItem.setProductReference(product.getReference());
+        cartItem.setSaleType(saleType.equals("RETAIL") ? SaleType.RETAIL : SaleType.WHOLESALE);
+        cartItem.setUnitPrice(saleType.equals("RETAIL") ? product.getUnitPrice() : product.getGrossPrice());
+        cartItem.setQuantity(quantity);
+
+        BigDecimal totalPrice = cartItem.getUnitPrice().multiply(new BigDecimal(quantity));
+        cartItem.setTotalPrice(totalPrice);
+
+        return cartItem;
+
+    }
+
+        ////////////////////////////////////////  END
+
+//    //
+//    private BigDecimal retrieveUnitPrice(Sale sale, Product product) {
+//        BigDecimal unitPrice = BigDecimal.ZERO;
+//        if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.RETAIL)) {
+//            unitPrice = product.getUnitPrice();
+//        } else  if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.WHOLESALE)) {
+//            unitPrice = product.getGrossPrice();
+//        }
+//
+//        return unitPrice;
+//    }
 
     //
     private void loadSales(Model model) {
@@ -268,8 +457,6 @@ public class SaleController {
 
         for (Sale sale: sales) {
 
-            setSaleTypeView(sale);
-
             if (sale.getSaleTxType() != null && sale.getSaleTxType().equals(SaleTxType.CASH)) {
                 cashSales.add(sale);
             }
@@ -281,7 +468,6 @@ public class SaleController {
         // For the Creation Form
         model.addAttribute("productsForm", productService.fetchAllProducts());
         Sale cashSaleForm = new Sale();
-        cashSaleForm.setSaleType(SaleType.RETAIL);
         String nextRef = EbgSysUtils.retrieveNextReference("VTC-EBG-", 7, cashSales.stream().map(s -> s.getReference()).collect(Collectors.toList()));
         cashSaleForm.setNextReferenceView(nextRef);
         model.addAttribute("cashSale", cashSaleForm);
@@ -292,6 +478,9 @@ public class SaleController {
 
     }
 
+    /**
+     *
+     * */
     private void loadCreditSales(Model model) {
         List<Sale> sales = saleService.fetchAllSales()
                 .stream()
@@ -301,16 +490,21 @@ public class SaleController {
         List<Sale> creditSales = new ArrayList<>();
         for (Sale sale: sales) {
             setCustomerNameView(sale);
-            setSaleTypeView(sale);
             creditSales.add(sale);
         }
 
+        Sale maxCreditSale = creditSales
+                .stream()
+                .max(Comparator.comparing(Sale::getReference))
+                .orElse(new Sale());
+        setCustomerNameView(maxCreditSale);
+
         model.addAttribute("creditSales", creditSales);
+        model.addAttribute("maxCreditSale", maxCreditSale);
         model.addAttribute("customers", customerService.fetchAllCustomers());
 
         model.addAttribute("productsForm", productService.fetchAllProducts());
         Sale creditSale = new Sale();
-        creditSale.setSaleType(SaleType.RETAIL);
         String nextRef = EbgSysUtils.retrieveNextReference("VTT-EBG-", 7, creditSales.stream().map(s -> s.getReference()).collect(Collectors.toList()));
         creditSale.setNextReferenceView(nextRef);
         model.addAttribute("creditSale", creditSale);
@@ -329,16 +523,6 @@ public class SaleController {
                 sale.setCustomerNameView(customer.getName());
             }
         }
-    }
-
-    private void setSaleTypeView(Sale sale) {
-        if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.RETAIL)) {
-            sale.setSaleTypeView(SALE_TYPE_RETAIL);
-
-        } else if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.WHOLESALE)) {
-            sale.setSaleTypeView(SALE_TYPE_WHOLESALE);
-        }
-
     }
 
 }

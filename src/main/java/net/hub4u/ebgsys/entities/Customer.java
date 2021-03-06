@@ -15,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 
@@ -45,12 +44,12 @@ public class Customer {
     String email;
     String webSite;
 
+    @OneToMany(mappedBy = "customer")
+    List<Sale> sales = new ArrayList<>();
+
     // Transient fields for the view
     @Transient
     String nextReferenceView;
-
-    @OneToMany(mappedBy = "customer")
-    List<Sale> sales = new ArrayList<>();
 
     public Customer(String name, String reference, String address, String phone) {
         this.name = name;

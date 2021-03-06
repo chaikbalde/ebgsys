@@ -6,6 +6,11 @@ import java.util.stream.Collectors;
 
 public class EbgSysUtils {
 
+
+    public static final String SESSION_SHOPPING_CART_PREFIX_BUY = "ShoppingCartBuy";
+
+    public static final String SESSION_SHOPPING_CART_PREFIX_SELL = "ShoppingCartSell";
+
     /**
      * Retrieves the next reference of an Entity based on its prefix and the previous references
      * */

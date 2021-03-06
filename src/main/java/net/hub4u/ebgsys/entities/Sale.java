@@ -7,18 +7,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
-@Data
 @Entity
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -30,28 +35,39 @@ public class Sale {
 
     Date saleDate;
     BigDecimal amount;
-    SaleType saleType;
+
+//        SaleType saleType;
+
     SaleTxType saleTxType;
-    int quantity;
+//    int quantity;
 
     // Calculated fields
     boolean paid;
     BigDecimal rest;
     BigDecimal balance;
-    BigDecimal payment;
+    BigDecimal paidAmount;
 
     Date creationDate;
     String createdBy;
     Date modificationDate;
     String modifiedBy;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    Product product;
+//    @ManyToOne
+//    @JoinColumn(name = "product_id")
+//    Product product;
+
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
+    List<SaleProduct> saleProducts = new ArrayList<>();
+
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
+    //@JoinColumn(name = "customer_id")
     Customer customer;
+
+
+
+    @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
+    List<Payment> payments = new ArrayList<>();
 
     String customerName;
     String customerPhone;

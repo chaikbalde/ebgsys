@@ -59,8 +59,8 @@
 
           <div class="box">
             <div class="box-header">
-              <!-- <button class="label-primary" style="float: right;"><i class="fa fa-print"></i>&nbsp;&nbsp; Imprimer</button> -->
-              <a href="invoice-print.html" th:href="@{/sales/invoiceprint/{id}(id=${sale.id})}" target="_blank" class="btn btn-default" style="float: right;"><i class="fa fa-print"></i> Imprimer</a>
+              <!-- <button class="label-primary" style="float: right;"><i class="fa fa-print"></i>&nbsp;&nbsp; Imprimer</button> --> <!-- fa fa-print -->
+              <a href="invoice-print.html" th:href="@{/sales/invoiceprint/{id}(id=${sale.id})}" target="_blank" class="btn btn-default" style="float: right;"><i class="fa fa-file-text"></i> Facture</a>
               Informations sur la vente <b th:text="${sale.reference}">SALE.REF</b> pour le client <b th:text="${sale.customerNameView}">CUSTOMER.NAME</b>  
             </div>
             <!-- /.box-header -->
@@ -73,24 +73,24 @@
       
 
       <div class="row">
-        <div class="col-md-6">
-          <div class="box box-solid">
-            <div class="box-header with-border">
+        <div class="col-md-4">
+          <div class="box">
+            <div class="box-header">
               <!-- <i class="fa fa-text-width"></i> -->
 
-              <h3>Vente</h3>
+              <h4>Vente</h4>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
               <dl class="dl-horizontal">
-                <dt style="background-color: #EFEFFE;">Date de vente</dt>
-                <dd th:text="${#dates.format(sale.saleDate, 'dd/MM/yyyy')}">18/02/2021</dd>
-                <dt>Référence de vente</dt>
+                <dt style="background-color: #EFEFFE;">Référence</dt>
                 <dd th:text="${sale.reference}">VTC-EBG-000000</dd>
+                <dt>Date de vente</dt>
+                <dd th:text="${#dates.format(sale.saleDate, 'dd/MM/yyyy')}">18/02/2021</dd>
                 <dt style="background-color: #EFEFFE;">Client</dt>
                 <dd><b th:text="${sale.customerNameView}">Chaikou Sylla</b> </dd>
                 <dd th:text="${'Tel: ' + sale.customer.phone}">Tel: 622 63 01 23 </dd>
-                <dd th:text="${'Email: ' + sale.customer.email}">Email: cbalde@gmail.com</dd>
+                <dd th:if="${sale.customer.email}"  th:text="${'Email: ' + sale.customer.email}">Email: cbalde@gmail.com</dd>
                 <dt style="background-color: #EFEFFE;">Date de saisie</dt>
                 <dd th:text="${#dates.format(sale.creationDate, 'dd/MM/yyyy HH:mm')}">22/02/2021</dd>
               </dl>
@@ -100,48 +100,110 @@
           <!-- /.box -->
         </div>
         <!-- ./col -->
-        <div class="col-md-6">
-          <div class="box box-solid">
-            <div class="box-header with-border">
-              <!-- <i class="fa fa-text-width"></i> -->
 
-              <h3>Produits / Transaction</h3>
+        <div class="col-md-4">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Produits</h3>
             </div>
             <!-- /.box-header -->
-            <div class="box-body">
-              <dl class="dl-horizontal">
-                <dt style="background-color: #EFEFFE;">Produits	achetés</dt>
-                <dd th:text="${sale.product.name}">Cloud 21 (5 En Gros)</dd>
-                <!-- <dd>Arrache clouds (2 En Details)</dd> -->  
-                <dt>Type	de transaction</dt>
-                <dd th:text="${sale.saleTypeView}">En Gros</dd>
-                <dt style="background-color: #EFEFFE;">Prix Unitaire</dt>
-                <dd th:text="${#numbers.formatInteger(sale.unitPriceView,3,'WHITESPACE')}">200 000</dd>
-                <dt>Quantité</dt>
-                <dd th:text="${sale.quantity}">10</dd>
-                <dt style="background-color: #EFEFFE;">Montant total</dt>
-                <dd th:text="${#numbers.formatInteger(sale.amount,3,'WHITESPACE')}">2 000 000</dd>
-                <dt>Soldé</dt>
-                <dd th:text="${sale.paid}">Non</dd>
-                <dt style="background-color: #EFEFFE;">Paiements</dt>
-                <dd th:text="${#numbers.formatInteger(sale.balance,3,'WHITESPACE')}">1 000 000  (18/02/2021) </dd>
-                <!-- <dd>500 000  (18/02/2021) </dd> -->
-                <dt>Reste</dt>
-                <dd th:text="${#numbers.formatInteger(sale.rest,3,'WHITESPACE')}">500 000</dd>
-                <dt style="background-color: #EFEFFE;" th:if="${sale.rest > 0 }" >Payer</dt>
-                <dd th:if="${sale.rest > 0 }" >
-                  <form role="form" action="#" th:action="@{/sales/makepayment}" >
-                    <input type="text" name="payamount"> <button type="submit">Payer</button> 
-                    <input type="hidden" name="saleId" th:value="${sale.id}">
-                  </form>
-                </dd>
-              </dl>
+            <div class="box-body no-padding">
+              <table class="table table-condensed">
+                <tr>
+                  <th style="width: 10px">#</th>
+                  <th>Produit</th>
+                  <th>Prix U.</th>
+                  <th>Qté</th>
+                  <th>Sous total</th>
+                </tr>
+                <tr th:each="sp,iterStat : ${sale.saleProducts} " th:class="${iterStat.odd} ? 'odd'">
+                  <td th:text="${iterStat.index+1 + '.'}">1.</td>
+                  <td><span class="badge bg-light-blue" th:text="${sp.product.name}">Fer 21</span></td>
+                  <td th:text="${#numbers.formatInteger(sp.unitPrice,3,'WHITESPACE')}">12 000 (En Détail) </td>
+                  <td th:text="${sp.quantity}">5</td>
+                  <td><b th:text="${#numbers.formatInteger(sp.subTotalPrice,3,'WHITESPACE')}">60 000</b></td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </table>
             </div>
             <!-- /.box-body -->
           </div>
-          <!-- /.box -->
+          <!-- /.box -->          
         </div>
         <!-- ./col -->
+
+
+        <div class="col-md-4">
+          <div class="box box-solid">
+            <div class="box-header">
+              <h4>Transactions <span style="float: right;"><img src="dist/img/checked_green.png" th:src="${ (sale.paid) ? '/dist/img/checked_green.png' : '/dist/img/checked_red.png'}"  class="user-image" alt="av1 Image" height="14" data-toggle="tooltip" data-placement="top" title="Payé" th:title="${'Payé: ' +  #numbers.formatInteger(sale.balance,3,'WHITESPACE')} " /></span> </h4>
+            </div>
+
+            <div class="box-body">
+              <dl class="dl-horizontal">
+
+                <dt  style="background-color: #EFEFFE; width: 35%;">Montant total</dt>
+                  <dd><b th:text="${#numbers.formatInteger(sale.amount,3,'WHITESPACE')}">50 500 000</b></dd>
+                <dt style="width: 35%;">Paiements</dt>
+                  <dd th:each="pay : ${sale.payments}" th:text="${#numbers.formatInteger(pay.amount,3,'WHITESPACE') + '&nbsp;&nbsp; (' + #dates.format(pay.payDate, 'dd/MM/yyyy - HH:mm') + ')'}">40 000 000  (02/03/2020) </dd>
+
+                <dt style="background-color: #EFEFFE; width: 35%;">Reste</dt>
+                  <dd><b style="color: red;" th:text="${#numbers.formatInteger(sale.rest,3,'WHITESPACE')}">10 000 000 </b></dd>
+
+                <dt style="width: 35%;">Payer</dt>
+                  <dd>
+                    <form role="form" action="#" th:action="@{/sales/makepayment}">
+                      <input type="text" name="payamount"/> <button type="submit">Payer</button> 
+                      <input type="hidden" name="saleId" th:value="${sale.id}"/>
+                    </form>
+                  </dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+
+<!-- 
+        <div class="col-md-4">
+          <div class="box box-solid">
+            <div class="box-header">
+              <h4>Transactions <span style="float: right;"><img src="dist/img/checked_green.png" th:src="${ (sale.paid) ? '/dist/img/checked_green.png' : '/dist/img/checked_red.png'}"  class="user-image" alt="av1 Image" height="14" data-toggle="tooltip" data-placement="top" title="Payé" th:title="${'Payé: ' +  #numbers.formatInteger(sale.balance,3,'WHITESPACE')} " /></span> </h4>
+            </div>
+
+            <div class="box-body">
+              <dl class="dl-horizontal">
+
+                <dt  style="background-color: #EFEFFE; width: 35%;">Montant total</dt>
+                  <dd>50 500 000</dd>
+
+                <dt style="width: 35%;">Paiements</dt>
+                  <dd>40 000 000  (02/03/2020) </dd>
+                  <dd>500 000 (10/03/2020) </dd>
+                  <dd>80 000 (15/03/2020) </dd>
+
+                  <dt  style="background-color: #EFEFFE; width: 35%;">Reste</dt>
+                    <dd>10 000 000</dd>
+
+                  <dt style="background-color: #EFEFFE;" width: 35%;>Payer</dt>
+                  <dd>
+                    <form role="form" action="#" th:action="@{/sales/makepayment}" >
+                      <input type="text" name="payamount"> <button type="submit">Payer</button> 
+                      <input type="hidden" name="saleId" />
+                    </form>
+                  </dd>
+
+                  
+              </dl>
+            </div>
+          </div>
+        </div>
+ -->
+
       </div>
       <!-- /.row -->              
 
