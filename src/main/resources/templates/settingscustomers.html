@@ -69,7 +69,7 @@
       <div th:if="${customerCreated}" class="alert alert-success alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <i class="icon fa fa-check"></i> 
-        Le client <b th:text="${customerCreated.customerNameView + ' | ' + customerCreated.customerCreated.reference}">BMW</b> a été ajouté avec succès!
+        Le client <b th:text="${customerCreated.customerNameView + ' | ' + customerCreated.reference}">BMW</b> a été ajouté avec succès!
       </div>
 
       <!-- Alert Updated -->
