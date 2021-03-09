@@ -69,8 +69,16 @@
       <div th:if="${customerCreated}" class="alert alert-success alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <i class="icon fa fa-check"></i> 
-        Le client <b th:text=${customerCreated.reference}>BMW</b> a été ajouté avec succès!
+        Le client <b th:text="${customerCreated.customerNameView + ' | ' + customerCreated.customerCreated.reference}">BMW</b> a été ajouté avec succès!
       </div>
+
+      <!-- Alert Updated -->
+      <div th:if="${customerUpdated}" class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <i class="icon fa fa-check"></i> 
+        Le client <b th:text="${customerUpdated.customerNameView + ' | ' + customerUpdated.reference}">BMW</b> a été modifié avec succès!
+      </div>
+
       <!-- Alert Deleted -->
       <div th:if="${customerDeleted}" class="alert alert-danger alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -100,19 +108,19 @@
                   <th><i class="fa fa-gear"></i> Action</th>
                 </tr>
                 </thead>
-                
+                        
                 <tbody>
-                  <tr th:each="person : ${persons}">
+                  <tr th:each="person : ${persons}" th:with="edit_person_params=${person.reference} + '/' + ${person.firstName} + '/' + ${person.lastName} + '/' + ${person.address} + '/' + ${person.phone} + '/' + ${person.email}">
                     <td th:text="${person.reference}">CLEBG00267</td>
                     <td th:text="${person.lastName + ' ' + person.firstName}">Bah Mamadou Saliou</td>
                     <td th:text="${person.phone}">624 58 56 69</td>
                     <td align="center">
-                      <a href="#" data-toggle="tooltip" data-placement="top" title="Editer" style="margin-right: 20px;"><i class="fa fa-pencil-square-o"></i></a> 
-                      <!-- <a href="#" title="Supprimer ce client "><i class="fa fa-trash"></i></a>  -->
+                      <a href="#modal-editperson" data-toggle="modal" th:attr="data-id=${edit_person_params}" class="open-EditPersonDialog"  title="Editer" style="margin-right: 20px;"><i class="fa fa-pencil-square-o"></i></a> 
                       <a href="#" th:href="@{/customers/delete/{id}(id=${person.id})}" data-toggle="tooltip" data-placement="top" title="Supprimer"><i class="fa fa-trash"></i></a> 
                     </td>
                   </tr>
                 </tbody>
+
                 <tfoot>
                   <tr>
                     <th>Référence</th>
@@ -152,14 +160,14 @@
                 <th align="center"><i class="fa fa-gear"></i> Action</th>
               </tr>
               </thead>              
+              
               <tbody>
-              <tr th:each="company : ${companies} ">
+              <tr th:each="company : ${companies} " th:with="edit_comp_params=${company.reference} + '/' + ${company.name} + '/' + ${company.address} + '/' + ${company.phone} + '/' + ${company.email} + '/' + ${company.webSite}">
                 <td th:text="${company.reference}">CLEBG00234</td>
                 <td th:text="${company.name}">TAFAGUI</td>
                 <td th:text="${company.phone}">624 33 55 99</td>
                 <td align="center">
-                  <!-- <a href="#" title="Modifier les données du client " data-toggle="modal" data-target="#modal-editcompany" data-id="${company.id}" style="margin-right: 20px;"><i class="fa fa-pencil-square-o"></i></a>  -->
-                  <a href="#" data-toggle="tooltip" data-placement="top" title="Editer" style="margin-right: 20px;"><i class="fa fa-pencil-square-o"></i></a> 
+                  <a href="#modal-editcompany" data-toggle="modal" th:attr="data-id=${edit_comp_params}" class="open-EditCompanyDialog"  title="Editer" style="margin-right: 20px;"><i class="fa fa-pencil-square-o"></i></a> 
                   <a href="#" th:href="@{/customers/delete/{id}(id=${company.id})}" data-toggle="tooltip" data-placement="top" title="Supprimer"><i class="fa fa-trash"></i></a> 
                 </td>
               </tr>
@@ -190,26 +198,15 @@
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Inscription du client</h4>
+                <h4 class="modal-title">Inscription de la personne cliente</h4>
               </div>
               <div class="modal-body">
-                
-                <!-- radio -->
-<!--                 
+
                 <div class="form-group">
-                  <label for="customerType">Type de client</label>
-                  <br>
-                  <label>
-                    <input type="radio" th:field="*{customerType}" name="customertype" class="flat-red" checked="checked" value="PERSON">
-                  </label>
-                  Personne physique
-                  
-                  <label style="margin-left: 50px;">
-                    <input type="radio" th:field="*{customerType}" name="customertype" class="flat-red" value="COMPANY" >
-                  </label>
-                  Société
+                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="reference_" placeholder="Référence" style="width: 50%; background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
-               -->
+                <input type="hidden" th:field="*{customerType}" id="customerType" >
+
                 <div class="form-group">
                   <input type="text" th:field="*{lastName}" class="form-control" id="lastname" placeholder="Nom" style="background-color: #e6f2ff; font-weight: bold;">
                 </div>
@@ -225,10 +222,6 @@
                 <div class="form-group">
                   <input type="text" th:field="*{email}" class="form-control" id="email" placeholder="Email" style="background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
-                <div class="form-group">
-                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="reference_" placeholder="Référence" style="width: 50%; background-color: #e6f2ff; font-weight: bold;"/>
-                </div>
-                <input type="hidden" th:field="*{customerType}" id="customerType" >
                 
               </div>
               <div class="modal-footer">
@@ -257,7 +250,12 @@
                 <h4 class="modal-title">Inscription de la société cliente</h4>
               </div>
               <div class="modal-body">
-                
+
+                <div class="form-group">
+                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="reference_" placeholder="Référence" style="width: 50%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <input type="hidden" th:field="*{customerType}" id="customerType" >
+
                 <div class="form-group">
                   <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nom" style="background-color: #e6f2ff; font-weight: bold;">
                 </div>
@@ -271,12 +269,11 @@
                   <input type="text" th:field="*{email}" class="form-control" id="email" placeholder="Email" style="background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
                 <div class="form-group">
-                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="reference_" placeholder="Référence" style="width: 50%; background-color: #e6f2ff; font-weight: bold;"/>
+                  <input type="text" th:field="*{webSite}" class="form-control" id="website" placeholder="Site Web" style="background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
-                
-                <input type="hidden" th:field="*{customerType}" id="customerType" >
 
               </div>
+
               <div class="modal-footer">
                 <button type="submit" class="btn btn-primary" style="float: left;">Sauvegarder <i class="fa fa-check"></i> </button>
                 <button type="reset" class="btn btn-default">Effacer <i class="fa fa-trash"></i> </button> 
@@ -289,42 +286,45 @@
         </div>
         <!-- /.modal-dialog -->
       </div>
-      <!-- /.modal -->      
 
-      <div class="modal fade" id="modal-editcompany">
+      <!-- /.modal -->      
+      <div class="modal fade" id="modal-editperson">
         <div class="modal-dialog">
-          <form role="form" action="#" th:action="@{/customers/create}" th:object="${company}" method="post">
+          <form role="form" action="#" th:action="@{/customers/update}" th:object="${customer}" method="post">
               <div class="modal-content">
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Inscription de la société cliente</h4>
+                <h4 class="modal-title">Mise à jour de la personne cliente</h4>
               </div>
               <div class="modal-body">
-                
+
                 <div class="form-group">
-                  <!-- <label for="lastname">Nom</label> -->
-                  <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nom" style="background-color: #e6f2ff; font-weight: bold;">
+                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="edit_person_reference_" placeholder="Référence" style="width: 50%; background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
-                <div class="form-group">
-                  <!-- <label for="address">Adresse</label> -->
-                  <input type="text" th:field="*{address}" class="form-control" id="address" placeholder="Adresse" style="background-color: #e6f2ff; font-weight: bold;"/>
-                </div>  
-                <div class="form-group">
-                  <!-- <label for="phone">Téléphone</label> -->
-                  <input type="text" th:field="*{phone}" class="form-control" id="phone" placeholder="Téléphone" style="background-color: #e6f2ff; font-weight: bold;"/>
-                </div>
-                <div class="form-group">
-                  <!-- <label for="email">Email</label> -->
-                  <input type="text" th:field="*{email}" class="form-control" id="email" placeholder="Email" style="background-color: #e6f2ff; font-weight: bold;"/>
-                </div>
-                <div class="form-group">
-                  <!-- <label for="reference">Référence</label> -->
-                  <input type="text" th:field="*{reference}" class="form-control" id="reference_" placeholder="Référence" style="width: 50%; background-color: #e6f2ff; font-weight: bold;"/>
-                </div>
-                
                 <input type="hidden" th:field="*{customerType}" id="customerType" >
 
+                <div class="form-group">
+                  <label for="edit_person_lastname">Nom</label>
+                  <input type="text" th:field="*{lastName}" class="form-control" id="edit_person_lastname" placeholder="Nom" style="background-color: #e6f2ff; font-weight: bold;">
+                </div>
+                <div class="form-group">
+                  <label for="edit_person_firstname">Prénom</label>
+                  <input type="text" th:field="*{firstName}" class="form-control" id="edit_person_firstname" placeholder="Prénom" style="background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <label for="edit_person_address">Adresse</label>
+                  <input type="text" th:field="*{address}" class="form-control" id="edit_person_address" placeholder="Adresse" style="background-color: #e6f2ff; font-weight: bold;"/>
+                </div>  
+                <div class="form-group">
+                  <label for="edit_person_phone">Téléphone</label>
+                  <input type="text" th:field="*{phone}" class="form-control" id="edit_person_phone" placeholder="Téléphone" style="background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <label for="edit_person_email">Email</label>
+                  <input type="text" th:field="*{email}" class="form-control" id="edit_person_email" placeholder="Email" style="background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                
               </div>
               <div class="modal-footer">
                 <button type="submit" class="btn btn-primary" style="float: left;">Sauvegarder <i class="fa fa-check"></i> </button>
@@ -340,71 +340,60 @@
       </div>
       <!-- /.modal -->      
 
-        <div class="modal fade" id="modal-makepayment">
-          <div class="modal-dialog">
-	          <form role="form">
-	            <div class="modal-content">
-	              <div class="modal-header">
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                  <span aria-hidden="true">&times;</span></button>
-	                <h4 class="modal-title">Versement à Orange</h4>
-	              </div>
-	              <div class="modal-body">
-	                <div class="form-group">
-	                  <input type="text" class="form-control" id="reference" placeholder="Référence" style="width: 60%"/>
-	                </div>
-		            <div class="form-group">
-		            	<div class="input-group date" style="width: 60%">
-		                	<div class="input-group-addon">
-		                    	<i class="fa fa-calendar"></i>
-		                  	</div>
-		                  	<input type="text" class="form-control pull-right" id="datepicker"/>
-		                </div>
-		                <!-- /.input group -->
-		            </div>
-	                
-					<div class="form-group">
-		              	<select class="form-control select2" id="bank" placeholder="Banque" style="width: 60%;">
-			              	<option>Choisissez une banque...</option>
-			              	<option value="1">BCI</option>
-			              	<option value="2">BICIGUI</option>
-			              	<option value="3">ECOBANK</option>
-			              	<option value="4">ORABANK</option>
-			              	<option value="6">SGBG</option>
-			              	<option value="6">UBA</option>
-						</select>
-	                </div>
-					<div class="form-group">
-		              	<select class="form-control select2" id="customer" placeholder="Client" style="width: 60%;">
-			              	<option>Choisissez un client...</option>
-			              	<option value="1">SCF</option>
-			              	<option value="2">BAH EL HAJ IBRAHIMA</option>
-			              	<option value="3">BAH MAMADOU BOBO</option>
-			              	<option value="4">BAH THIERNO OUMAR</option>
-			              	<option value="6">BAH THIERNO SOULEYMANE</option>
-			              	<option value="6">DIALLO ALHASSANE</option>
-			              	<option value="6">DIALLO AMADOU BAYA</option>
-						</select>
-	                </div>
-	                
-	                <div class="form-group">
-	                  <input type="text" name="amount" class="form-control" id="amount" placeholder="Montant" style="width: 60%"/>
-	                </div>
-	                
-	              </div>
-	              <div class="modal-footer">
-	                <button type="submit" class="btn btn-primary"  style="float: left;">Sauvegarder <i class="fa fa-check"></i> </button>
-	                <button type="reset" class="btn btn-default">Effacer <i class="fa fa-trash"></i> </button> 
-	                <button type="button" class="btn btn-default" data-dismiss="modal">Quitter <i class="fa fa-times"></i></button> 
-	              </div>
-	            </div>
-	          </form>
-            
-            <!-- /.modal-content -->
-          </div>
-          <!-- /.modal-dialog -->
+
+
+      <div class="modal fade" id="modal-editcompany">
+        <div class="modal-dialog">
+          <form role="form" action="#" th:action="@{/customers/update}" th:object="${company}" method="post">
+              <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Mise à jour de la société cliente</h4>
+              </div>
+              <div class="modal-body">
+                
+                <div class="form-group">
+                  <label for="reference">Référence</label>
+                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="edit_comp_reference_" readonly="readonly" style="width: 50%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <input type="hidden" th:field="*{customerType}" id="customerType" >
+
+                <div class="form-group">
+                  <label for="lastname">Nom</label>
+                  <input type="text" th:field="*{name}" class="form-control" id="edit_comp_name" placeholder="Nom" style="background-color: #e6f2ff; font-weight: bold;">
+                </div>
+                <div class="form-group">
+                  <label for="address">Adresse</label>
+                  <input type="text" th:field="*{address}" class="form-control" id="edit_comp_address" placeholder="Adresse" style="background-color: #e6f2ff; font-weight: bold;"/>
+                </div>  
+                <div class="form-group">
+                  <label for="phone">Téléphone</label>
+                  <input type="text" th:field="*{phone}" class="form-control" id="edit_comp_phone" placeholder="Téléphone" style="background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="text" th:field="*{email}" class="form-control" id="edit_comp_email" placeholder="Email" style="background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <label for="website">Site Web</label>
+                  <input type="text" th:field="*{webSite}" class="form-control" id="edit_comp_website" placeholder="Site Web" style="background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" style="float: left;">Sauvegarder <i class="fa fa-check"></i> </button>
+                <button type="reset" class="btn btn-default">Effacer <i class="fa fa-trash"></i> </button> 
+                <button type="button" class="btn btn-default" data-dismiss="modal">Quitter <i class="fa fa-times"></i></button> 
+              </div>
+            </div>
+          </form>
+          
+          <!-- /.modal-content -->
         </div>
-        <!-- /.modal -->
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->      
       
     </section>
     <!-- /.content -->
@@ -444,16 +433,6 @@
 <!-- page script -->
 <script>
   $(function () {
-    $('#example1').DataTable()
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
-    })
-    
     
     $('#cust1table').DataTable({
 
@@ -527,7 +506,51 @@ $(function () {
       autoclose: true
     })
     
-  })
+  });
+
+  // EDIT Person Dialog
+  $(document).on("click", ".open-EditPersonDialog", function () {
+		    var persondata = $(this).data('id');
+		    let res = persondata.split("/");
+
+        $(".modal-body #edit_person_reference_").val(res[0]);
+	      $(".modal-body #edit_person_firstname").val(res[1]);
+	      $(".modal-body #edit_person_lastname").val(res[2]);
+	      $(".modal-body #edit_person_address").val(res[3]);
+	      $(".modal-body #edit_person_phone").val(res[4]);
+
+        let email = "";
+        if (res[5] != null) {
+          email = res[5];
+        }
+	      $(".modal-body #edit_person_email").val(email);
+
+		});
+
+
+  // EDIT Company Dialog
+  $(document).on("click", ".open-EditCompanyDialog", function () {
+		    var companydata = $(this).data('id');
+		    let res = companydata.split("/");
+
+        $(".modal-body #edit_comp_reference_").val(res[0]);
+	      $(".modal-body #edit_comp_name").val(res[1]);
+	      $(".modal-body #edit_comp_address").val(res[2]);
+	      $(".modal-body #edit_comp_phone").val(res[3]);
+
+        let email = "";
+        if (res[4] != null) {
+          email = res[4];
+        }
+	      $(".modal-body #edit_comp_email").val(email);
+
+        let website = "";
+        if (res[5] != null) {
+          website = res[5];
+        }
+		    $(".modal-body #edit_comp_website").val(website);
+		});
+
 </script>
 </body>
 </html>

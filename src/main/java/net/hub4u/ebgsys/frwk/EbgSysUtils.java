@@ -1,5 +1,9 @@
 package net.hub4u.ebgsys.frwk;
 
+import net.hub4u.ebgsys.entities.Customer;
+import net.hub4u.ebgsys.entities.CustomerType;
+import net.hub4u.ebgsys.entities.Sale;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,4 +36,19 @@ public class EbgSysUtils {
 
         return prefix + nextRef;
     }
+
+    /**
+     * Retrieves Customer's name whether she's a person or a company
+     * */
+    public static String retrieveCustomerNameView(Customer customer) {
+        if (customer != null) {
+            if (customer.getCustomerType().equals(CustomerType.PERSON)) {
+                customer.setCustomerNameView(customer.getLastName() + ' ' + customer.getFirstName());
+            } else {
+                customer.setCustomerNameView(customer.getName());
+            }
+        }
+        return customer.getCustomerNameView();
+    }
+
 }

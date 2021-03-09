@@ -13,4 +13,8 @@ public interface CustomerService {
     void deleteCustomer(Long id);
 
     Customer fetchCustomer(Long id);
+
+    Customer fetchCustomerByReference(String reference);
+
+    Customer updateCustomer(Customer customer);
 }

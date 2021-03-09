@@ -12,9 +12,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
@@ -48,10 +51,24 @@ public class ProductController {
         return "settingsproducts";
     }
 
+    @PostMapping("/update")
+    public String updateProduct(Product product, Model model, HttpServletRequest request) {
+
+        product.setReference(product.getNextReferenceView());
+
+        Product updatedProduct = productService.updateProduct(product);
+        log.info("updateProduct() - Successfully updated Product with reference : " + updatedProduct.getReference());
+
+        model.addAttribute("productUpdated", updatedProduct);
+        loadProducts(model);
+
+        return "settingsproducts";
+    }
+
     @GetMapping("/delete/{id}")
     public String deleteProduct(@PathVariable Long id, Model model) {
-        productService.deleteProduct(id);
-        log.info("deleteProduct() - Removed Product with ID: " + id);
+        Product deletedProduct = productService.deleteProduct(id);
+        log.info("deleteProduct() - Removed Product with reference: " + deletedProduct.getReference());
 
         model.addAttribute("productDeleted", id);
         loadProducts(model);
@@ -67,11 +84,7 @@ public class ProductController {
         Product product = productService.fetchProduct(productId);
         log.debug("getProductPrice() - Getting price from Product : " + product.getName());
 
-//        return NUMBER_FORMAT.format(product.getUnitPrice()) + " | "+ NUMBER_FORMAT.format(product.getGrossPrice()) ;
-
         return new String[] {""+product.getUnitPrice(), ""+product.getGrossPrice(), ""+NUMBER_FORMAT.format(product.getUnitPrice()), ""+NUMBER_FORMAT.format(product.getGrossPrice())} ;
-
-//        return new String[] {""+NUMBER_FORMAT.format(product.getUnitPrice()), ""+NUMBER_FORMAT.format(product.getGrossPrice())} ;
     }
 
 

@@ -131,9 +131,6 @@
                   <th>Référence</th>
                   <th>Client | Téléphone</th>
                   <th><i class="fa fa-product-hunt"></i>&nbsp;&nbsp; Produits</th>
-                  <!-- <th>Type</th>
-                  <th><i class="fa fa-money"></i>&nbsp;&nbsp;Prix U.</th>
-                  <th>Quantité</th> -->
                   <th><i class="fa fa-money"></i>&nbsp;&nbsp;Montant total</th>
                   <th>Soldé</th>
                   <th><i class="fa fa-money"></i>&nbsp;&nbsp;Reste</th>
@@ -176,9 +173,6 @@
                   <th>Référence</th>
                   <th>Client | Téléphone </th>
                   <th><i class="fa fa-product-hunt"></i>&nbsp;&nbsp; Produits</th>
-                  <!-- <th>Type</th>
-                  <th><i class="fa fa-money"></i>&nbsp;&nbsp;Prix U.</th>
-                  <th>Quantité</th> -->
                   <th><i class="fa fa-money"></i>&nbsp;&nbsp;Montant total</th>
                   <th>Soldé</th>
                   <th><i class="fa fa-money"></i>&nbsp;&nbsp;Reste</th>
@@ -245,8 +239,8 @@
 	                </div>
 
 	                <div class="form-group">
-                    <input type="text" class="form-control" id="productpriceunit" placeholder="Prix en detail" readonly="readonly" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/><p id="totalprice_retail" style="width: 30%; background-color: #EEEEFE"></p>
-                    <input type="text" class="form-control" id="productpricegross" placeholder="Prix en gros" readonly="readonly" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/><p id="totalprice_gross" style="width: 30%; background-color: #EEEEFE"></p>
+                    <input type="text" class="form-control" id="productpriceunit" placeholder="Prix en detail" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/><p id="totalprice_retail" style="width: 30%; background-color: #EEEEFE"></p>
+                    <input type="text" class="form-control" id="productpricegross" placeholder="Prix en gros" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/><p id="totalprice_gross" style="width: 30%; background-color: #EEEEFE"></p>
                     <input type="hidden" class="form-control" id="productpriceunitraw"/>
                     <input type="hidden" class="form-control" id="productpricegrossraw"/>
 	                </div>
@@ -405,7 +399,7 @@ function find_prodprice() {
 
     $.ajax({
 				  type: "get",
-				  url: REMOTE_HOST + "/products/findproductpice/" + $("#product").val(),
+				  url: LOCAL_HOST + "/products/findproductpice/" + $("#product").val(),
 				  dataType: "json",
 				  cache: false,    
 				  //data:'product=' + $("#product").val(),
@@ -487,7 +481,7 @@ function find_prodprice() {
       $.ajax({
 
         type: "get",
-				  url: REMOTE_HOST + "/sales/add2cart/" + prodId,
+				  url: LOCAL_HOST + "/sales/add2cart/" + prodId,
 				  dataType: "json",
 				  cache: false,
 				  data:"prodId=" + prodId + '&cartType=ShoppingCartSell' + '&saleType=' + saleType + '&qty=' + qty,

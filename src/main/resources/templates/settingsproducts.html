@@ -69,7 +69,13 @@
       <div th:if="${productCreated}" class="alert alert-success alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <i class="icon fa fa-check"></i> 
-        Le produit <b th:text="${productCreated.name + ' / ' + productCreated.reference}">MATERIEL</b> a été ajouté avec succès!
+        Le produit <b th:text="${productCreated.name + ' | ' + productCreated.reference}">MATERIEL</b> a été ajouté avec succès!
+      </div>
+      <!-- Alert Updated -->
+      <div th:if="${productUpdated}" class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <i class="icon fa fa-check"></i> 
+        Le produit <b th:text="${productUpdated.name + ' | ' + productUpdated.reference}">MATERIEL</b> a été modifié avec succès!
       </div>
       <!-- Alert Deleted -->
       <div th:if="${productDeleted}" class="alert alert-danger alert-dismissible">
@@ -107,10 +113,9 @@
                   <th><i class="fa fa-gear"></i> Action</th>
                 </tr>
                 </thead>
-                
                 <tbody>
-                  <tr th:each="prod : ${products}">
-                    <!-- <tr th:each="prod : ${products}" th:style="${createdProduct != null ? 'color: blue': ''} "> -->
+                  <!-- <tr th:each="prod : ${products}" th:with="edit_prod_params=${prod.reference} + '/' + ${prod.name} + '/' + ${#numbers.formatInteger(prod.unitPrice,3,'WHITESPACE')} + '/' + ${prod.unitPrice} + '/' + ${#numbers.formatInteger(prod.grossPrice,3,'WHITESPACE')}  + '/' + ${prod.grossPrice} + '/' + ${#numbers.formatInteger(prod.cost,3,'WHITESPACE')} + '/' + ${prod.cost} + '/' + ${prod.description}"> -->
+                  <tr th:each="prod : ${products}" th:with="edit_prod_params=${prod.reference} + '/' + ${prod.name} + '/' + ${#numbers.formatInteger(prod.unitPrice,3,'WHITESPACE')} + '/' + ${#numbers.formatInteger(prod.grossPrice,3,'WHITESPACE')}  + '/' + ${#numbers.formatInteger(prod.cost,3,'WHITESPACE')} + '/' + ${prod.description}">
                     <td th:text="${prod.reference}">CLEBG00267</td>
                     <td th:text="${prod.name}">PROD.NAME</td>
                     <td th:text="${#numbers.formatInteger(prod.unitPrice,3,'WHITESPACE')}">999</td>
@@ -118,8 +123,7 @@
                     <td th:text="${#numbers.formatInteger(prod.cost,3,'WHITESPACE')}">8888</td>
                     <td th:text="${prod.description}">PROD.DESC</td>
                     <td align="center">
-                      <a href="#" data-toggle="tooltip" data-placement="top" title="Editer" style="margin-right: 20px;"><i class="fa fa-pencil-square-o"></i></a> 
-                      <!-- <a href="#" title="Supprimer ce client "><i class="fa fa-trash"></i></a>  -->
+                      <a href="#modal-modifyproduct" data-toggle="modal" th:attr="data-id=${edit_prod_params}" class="open-EditProductDialog"  title="Editer" style="margin-right: 20px;"><i class="fa fa-pencil-square-o"></i></a> 
                       <a href="#" th:href="@{/products/delete/{id}(id=${prod.id})}" data-toggle="tooltip" data-placement="top" title="Supprimer"><i class="fa fa-trash"></i></a> 
                     </td>
                   </tr>
@@ -159,10 +163,10 @@
               <div class="modal-body">
                 
                 <div class="form-group">
-                  <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nom" style="width: 70%; background-color: #e6f2ff; font-weight: bold;">
+                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="reference_" placeholder="Référence" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
                 <div class="form-group">
-                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="reference_" placeholder="Référence" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                  <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nom" style="width: 70%; background-color: #e6f2ff; font-weight: bold;">
                 </div>
                 <div class="form-group">
                   <input type="text" th:field="*{description}" class="form-control" id="description" placeholder="Description" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
@@ -184,79 +188,65 @@
               </div>
             </div>
           </form>
-          
           <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
       </div>
       <!-- /.modal -->      
- 
 
-        <div class="modal fade" id="modal-makepayment">
-          <div class="modal-dialog">
-	          <form role="form">
-	            <div class="modal-content">
-	              <div class="modal-header">
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                  <span aria-hidden="true">&times;</span></button>
-	                <h4 class="modal-title">Versement à Orange</h4>
-	              </div>
-	              <div class="modal-body">
-	                <div class="form-group">
-	                  <input type="text" class="form-control" id="reference" placeholder="Référence" style="width: 60%"/>
-	                </div>
-		            <div class="form-group">
-		            	<div class="input-group date" style="width: 60%">
-		                	<div class="input-group-addon">
-		                    	<i class="fa fa-calendar"></i>
-		                  	</div>
-		                  	<input type="text" class="form-control pull-right" id="datepicker"/>
-		                </div>
-		                <!-- /.input group -->
-		            </div>
-	                
-					<div class="form-group">
-		              	<select class="form-control select2" id="bank" placeholder="Banque" style="width: 60%;">
-			              	<option>Choisissez une banque...</option>
-			              	<option value="1">BCI</option>
-			              	<option value="2">BICIGUI</option>
-			              	<option value="3">ECOBANK</option>
-			              	<option value="4">ORABANK</option>
-			              	<option value="6">SGBG</option>
-			              	<option value="6">UBA</option>
-						</select>
-	                </div>
-					<div class="form-group">
-		              	<select class="form-control select2" id="customer" placeholder="Client" style="width: 60%;">
-			              	<option>Choisissez un client...</option>
-			              	<option value="1">SCF</option>
-			              	<option value="2">BAH EL HAJ IBRAHIMA</option>
-			              	<option value="3">BAH MAMADOU BOBO</option>
-			              	<option value="4">BAH THIERNO OUMAR</option>
-			              	<option value="6">BAH THIERNO SOULEYMANE</option>
-			              	<option value="6">DIALLO ALHASSANE</option>
-			              	<option value="6">DIALLO AMADOU BAYA</option>
-						</select>
-	                </div>
-	                
-	                <div class="form-group">
-	                  <input type="text" name="amount" class="form-control" id="amount" placeholder="Montant" style="width: 60%"/>
-	                </div>
-	                
-	              </div>
-	              <div class="modal-footer">
-	                <button type="submit" class="btn btn-primary"  style="float: left;">Sauvegarder <i class="fa fa-check"></i> </button>
-	                <button type="reset" class="btn btn-default">Effacer <i class="fa fa-trash"></i> </button> 
-	                <button type="button" class="btn btn-default" data-dismiss="modal">Quitter <i class="fa fa-times"></i></button> 
-	              </div>
-	            </div>
-	          </form>
-            
-            <!-- /.modal-content -->
-          </div>
-          <!-- /.modal-dialog -->
+
+      <div class="modal fade" id="modal-modifyproduct">
+        <div class="modal-dialog">
+          <form role="form" action="#" th:action="@{/products/update}" th:object="${product}" method="post" id="editProductForm">
+              <div class="modal-content">
+
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Modifier le produit</h4>
+              </div>
+
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="edit_reference_">Référence</label>
+                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="edit_reference_" readonly="readonly" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <label for="edit_name">Nom</label>
+                  <input type="text" th:field="*{name}" class="form-control" id="edit_name" placeholder="Nom" style="width: 70%; background-color: #e6f2ff; font-weight: bold;">
+                </div>
+                <div class="form-group">
+                  <label for="edit_description">Description</label>
+                  <input type="text" th:field="*{description}" class="form-control" id="edit_description" placeholder="Description" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <label for="edit_unitprice">Prix unitaire de vente</label>
+                  <input type="text" th:field="*{unitPrice}" name="unitPrice" class="form-control" id="edit_unitprice" placeholder="Prix Unitaire de Vente" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <label for="edit_grossprice">Prix en gros de vente</label>
+                  <input type="text" th:field="*{grossPrice}" class="form-control" id="edit_grossprice" placeholder="Prix en Gros de Vente" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <label for="edit_cost">Prix d'achat</label>
+                  <input type="text" th:field="*{cost}" class="form-control" id="edit_cost" placeholder="Prix d'Achat" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" id="submitBtn" class="btn btn-primary" style="float: left;">Sauvegarder <i class="fa fa-check"></i> </button>
+                <button type="reset" class="btn btn-default">Effacer <i class="fa fa-trash"></i> </button> 
+                <button type="button" class="btn btn-default" data-dismiss="modal">Quitter <i class="fa fa-times"></i></button> 
+              </div>
+            </div>
+          </form>
+          <!-- /.modal-content -->
         </div>
-        <!-- /.modal -->
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->      
+
+
       
     </section>
     <!-- /.content -->
@@ -339,36 +329,10 @@
      });
     
     
-     $('#cust2table').DataTable({
-
-"oLanguage": {
-       "sProcessing":     "Traitement en cours...",
-    "sSearch":         "Rechercher&nbsp;:",
-      "sLengthMenu":     "Afficher _MENU_ &eacute;l&eacute;ments",
-    //"sInfo":           "Affichage de _TOTAL_ &eacute;l&eacute;ments",
-    "sInfo":           "Affichage de _START_ &agrave _END_ sur _TOTAL_ &eacute;l&eacute;ments",
-    "sInfoEmpty":      "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
-    "sInfoFiltered":   "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
-    "sInfoPostFix":    "",
-    "sLoadingRecords": "Chargement en cours...",
-      "sZeroRecords":    "Aucun &eacute;l&eacute;ment &agrave; afficher",
-    "sEmptyTable":     "Aucune donn&eacute;e disponible dans le tableau",
-    "oPaginate": {
-      "sFirst":      "Premier",
-      "sPrevious":   "Pr&eacute;c&eacute;dent",
-      "sNext":       "Suivant",
-      "sLast":       "Dernier"
-    },
-    "oAria": {
-      "sSortAscending":  ": activer pour trier la colonne par ordre croissant",
-      "sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
-    }
-   },
-   'columnDefs': [ {
-    'targets': [3], /* column index */
-    'orderable': false /* true or false */
-  }]
-});
+  $('#cust2table').DataTable({
+    
+     'columnDefs': [ ]
+  });
 
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
@@ -379,7 +343,49 @@ $(function () {
       autoclose: true
     })
     
-  })
+  });
+
+
+  // EDIT Dialog
+  $(document).on("click", ".open-EditProductDialog", function () {
+		     var myProductData = $(this).data('id');
+         // reference / name / unitPrice / grossPrice / cost / description
+
+		    let res = myProductData.split("/");
+
+        $(".modal-body #edit_reference_").val(res[0]);
+	      $(".modal-body #edit_name").val(res[1]);
+	      $(".modal-body #edit_unitprice").val(res[2]);
+	      $(".modal-body #edit_grossprice").val(res[3]);
+	      $(".modal-body #edit_cost").val(res[4]);
+		    $(".modal-body #edit_description").val(res[5]);
+
+		});
+
+    // SUBMIT Edited Form
+    $(document).ready(function(){
+      $("#submitBtn").click(function(){
+
+        //   '.replace(/\s+/g, '')
+        
+        let unitPrice = $("#edit_unitprice").val();
+        let trimedUnitPrice = $.trim(unitPrice);
+	      $(".modal-body #edit_unitprice").val(trimedUnitPrice);
+
+        let grossPrice = $("#edit_grossprice").val();
+        let trimedGrossPrice = $.trim(grossPrice);
+	      $(".modal-body #edit_grossprice").val(trimedGrossPrice);
+
+        let cost = $("#edit_cost").val();
+        let trimedCost = $.trim(cost);
+	      $(".modal-body #edit_cost").val(trimedCost);
+
+
+        $("#editProductForm").submit(); // Submit the form
+      });
+    });    
+ 
+
 </script>
 </body>
 </html>

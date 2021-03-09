@@ -2,6 +2,7 @@ package net.hub4u.ebgsys.services.impl;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import net.hub4u.ebgsys.entities.Product;
 import net.hub4u.ebgsys.repositories.ProductRepository;
 import net.hub4u.ebgsys.services.ProductService;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductServiceImpl implements ProductService {
 
@@ -33,8 +35,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(Long id) {
+    public Product deleteProduct(Long id) {
+        Product product = fetchProduct(id);
+        log.info("deleteProduct() - Deleting Product with reference : " + product.getReference());
         productRepository.deleteById(id);
+        return product;
     }
 
     @Override
@@ -52,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product updateProduct(Product product) {
 
-        Product currentProduct = fetchProduct(product.getId());
+        Product currentProduct = fetchProductByReference(product.getReference());
 
         currentProduct.setReference(product.getReference());
         currentProduct.setCost(product.getCost());

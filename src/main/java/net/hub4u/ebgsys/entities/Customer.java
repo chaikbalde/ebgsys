@@ -50,6 +50,8 @@ public class Customer {
     // Transient fields for the view
     @Transient
     String nextReferenceView;
+    @Transient
+    String customerNameView;
 
     public Customer(String name, String reference, String address, String phone) {
         this.name = name;

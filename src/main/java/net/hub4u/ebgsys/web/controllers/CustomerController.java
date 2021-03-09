@@ -7,6 +7,7 @@ import net.hub4u.ebgsys.entities.Customer;
 import net.hub4u.ebgsys.entities.CustomerType;
 import net.hub4u.ebgsys.frwk.EbgSysUtils;
 import net.hub4u.ebgsys.services.CustomerService;
+import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,10 +38,26 @@ public class CustomerController {
     @PostMapping("/create")
     public String createCustomer(@ModelAttribute Customer customer, Model model) {
         customer.setReference(customer.getNextReferenceView());
-        customerService.createCustomer(customer);
-        log.info("createCustomer() - Created Customer with ID: " + customer.getId());
+        Customer createdCustomer = customerService.createCustomer(customer);
+        createdCustomer.setCustomerNameView(EbgSysUtils.retrieveCustomerNameView(createdCustomer));
+        log.info("createCustomer() - Created Customer with reference: " + createdCustomer.getReference());
 
-        model.addAttribute("customerCreated", customer);
+        model.addAttribute("customerCreated", createdCustomer);
+        loadCustomers(model);
+
+        return "settingscustomers";
+    }
+
+    @PostMapping("/update")
+    public String updateCustomer(Customer customer, Model model) {
+        customer.setReference(customer.getNextReferenceView());
+
+        Customer updatedCustomer = customerService.updateCustomer(customer);
+        updatedCustomer.setCustomerNameView(EbgSysUtils.retrieveCustomerNameView(updatedCustomer));
+
+        log.info("updateCustomer() - Updated Customer with reference: " + updatedCustomer.getReference());
+
+        model.addAttribute("customerUpdated", updatedCustomer);
         loadCustomers(model);
 
         return "settingscustomers";

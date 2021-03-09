@@ -11,7 +11,7 @@ public interface ProductService {
 
     List<Product> fetchAllProducts();
 
-    void deleteProduct(Long id);
+    Product deleteProduct(Long id);
 
     Product fetchProduct(Long id);
 
