@@ -399,7 +399,7 @@ function find_prodprice() {
 
     $.ajax({
 				  type: "get",
-				  url: LOCAL_HOST + "/products/findproductpice/" + $("#product").val(),
+				  url: REMOTE_HOST + "/products/findproductpice/" + $("#product").val(),
 				  dataType: "json",
 				  cache: false,    
 				  //data:'product=' + $("#product").val(),
@@ -471,17 +471,10 @@ function find_prodprice() {
         saleType = 'RETAIL';
       } 
 
-
-			// var totalprice = $.trim( $('#prodtotalprice').val() );
-			// if (totalprice=='') {
-			// 	alert('Choisir un article et saisir la quantité pour calculer Le sous-total!. ');
-			// 	return;
-			// }
-
       $.ajax({
 
         type: "get",
-				  url: LOCAL_HOST + "/sales/add2cart/" + prodId,
+				  url: REMOTE_HOST + "/sales/add2cart/" + prodId,
 				  dataType: "json",
 				  cache: false,
 				  data:"prodId=" + prodId + '&cartType=ShoppingCartSell' + '&saleType=' + saleType + '&qty=' + qty,
