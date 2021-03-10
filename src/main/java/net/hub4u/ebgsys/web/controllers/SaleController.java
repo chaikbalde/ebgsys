@@ -197,76 +197,6 @@ public class SaleController {
         return "salescredit";
     }
 
-
-
-
-//    @PostMapping("/createcreditsale_prev")
-//    public String createCreditSale_prev(@ModelAttribute Sale creditSale,  BindingResult bindingResult, Model model) {
-//        if (bindingResult.hasErrors()) {
-//            log.error("createCreditSale() -  Failed processing form. Errors: " + bindingResult.getAllErrors());
-//        }
-//
-//        creditSale.setReference(creditSale.getNextReferenceView());
-//
-//        if (creditSale.getProduct() == null) {
-//            log.error("createCreditSale() - Failed creating Sale. Product CANNOT BE NULL !");
-//            loadCreditSales(model);
-//            return "salescredit";
-//        }
-//
-//        long prodId = creditSale.getProduct().getId();
-//        Product product = productService.fetchProduct(prodId);
-//        product.getSales().add(creditSale);
-//        creditSale.setProduct(product);
-//
-//        BigDecimal unitPrice = retrieveUnitPrice(creditSale, product);
-//        BigDecimal totalPrice = unitPrice.multiply(new BigDecimal(creditSale.getQuantity()));
-//        creditSale.setAmount(totalPrice);
-//        creditSale.setUnitPriceView(unitPrice);
-//
-//        BigDecimal paidAmount = creditSale.getPaidAmount();
-//        if (paidAmount != null) {
-//            Payment payment = new Payment();
-//            payment.setAmount(paidAmount);
-//            payment.setPayDate(creditSale.getSaleDate());
-//
-//            payment.setSale(creditSale);
-//            creditSale.getPayments().add(payment);
-//
-//            BigDecimal restToPay = totalPrice.subtract(paidAmount);
-//            creditSale.setRest(restToPay);
-//            creditSale.setPaid( (restToPay.intValue() > 0) ? false: true );
-//            creditSale.setBalance(paidAmount);
-//        } else {
-//            creditSale.setRest(totalPrice);
-//            creditSale.setPaid(false);
-//            creditSale.setBalance(new BigDecimal("0"));
-//        }
-//
-//        if (creditSale.getCustomer() == null) {
-//            log.error("createCreditSale() - Failed creating Sale. Customer CANNOT BE NULL !");
-//            loadCreditSales(model);
-//            return "salescredit";
-//        }
-//
-//        long customerId = creditSale.getCustomer().getId();
-//        Customer customer = customerService.fetchCustomer(customerId);
-//        customer.getSales().add(creditSale);
-//        creditSale.setCustomer(customer);
-//
-//        creditSale.setSaleTxType(SaleTxType.CREDIT);
-//        creditSale.setCreationDate(new Date());
-//
-//        Sale createdSale = saleService.createSale(creditSale);
-//        log.info("createCreditSale() - Created sale '"+createdSale.getReference()+"' with Id '"+createdSale.getId()+"'");
-//
-//        model.addAttribute("saleCreated", createdSale);
-//
-//        loadCreditSales(model);
-//
-//        return "salescredit";
-//    }
-
     /**
      *
      * */
@@ -276,10 +206,6 @@ public class SaleController {
         Sale sale = saleService.fetchSale(saleId);
 
         setCustomerNameView(sale);
-//        setSaleTypeView(sale);
-
-//        BigDecimal unitPrice = retrieveUnitPrice(sale, sale.getProduct());
-//        sale.setUnitPriceView(unitPrice);
 
         model.addAttribute("sale", sale);
 

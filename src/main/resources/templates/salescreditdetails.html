@@ -153,11 +153,11 @@
                 <dt style="width: 35%;">Paiements</dt>
                   <dd th:each="pay : ${sale.payments}" th:text="${#numbers.formatInteger(pay.amount,3,'WHITESPACE') + '&nbsp;&nbsp; (' + #dates.format(pay.payDate, 'dd/MM/yyyy - HH:mm') + ')'}">40 000 000  (02/03/2020) </dd>
 
-                <dt style="background-color: #EFEFFE; width: 35%;">Reste</dt>
-                  <dd><b style="color: red;" th:text="${#numbers.formatInteger(sale.rest,3,'WHITESPACE')}">10 000 000 </b></dd>
+                <dt th:if="${sale.rest > 0}" style="background-color: #EFEFFE; width: 35%;">Reste</dt>
+                <dd th:if="${sale.rest > 0}" ><b style="color: red;" th:text="${#numbers.formatInteger(sale.rest,3,'WHITESPACE')}">10 000 000 </b></dd>
 
-                <dt style="width: 35%;">Payer</dt>
-                  <dd>
+                <dt th:if="${sale.rest > 0}" style="width: 35%;">Payer</dt>
+                  <dd th:if="${sale.rest > 0}" >
                     <form role="form" action="#" th:action="@{/sales/makepayment}">
                       <input type="text" name="payamount"/> <button type="submit">Payer</button> 
                       <input type="hidden" name="saleId" th:value="${sale.id}"/>
@@ -167,42 +167,6 @@
             </div>
           </div>
         </div>
-
-<!-- 
-        <div class="col-md-4">
-          <div class="box box-solid">
-            <div class="box-header">
-              <h4>Transactions <span style="float: right;"><img src="dist/img/checked_green.png" th:src="${ (sale.paid) ? '/dist/img/checked_green.png' : '/dist/img/checked_red.png'}"  class="user-image" alt="av1 Image" height="14" data-toggle="tooltip" data-placement="top" title="Payé" th:title="${'Payé: ' +  #numbers.formatInteger(sale.balance,3,'WHITESPACE')} " /></span> </h4>
-            </div>
-
-            <div class="box-body">
-              <dl class="dl-horizontal">
-
-                <dt  style="background-color: #EFEFFE; width: 35%;">Montant total</dt>
-                  <dd>50 500 000</dd>
-
-                <dt style="width: 35%;">Paiements</dt>
-                  <dd>40 000 000  (02/03/2020) </dd>
-                  <dd>500 000 (10/03/2020) </dd>
-                  <dd>80 000 (15/03/2020) </dd>
-
-                  <dt  style="background-color: #EFEFFE; width: 35%;">Reste</dt>
-                    <dd>10 000 000</dd>
-
-                  <dt style="background-color: #EFEFFE;" width: 35%;>Payer</dt>
-                  <dd>
-                    <form role="form" action="#" th:action="@{/sales/makepayment}" >
-                      <input type="text" name="payamount"> <button type="submit">Payer</button> 
-                      <input type="hidden" name="saleId" />
-                    </form>
-                  </dd>
-
-                  
-              </dl>
-            </div>
-          </div>
-        </div>
- -->
 
       </div>
       <!-- /.row -->              

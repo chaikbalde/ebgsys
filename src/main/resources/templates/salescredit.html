@@ -389,7 +389,9 @@ $(function () {
     language: 'fr',
     autoclose: true
   })
-  
+
+  $('#datepicker').datepicker('update', new Date());
+
 })
 
 let LOCAL_HOST = "http://localhost:8080"; 
@@ -399,7 +401,7 @@ function find_prodprice() {
 
     $.ajax({
 				  type: "get",
-				  url: REMOTE_HOST + "/products/findproductpice/" + $("#product").val(),
+				  url: LOCAL_HOST + "/products/findproductpice/" + $("#product").val(),
 				  dataType: "json",
 				  cache: false,    
 				  //data:'product=' + $("#product").val(),
@@ -474,7 +476,7 @@ function find_prodprice() {
       $.ajax({
 
         type: "get",
-				  url: REMOTE_HOST + "/sales/add2cart/" + prodId,
+				  url: LOCAL_HOST + "/sales/add2cart/" + prodId,
 				  dataType: "json",
 				  cache: false,
 				  data:"prodId=" + prodId + '&cartType=ShoppingCartSell' + '&saleType=' + saleType + '&qty=' + qty,
