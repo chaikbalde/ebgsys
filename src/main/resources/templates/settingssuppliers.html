@@ -69,7 +69,13 @@
       <div th:if="${supplierCreated}" class="alert alert-success alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <i class="icon fa fa-check"></i> 
-        Le fournisseur <b th:text="${supplierCreated.name}">MATERIEL</b> a été ajouté avec succès!
+        Le fournisseur <b th:text="${supplierCreated.name + ' | ' + supplierCreated.reference}">MATERIEL</b> a été ajouté avec succès!
+      </div>
+      <!-- Alert Updated -->
+      <div th:if="${supplierUpdated}" class="alert alert-success alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <i class="icon fa fa-check"></i> 
+        Le fournisseur <b th:text="${supplierUpdated.name + ' | ' + supplierUpdated.reference}">MATERIEL</b> a été mis à jour avec succès!
       </div>
       <!-- Alert Deleted -->
       <div th:if="${supplierDeleted}" class="alert alert-danger alert-dismissible">
@@ -108,9 +114,9 @@
                   <th><i class="fa fa-gear"></i> Action</th>
                 </tr>
                 </thead>
-                
+
                 <tbody>
-                  <tr th:each="supplier : ${suppliers}">
+                  <tr th:each="supplier : ${suppliers}" th:with="edit_supp_params=${supplier.reference} + '/' + ${supplier.name} + '/' + ${supplier.contactPerson} + '/' + ${supplier.address} + '/' + ${supplier.phone} + '/' + ${supplier.email} + '/' + ${supplier.webSite}">
                     <td th:text="${supplier.reference}">FR-EBG-00267</td>
                     <td th:text="${supplier.name}">TAFAGUI</td>
                     <td th:text="${supplier.contactPerson}">DIALLO</td>
@@ -118,11 +124,12 @@
                     <td th:text="${supplier.phone}">622 22 22 22</td>
                     <td th:text="${supplier.email}">EMAIL@HOME</td>
                     <td align="center">
-                      <a href="#" data-toggle="tooltip" data-placement="top" title="Editer" style="margin-right: 20px;"><i class="fa fa-pencil-square-o"></i></a> 
+                      <a href="#modal-editsupplier" data-toggle="modal" th:attr="data-id=${edit_supp_params}" class="open-EditSupplierDialog"  title="Editer" style="margin-right: 20px;"><i class="fa fa-pencil-square-o"></i></a> 
                       <a href="#" th:href="@{/suppliers/delete/{id}(id=${supplier.id})}" data-toggle="tooltip" data-placement="top" title="Supprimer"><i class="fa fa-trash"></i></a> 
                     </td>
                   </tr>
                 </tbody>
+                
                 <tfoot>
                   <tr>
                     <th>Référence</th>
@@ -152,15 +159,15 @@
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Ajout d'un fournisseur</h4>
+                <h4 class="modal-title">Ajouter un fournisseur</h4>
               </div>
               <div class="modal-body">
                 
                 <div class="form-group">
-                  <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nom" style="width: 70%; background-color: #e6f2ff; font-weight: bold;">
+                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="reference_" placeholder="Référence" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
                 <div class="form-group">
-                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="reference_" placeholder="Référence" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                  <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="Nom" style="width: 70%; background-color: #e6f2ff; font-weight: bold;">
                 </div>
                 <div class="form-group">
                   <input type="text" th:field="*{contactPerson}" class="form-control" id="contactperson" placeholder="Contact" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
@@ -193,71 +200,60 @@
       <!-- /.modal -->      
  
 
-        <div class="modal fade" id="modal-makepayment">
-          <div class="modal-dialog">
-	          <form role="form">
-	            <div class="modal-content">
-	              <div class="modal-header">
-	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	                  <span aria-hidden="true">&times;</span></button>
-	                <h4 class="modal-title">Versement à Orange</h4>
-	              </div>
-	              <div class="modal-body">
-	                <div class="form-group">
-	                  <input type="text" class="form-control" id="reference" placeholder="Référence" style="width: 60%"/>
-	                </div>
-		            <div class="form-group">
-		            	<div class="input-group date" style="width: 60%">
-		                	<div class="input-group-addon">
-		                    	<i class="fa fa-calendar"></i>
-		                  	</div>
-		                  	<input type="text" class="form-control pull-right" id="datepicker"/>
-		                </div>
-		                <!-- /.input group -->
-		            </div>
-	                
-					<div class="form-group">
-		              	<select class="form-control select2" id="bank" placeholder="Banque" style="width: 60%;">
-			              	<option>Choisissez une banque...</option>
-			              	<option value="1">BCI</option>
-			              	<option value="2">BICIGUI</option>
-			              	<option value="3">ECOBANK</option>
-			              	<option value="4">ORABANK</option>
-			              	<option value="6">SGBG</option>
-			              	<option value="6">UBA</option>
-						</select>
-	                </div>
-					<div class="form-group">
-		              	<select class="form-control select2" id="customer" placeholder="Client" style="width: 60%;">
-			              	<option>Choisissez un client...</option>
-			              	<option value="1">SCF</option>
-			              	<option value="2">BAH EL HAJ IBRAHIMA</option>
-			              	<option value="3">BAH MAMADOU BOBO</option>
-			              	<option value="4">BAH THIERNO OUMAR</option>
-			              	<option value="6">BAH THIERNO SOULEYMANE</option>
-			              	<option value="6">DIALLO ALHASSANE</option>
-			              	<option value="6">DIALLO AMADOU BAYA</option>
-						</select>
-	                </div>
-	                
-	                <div class="form-group">
-	                  <input type="text" name="amount" class="form-control" id="amount" placeholder="Montant" style="width: 60%"/>
-	                </div>
-	                
-	              </div>
-	              <div class="modal-footer">
-	                <button type="submit" class="btn btn-primary"  style="float: left;">Sauvegarder <i class="fa fa-check"></i> </button>
-	                <button type="reset" class="btn btn-default">Effacer <i class="fa fa-trash"></i> </button> 
-	                <button type="button" class="btn btn-default" data-dismiss="modal">Quitter <i class="fa fa-times"></i></button> 
-	              </div>
-	            </div>
-	          </form>
-            
-            <!-- /.modal-content -->
-          </div>
-          <!-- /.modal-dialog -->
+      <div class="modal fade" id="modal-editsupplier">
+        <div class="modal-dialog">
+          <form role="form" action="#" th:action="@{/suppliers/update}" th:object="${supplier}" method="post">
+              <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Modifier le fournisseur</h4>
+              </div>
+              <div class="modal-body">
+                
+                <div class="form-group">
+                  <label for="edit_supp_reference_">Référence</label>
+                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="edit_supp_reference_" readonly="readonly" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <label for="edit_supp_name">Nom</label>
+                  <input type="text" th:field="*{name}" class="form-control" id="edit_supp_name" placeholder="Nom" style="width: 70%; background-color: #e6f2ff; font-weight: bold;">
+                </div>
+                <div class="form-group">
+                  <label for="edit_supp_contactperson">Contact</label>
+                  <input type="text" th:field="*{contactPerson}" class="form-control" id="edit_supp_contactperson" placeholder="Contact" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <label for="edit_supp_address">Adresse</label>
+                  <input type="text" th:field="*{address}" class="form-control" id="edit_supp_address" placeholder="Adresse" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <label for="edit_supp_phone">Téléphone</label>
+                  <input type="text" th:field="*{phone}" class="form-control" id="edit_supp_phone" placeholder="Téléphone" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <label for="edit_supp_email">Email</label>
+                  <input type="text" th:field="*{email}" class="form-control" id="edit_supp_email" placeholder="Email" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <label for="edit_supp_website">Site Web</label>
+                  <input type="text" th:field="*{webSite}" class="form-control" id="edit_supp_website" placeholder="Site Web" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" style="float: left;">Sauvegarder <i class="fa fa-check"></i> </button>
+                <button type="reset" class="btn btn-default">Effacer <i class="fa fa-trash"></i> </button> 
+                <button type="button" class="btn btn-default" data-dismiss="modal">Quitter <i class="fa fa-times"></i></button> 
+              </div>
+            </div>
+          </form>
+          
+          <!-- /.modal-content -->
         </div>
-        <!-- /.modal -->
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->      
+
       
     </section>
     <!-- /.content -->
@@ -297,16 +293,6 @@
 <!-- page script -->
 <script>
   $(function () {
-    $('#example1').DataTable()
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
-    })
-    
     
     $('#suppliertable').DataTable({
 
@@ -350,6 +336,48 @@ $(function () {
     })
     
   })
+
+
+  // EDIT Dialog
+  $(document).on("click", ".open-EditSupplierDialog", function () {
+		     var supplierdata = $(this).data('id');
+         // reference / name / unitPrice / grossPrice / cost / description
+
+		    let res = supplierdata.split("/");
+
+        $(".modal-body #edit_supp_reference_").val(res[0]);
+	      $(".modal-body #edit_supp_name").val(res[1]);
+	      $(".modal-body #edit_supp_contactperson").val(res[2]);
+	      $(".modal-body #edit_supp_address").val(res[3]);
+	      $(".modal-body #edit_supp_phone").val(res[4]);
+		    $(".modal-body #edit_supp_email").val(res[5]);
+		    $(".modal-body #edit_supp_website").val(res[6]);
+
+		});
+
+    // // SUBMIT Edited Form
+    // $(document).ready(function(){
+    //   $("#submitBtn").click(function(){
+
+    //     //   '.replace(/\s+/g, '')
+        
+    //     let unitPrice = $("#edit_unitprice").val();
+    //     let trimedUnitPrice = $.trim(unitPrice);
+	  //     $(".modal-body #edit_unitprice").val(trimedUnitPrice);
+
+    //     let grossPrice = $("#edit_grossprice").val();
+    //     let trimedGrossPrice = $.trim(grossPrice);
+	  //     $(".modal-body #edit_grossprice").val(trimedGrossPrice);
+
+    //     let cost = $("#edit_cost").val();
+    //     let trimedCost = $.trim(cost);
+	  //     $(".modal-body #edit_cost").val(trimedCost);
+
+
+    //     $("#editProductForm").submit(); // Submit the form
+    //   });
+    // });    
+
 </script>
 </body>
 </html>

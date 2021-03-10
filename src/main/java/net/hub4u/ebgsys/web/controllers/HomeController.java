@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 import net.hub4u.ebgsys.entities.Customer;
 import net.hub4u.ebgsys.entities.Employee;
 import net.hub4u.ebgsys.entities.Product;
+import net.hub4u.ebgsys.entities.Purchase;
 import net.hub4u.ebgsys.entities.Sale;
 import net.hub4u.ebgsys.entities.SaleTxType;
 import net.hub4u.ebgsys.entities.Supplier;
@@ -12,6 +13,7 @@ import net.hub4u.ebgsys.entities.Vehicle;
 import net.hub4u.ebgsys.services.CustomerService;
 import net.hub4u.ebgsys.services.EmployeeService;
 import net.hub4u.ebgsys.services.ProductService;
+import net.hub4u.ebgsys.services.PurchaseService;
 import net.hub4u.ebgsys.services.SaleService;
 import net.hub4u.ebgsys.services.SupplierService;
 import net.hub4u.ebgsys.services.VehicleService;
@@ -40,6 +42,8 @@ public class HomeController {
 
     @Autowired
     SaleService saleService;
+    @Autowired
+    PurchaseService purchaseService;
 
 
     @GetMapping("/settingsintro")
@@ -84,5 +88,19 @@ public class HomeController {
         model.addAttribute("subSidemenuSalesIntro", true);
 
         return "salesintro";
+    }
+
+    @GetMapping("/purchasesintro")
+    public String purchasesHome(Model model) {
+
+        List<Purchase> purchases = purchaseService.fetchAllPurchases();
+
+        model.addAttribute("purchases", purchases);
+
+
+        model.addAttribute("sidemenuPurchases", true);
+        model.addAttribute("subSidemenuPurchasesIntro", true);
+
+        return "purchasesintro";
     }
 }

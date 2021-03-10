@@ -3,6 +3,7 @@ package net.hub4u.ebgsys.web.controllers;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import net.hub4u.ebgsys.entities.Customer;
 import net.hub4u.ebgsys.entities.Supplier;
 import net.hub4u.ebgsys.entities.Vehicle;
 import net.hub4u.ebgsys.frwk.EbgSysUtils;
@@ -40,6 +41,18 @@ public class SupplierController {
         Supplier supplierCreated  = supplierService.createSupplier(supplier);
         model.addAttribute("supplierCreated", supplierCreated);
         loadSuppliers(model);
+        return "settingssuppliers";
+    }
+
+    @PostMapping("/update")
+    public String updateSupplier(Supplier supplier, Model model) {
+        supplier.setReference(supplier.getNextReferenceView());
+        Supplier updatedSupplier = supplierService.updateSupplier(supplier);
+        log.info("updateCustomer() - Updated Supplier with reference : " + updatedSupplier.getReference());
+
+        model.addAttribute("supplierUpdated", updatedSupplier);
+        loadSuppliers(model);
+
         return "settingssuppliers";
     }
 

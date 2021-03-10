@@ -13,21 +13,15 @@
         <li th:class="${sidemenuPurchases != null ? 'active treeview menu-open' : 'treeview'}">
           <a href="#">
             <i class="fa fa-shopping-cart text-aqua"></i>
-            <span>Achats</span>
+            <span>Approvisionnements</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li th:class="${subSidemenuIntro != null ? 'active': ''}"><a href="#"><i class="fa fa-circle-o text-aqua"></i> Intro</a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> CKY - KALOUM</a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> CKY - MATAM</a></li>
-            <li><a href="purchases_matoto.html"><i class="fa fa-circle-o text-aqua"></i> CKY - MATOTO</a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> CKY - RATOMA</a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> BOKE</a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> KINDIA</a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> LABE</a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> MAMOU</a></li>
+            <li th:class="${subSidemenuPurchasesIntro != null ? 'active': ''}"><a href="/purchasesintro"><i class="fa fa-circle-o text-aqua"></i> Intro</a></li>
+            <li th:class="${subSidemenuPurchases != null ? 'active': ''}"><a href="/purchases"><i class="fa fa-tag text-aqua"></i> Achats</a></li>
+            <li><a href="#"><i class="fa fa-tag text-aqua"></i> Débit / Crédit</a></li>
           </ul>
         </li>
 
@@ -44,7 +38,6 @@
           </a>
           <ul class="treeview-menu">
             <li th:class="${subSidemenuSalesIntro != null ? 'active': ''}"><a href="/salesintro"><i class="fa fa-circle-o text-green"></i> Intro</a></li>
-            <!-- <li><a href="#"><i class="fa fa-tag text-green"></i> Intro</a></li> -->
             <li th:class="${subSidemenuSalesCredit != null ? 'active': ''}"><a href="/sales/credit"><i class="fa fa-tag text-green"></i> À Terme</a></li>
             <li th:class="${subSidemenuSalesCash != null ? 'active': ''}"><a href="/sales/cash"><i class="fa fa-tag text-green"></i> Comptant</a></li>
           </ul>

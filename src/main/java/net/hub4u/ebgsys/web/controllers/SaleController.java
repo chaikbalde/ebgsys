@@ -147,10 +147,8 @@ public class SaleController {
             saleProduct.setQuantity(cartItem.getQuantity());
             saleProduct.setUnitPrice(cartItem.getUnitPrice());
 
-
             product.getSaleProducts().add(saleProduct);
             saleProduct.setProduct(product);
-//            productService.updateProduct(product);
             creditSale.getSaleProducts().add(saleProduct);
             saleProduct.setSale(creditSale);
 

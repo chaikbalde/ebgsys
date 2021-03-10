@@ -34,10 +34,7 @@ public class Sale {
     Date saleDate;
     BigDecimal amount;
 
-//        SaleType saleType;
-
     SaleTxType saleTxType;
-//    int quantity;
 
     // Calculated fields
     boolean paid;
@@ -50,19 +47,11 @@ public class Sale {
     Date modificationDate;
     String modifiedBy;
 
-//    @ManyToOne
-//    @JoinColumn(name = "product_id")
-//    Product product;
-
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
     List<SaleProduct> saleProducts = new ArrayList<>();
 
-
     @ManyToOne
-    //@JoinColumn(name = "customer_id")
     Customer customer;
-
-
 
     @OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
     List<Payment> payments = new ArrayList<>();

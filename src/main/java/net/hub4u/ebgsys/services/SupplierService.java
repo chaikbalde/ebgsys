@@ -11,4 +11,8 @@ public interface SupplierService {
     List<Supplier> fetchAllSuppliers();
 
     void deleteSupplier(Long id);
+
+    Supplier fetchSupplierByReference(String reference);
+
+    Supplier updateSupplier(Supplier supplier);
 }

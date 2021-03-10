@@ -118,7 +118,7 @@
                 </tr>
                 <tr th:each="sp,iterStat : ${sale.saleProducts} " th:class="${iterStat.odd} ? 'odd'">
                   <td th:text="${iterStat.index+1 + '.'}">1.</td>
-                  <td><span class="badge bg-light-blue" th:text="${sp.product.name}">Fer 21</span></td>
+                  <td><span class="badge bg-green" th:text="${sp.product.name}">Fer 21</span></td>
                   <td th:text="${#numbers.formatInteger(sp.unitPrice,3,'WHITESPACE')}">12 000 (En Détail) </td>
                   <td th:text="${sp.quantity}">5</td>
                   <td><b th:text="${#numbers.formatInteger(sp.subTotalPrice,3,'WHITESPACE')}">60 000</b></td>

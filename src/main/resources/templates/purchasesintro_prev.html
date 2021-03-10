@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Grouoe SCF | Achats</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="../bower_components/font-awesome/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="../bower_components/Ionicons/css/ionicons.min.css">
+  <!-- jvectormap -->
+  <link rel="stylesheet" href="../bower_components/jvectormap/jquery-jvectormap.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="../dist/css/AdminLTE.min.css">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="../dist/css/skins/_all-skins.min.css">
+
+  <!-- Google Font -->
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <div th:insert="fragments/header :: header"></div>
+
+  <!-- Left side column. contains the logo and sidebar -->
+  <div th:insert="fragments/aside :: aside"></div>
+
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        <i class="fa fa-shopping-cart"></i> &nbsp; Achats
+        <small>Vue d'ensemble</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="intro.html"><i class="fa fa-home"></i> Accueil</a></li>
+        <li class="active">Achats</li>
+      </ol>
+    </section>
+
+    <br/>
+
+    <!-- Main content -->
+    <section class="content">
+      <!-- Info boxes -->
+
+      <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua">
+                <i class="fa fa-shopping-cart"></i>
+            </span>
+            <a href="#">
+	            <div class="info-box-content">
+	              <span class="info-box-text">KALOUM</span>
+	              <span class="info-box-number">
+	                <small title="Solde - 04/05/2018">24 740 000 GNF</small>  
+	              </span>
+	            </div>
+            </a>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+
+            <span class="info-box-icon bg-red">
+              <i class="fa fa-shopping-cart"></i>
+            </span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">MATAM</span>
+              <span class="info-box-number">
+                <small title="Solde - 05/05/2018">12 339 000 GNF</small>  
+              </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+        <!-- fix for small devices only -->
+        <div class="clearfix visible-sm-block"></div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua">
+                <i class="fa fa-shopping-cart"></i>
+            </span>
+            <a href="purchases_matoto.html">
+              <div class="info-box-content">
+                <span class="info-box-text">MATOTO</span>
+                <span class="info-box-number">
+                  <small title="Solde - 20/02/2013">    1 105 487 GNF</small>  
+                </span>
+              </div>
+            </a>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-red">
+                <i class="fa fa-shopping-cart"></i>
+            </span>
+            <div class="info-box-content">
+              <span class="info-box-text">RATOMA</span>
+              <span class="info-box-number">
+                <small title="Solde - 04/05/2018">112 210 000 GNF</small>  
+              </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+
+
+      <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-green">
+                <i class="fa fa-shopping-cart"></i>
+            </span>
+            <div class="info-box-content">
+              <span class="info-box-text">BOKE</span>
+              <span class="info-box-number">
+                <small title="Solde - 03/05/2018">26 700 000 GNF</small>  
+              </span>
+
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+
+            <span class="info-box-icon bg-yellow">
+              <i class="fa fa-shopping-cart"></i>
+            </span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">KINDIA</span>
+              <span class="info-box-number">
+                <small title="Solde - 02/05/2018">78 350 000 GNF</small>  
+              </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+        <!-- fix for small devices only -->
+        <div class="clearfix visible-sm-block"></div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-green">
+                <i class="fa fa-shopping-cart"></i>
+            </span>
+            <div class="info-box-content">
+              <span class="info-box-text">LABE</span>
+              <span class="info-box-number">
+                <small title="Solde - 04/05/2018">64 500 000 GNF</small>  
+              </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-yellow">
+                <i class="fa fa-shopping-cart"></i>
+            </span>
+            <div class="info-box-content">
+              <span class="info-box-text">MAMOU</span>
+              <span class="info-box-number">
+                <small title="Solde - 03/05/2018">78 200 000 GNF</small>  
+              </span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+      <!-- /.row -->
+
+
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+
+  <div th:insert="fragments/footer :: footer"></div>
+
+
+  <!-- Control Sidebar -->
+  <div th:insert="fragments/asidecontrol :: asidecontrol"></div>
+
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+<script src="bower_components/fastclick/lib/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js"></script>
+<!-- Sparkline -->
+<script src="bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+<!-- jvectormap  -->
+<script src="plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+<!-- SlimScroll -->
+<script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<!-- ChartJS -->
+<script src="bower_components/Chart.js/Chart.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="dist/js/pages/dashboard2.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="dist/js/demo.js"></script>
+</body>
+</html>
