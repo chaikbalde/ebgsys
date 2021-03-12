@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>EBG | Ventes Terme</title>
+  <title>EBG | Achats</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
@@ -41,20 +41,20 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <i class="fa fa-tag"></i> &nbsp; Ventes à Terme
-        <small>Gestion de la vente à terme</small>
+        <i class="fa fa-shopping-cart"></i> &nbsp; Achats
+        <small>Gestion des achats</small>
       </h1>
       
       <ol class="breadcrumb">
         <li><a href="index.html" th:href="@{/}"><i class="fa fa-home"></i> Accueil</a></li>
-        <li><a href="/salesintro"><i class="fa fa-tag"></i>Ventes</a></li>
-        <li class="active">Vente à Terme</li>
+        <li><a href="/purchasesintro"><i class="fa fa-shopping-cart"></i>Approvisionnements</a></li>
+        <li class="active">Achats</li>
       </ol>
       
     </section>
 
 
-    <!-- Main content   -->
+    <!-- Main content  |   th:if="${not #lists.isEmpty(cashSales)}"  -->
     <section class="content">
 	    
 	    <div class="row">
@@ -65,23 +65,23 @@
 	          <div class="box box-primary">
 	            <div class="box-body box-profile">
 	            
-	              <h3 class="profile-username text-center" title="Dernier jour de vente" >Résumé dernière vente</h3>
+	              <h3 class="profile-username text-center" title="Dernier jour de vente" >Résumé dernier achat</h3>
 	              <ul class="list-group list-group-unbordered">
 	                <li class="list-group-item">
-	                  <b>Date</b> <a class="pull-right"  th:text="${#dates.format(maxCreditSale.saleDate, 'dd/MM/yyyy')}" >11/02/2021</a>
+	                  <b>Date</b> <a class="pull-right"  th:text="${#dates.format(maxPurchase.purchaseDate, 'dd/MM/yyyy')}" >11/02/2021</a>
 	                </li>
 	                <li class="list-group-item">
-	                  <b>Produits vendus</b> 
+	                  <b>Produits achetés</b> 
 	                  <a class="pull-right">
-	                  	<span class="label label-success" th:each="sp : ${maxCreditSale.saleProducts}" th:text="${'&nbsp;' + sp.product.name}" >Fer 12</span> 
+	                  	<span class="label label-primary" th:each="pp : ${maxPurchase.purchaseProducts}" th:text="${'&nbsp;' + pp.product.name}" > Fer 12</span> 
 	                  </a>
 	                </li>
 	                
 	                <li class="list-group-item">
-	                  <b>Prix total</b> <a class="pull-right" th:text="${#numbers.formatInteger(maxCreditSale.amount,3,'WHITESPACE')}">1 222 950 000 </a>
+	                  <b>Prix total</b> <a class="pull-right" th:text="${#numbers.formatInteger(maxPurchase.amount,3,'WHITESPACE')}">1 222 950 000 </a>
 	                </li>
 	                <li class="list-group-item">
-	                  <b>Client</b> <a class="pull-right" th:text="${maxCreditSale.customerNameView} ">MAXIM</a>
+	                  <b>Fournisseur</b> <a class="pull-right" th:text="${maxPurchase.supplier.name} ">MAXIM</a>
 	                </li>
 	              </ul>
 	
@@ -95,85 +95,69 @@
 	    </div>
 
       <!-- Alert Created -->
-      <div th:if="${saleCreated}" class="alert alert-success alert-dismissible">
+      <div th:if="${purchaseCreated}" class="alert alert-success alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <i class="icon fa fa-check"></i> 
-        La vente <b th:text="${saleCreated.reference}">MATERIEL</b> a été saisie avec succès!
+        L'achat <b th:text="${purchaseCreated.reference}">APP-EBG-999</b> a été saisie avec succès!
       </div>
 
-      <!-- Alert Payment maade -->
-      <div th:if="${madePayment}" class="alert alert-success alert-dismissible">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <i class="icon fa fa-check"></i> 
-        Un paiement de <b th:text="${#numbers.formatInteger(madePayment.amount,3,'WHITESPACE')}">999999</b> a été effectué avec succès sur la vente <b th:text="${madePayment.sale.reference}">SALE</b>
-      </div>
-      
-
+    
       <div class="row">
         <div class="col-xs-12">
 
           <div class="box">
             <div class="box-header">
             	
-              <button type="button" class="pull-right btn btn-primary" id="addproduct" data-toggle="modal" data-target="#modal-createsale">
-              	Vendre <i class="fa fa-plus-circle"></i></button>
+              <button type="button" class="pull-right btn btn-primary" id="addproduct" data-toggle="modal" data-target="#modal-createpurchase">
+              	Acheter <i class="fa fa-plus-circle"></i></button>
               	
-              <h3 class="box-title">Liste des ventes à terme</h3>
+              <h3 class="box-title">Liste des ventes au comptant</h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <table id="salestable" class="table table-bordered table-striped">
+              <table id="purchasestable" class="table table-bordered table-striped">
                 <thead>
                 <tr>
-                  <th><i class="fa fa-calendar"></i>&nbsp;&nbsp; Date</th>
                   <th>Référence</th>
-                  <th>Client | Téléphone</th>
+                  <th><i class="fa fa-calendar"></i>&nbsp;&nbsp; Date</th>
+                  <th><i class="fa fa-industry"></i>&nbsp;&nbsp; Fournisseur | Téléphone</th>
                   <th><i class="fa fa-product-hunt"></i>&nbsp;&nbsp; Produits</th>
                   <th><i class="fa fa-money"></i>&nbsp;&nbsp;Montant total</th>
-                  <th>Soldé</th>
-                  <th><i class="fa fa-money"></i>&nbsp;&nbsp;Reste</th>
                 </tr>
                 </thead>
 
                 <tbody>
-                 <tr th:each="sale : ${creditSales}">
-                  <td th:text="${#dates.format(sale.saleDate, 'dd/MM/yyyy')}">16/02/2013</td>
-                  <td><a href="#" th:href="@{/sales/credit/{id}(id=${sale.id})}"  th:text="${sale.reference}" >FE12</a></td>
-                  <td th:text="${sale.customerNameView + ' | ' + sale.customer.phone  } ">CLIENT</td>
-
+                 <tr th:each="purchase : ${purchases}">
+                  <td th:text="${purchase.reference}" >FE12</td>
+                  <td th:text="${#dates.format(purchase.purchaseDate, 'dd/MM/yyyy')}">16/02/2021</td>
+                  <td th:text="${purchase.supplier.name + ' | ' + purchase.supplier.phone} ">SUPPLIER</td>
                   <td>
 
                     <div class="box-body table-responsive no-padding">
                       <table class="table table-hover">
 
-                        <tr th:each="sp : ${sale.saleProducts}">
-                          <td><span class="label label-success" th:text="${sp.product.name}"> Barbellet 20mm</span></td>
-                          <td th:text="${#numbers.formatInteger(sp.unitPrice,3,'WHITESPACE')}">44 444</td>
-                          <td th:text="${sp.quantity}">11</td>
-                          <td th:text="${#numbers.formatInteger(sp.subTotalPrice,3,'WHITESPACE')}">444 888 000</td>
+                        <tr th:each="pp : ${purchase.purchaseProducts}">
+                          <td><span class="label label-primary" th:text="${pp.product.name}"> PROD.NAME</span></td>
+                          <td th:text="${#numbers.formatInteger(pp.unitPrice,3,'WHITESPACE')}">44 444</td>
+                          <td th:text="${pp.quantity}">11</td>
+                          <td><b th:text="${#numbers.formatInteger(pp.subTotalPrice,3,'WHITESPACE')}">444 888 000</b></td>
                         </tr>
 
                       </table>
                     </div>
-                    <!-- /.box-body -->
     
                   </td>
-
-                  <td th:text="${#numbers.formatInteger(sale.amount,3,'WHITESPACE')}">1 999 888 777</td>
-                  <td align="center"><img src="dist/img/checked_green.png" th:src="${ (sale.paid) ? '/dist/img/checked_green.png' : '/dist/img/checked_red.png'}"  class="user-image" alt="av1 Image" height="14" data-toggle="tooltip" data-placement="top" title="Payé" th:title="${'Payé: ' +  #numbers.formatInteger(sale.balance,3,'WHITESPACE')} " /></td>
-                  <td th:text="${#numbers.formatInteger(sale.rest,3,'WHITESPACE')}">777 666</td>
+                  <td th:text="${#numbers.formatInteger(purchase.amount,3,'WHITESPACE')}">9 999 888 777</td>
                 </tr>
                 
                 </tbody>
                 <tfoot>
                 <tr>
-                  <th><i class="fa fa-calendar"></i>&nbsp;&nbsp; Date</th>
                   <th>Référence</th>
-                  <th>Client | Téléphone </th>
+                  <th><i class="fa fa-calendar"></i>&nbsp;&nbsp; Date</th>
+                  <th><i class="fa fa-industry"></i>&nbsp;&nbsp; Fournisseur | Téléphone</th>
                   <th><i class="fa fa-product-hunt"></i>&nbsp;&nbsp; Produits</th>
                   <th><i class="fa fa-money"></i>&nbsp;&nbsp;Montant total</th>
-                  <th>Soldé</th>
-                  <th><i class="fa fa-money"></i>&nbsp;&nbsp;Reste</th>
                 </tr>
                 </tfoot>
               </table>
@@ -187,88 +171,65 @@
       <!-- /.row -->
       
 
-        <div class="modal fade" id="modal-createsale">
-          <div class="modal-dialog" style="width: 45%;">
-            <form role="form" action="#" th:action="@{/sales/createcreditsale}" th:object="${creditSale}" method="post" id="salesform">
+        <div class="modal fade" id="modal-createpurchase">
+          <div class="modal-dialog">
+            <form role="form" action="#" th:action="@{/purchases/create}" th:object="${purchase}" method="post" id="purchaseForm">
 	            <div class="modal-content">
 	              <div class="modal-header">
 	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 	                  <span aria-hidden="true">&times;</span></button>
-	                <h4 class="modal-title">Vente de produits à terme</h4>
+	                <h4 class="modal-title">Achats de produits</h4>
 	              </div>
-
 	              <div class="modal-body">
-
 	                <div class="form-group">
-	                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="reference" placeholder="Référence de Vente" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
+	                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="reference" placeholder="Référence" style="width: 60%; background-color: #e6f2ff; font-weight: bold;"/>
 	                </div>
+		              <div class="form-group">
+		                <div class="input-group date" style="width: 60%">
+		                  <div class="input-group-addon">
+		                    <i class="fa fa-calendar"></i>
+		                  </div>
+		                  <input type="text"  th:field="*{purchaseDate}" class="form-control pull-right" id="datepicker" style="background-color: #e6f2ff; font-weight: bold;"/>
+		                </div>
+		              </div>
                   <div class="form-group">
-                    <select class="form-control select2" id="customer" th:field="*{customer.id}" style="width: 60%; background-color: #DAFDED; font-weight: bold;">
-                      <option value="">Client...</option>
-                      <option th:each="cust : ${customers}" th:value="${cust.id}" th:text="${( cust.customerType == T(net.hub4u.ebgsys.entities.CustomerType).COMPANY ) ?  cust.name : cust.lastName + ' ' + cust.firstName}"></option>
+                    <select class="form-control select2" id="supplier" th:field="*{supplier.reference}" style="width: 60%; background-color: #e6f2ff; font-weight: bold;">
+                      <option value="">Fournisseur...</option>
+                      <option th:each="supp : ${suppliers}" th:value="${supp.reference}" th:text="${supp.name}"></option>
                     </select>
                   </div>
-                  <div class="form-group">
-                    <div class="input-group date" style="width: 60%">
-                      <div class="input-group-addon">
-                        <i class="fa fa-calendar"></i>
-                      </div>
-                      <input type="text"  th:field="*{saleDate}" value="" placeholder="Date de Vente" class="form-control pull-right" id="datepicker" style="background-color: #DAFDED; font-weight: bold;"/>
-                    </div>
-                  </div>
-  
+
                   <hr> 
 
                   <div class="form-group">
                     <label for="product">Produit</label>
-		              	<select class="form-control select2" name="product" id="product" onchange="find_prodprice();"   style="width: 60%; background-color: #DAFDED; font-weight: bold;">
+		              	<select class="form-control select2" name="productId" id="product" onchange="find_prodcost();"   style="width: 60%; background-color: #e6f2ff; font-weight: bold;">
 			              	<option value="">...</option>
                       <option th:each="prod : ${productsForm}" th:value="${prod.id}" th:text="${prod.name}"></option>
 				            </select>
 	                </div>
 
 	                <div class="form-group">
-                    <input type="text" class="form-control" id="productpriceunit" placeholder="Prix en detail" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/><p id="totalprice_retail" style="width: 30%; background-color: #EEEEFE"></p>
-                    <input type="text" class="form-control" id="productpricegross" placeholder="Prix en gros" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/><p id="totalprice_gross" style="width: 30%; background-color: #EEEEFE"></p>
-                    <input type="hidden" class="form-control" id="productpriceunitraw"/>
-                    <input type="hidden" class="form-control" id="productpricegrossraw"/>
+                    <input type="text" class="form-control" id="productprice" onchange="show_total_prices(this.value)" placeholder="Prix" style="width: 60%; background-color: #e6f2ff; font-weight: bold;"/>
 	                </div>
-
-                  <div class="form-group">
-                    <label>
-                      <input type="radio"name="saletype" id="saletypeRetail" class="flat-red" value="RETAIL"/>
-                    </label>
-                    Vente en Détail
-                    
-                    <label style="margin-left: 50px;">
-                      <input type="radio" name="saletype" id="saletypeWhole" class="flat-red" value="WHOLESALE"/>
-                    </label>
-                    Vente en Gros
-                  </div>
                   
 	                <div class="form-group">
-	                  <input type="text"  class="form-control" id="quantity" onchange="show_total_prices(this.value);" placeholder="Quantité" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
+	                  <input type="text"  class="form-control" id="quantity" onchange="show_total_prices(this.value);" placeholder="Quantité" style="width: 60%; background-color: #e6f2ff; font-weight: bold;"/>
+                    <p id="totalprice" style="margin-top: 10px; width: 30%; font-weight: bolder; font-size: large; background-color: #EEEEFE"></p>
 	                </div>
 
                   <p>
-                    <a href="javascript:add2cart();"><img src="dist/img/cart.png" th:src="@{/dist/img/cart.png}" data-toggle="tooltip" data-placement="top" title="Ajouter au panier" alt="ShopCart" style="height: 25px; margin-left: 55%;" /></a>
+                    <a href="javascript:addtopurchasecart();"><img src="dist/img/cart.png" th:src="@{/dist/img/cart.png}" data-toggle="tooltip" data-placement="top" title="Ajouter au panier" alt="ShopCart" style="height: 25px; margin-left: 55%;" /></a>
                   </p>  
                   
                   <hr>
 
-	                <div class="form-group">
-	                  <input type="text" th:field="*{paidAmount}" name="payment" class="form-control" id="payment" placeholder="Acompte" value="" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
-	                </div>
-
-
-                  <span id="shoptable">
-                  </span>
+                  <span id="purchaseshoptable"></span>
     
 	              </div>
-                
 	              <div class="modal-footer">
 	                <button type="submit" class="btn btn-primary"  style="float: left;">Sauvegarder <i class="fa fa-check"></i> </button>
-	                <button type="reset" class="btn btn-default">Effacer <i class="fa fa-trash"></i> </button> 
+	                <button type="button" onclick="resetForm();" class="btn btn-default">Effacer <i class="fa fa-trash"></i> </button> 
 	                <button type="button" class="btn btn-default" data-dismiss="modal">Quitter <i class="fa fa-times"></i></button> 
 	              </div>
 	            </div>
@@ -319,14 +280,11 @@
 <script src="dist/js/demo.js" th:src="@{/dist/js/demo.js}"></script>
 <!-- page script -->
 <script>
-
-  // [CB] : default value for input typ 'number' & radio btn value
-  document.getElementById("quantity").defaultValue = "";
-  document.getElementById("saletypeRetail").checked = true;
-
   $(function () {
-   
-    $('#salestable').DataTable({
+
+    
+    
+    $('#purchasestable').DataTable({
 
    	 "oLanguage": {
 	         	"sProcessing":     "Traitement en cours...",
@@ -351,7 +309,11 @@
         		"sSortDescending": ": activer pour trier la colonne par ordre d&eacute;croissant"
         	}
          }
-
+        //  ,
+        //  'columnDefs': [ {
+        //   'targets': [5], /* column index */
+        //   'orderable': false /* true or false */
+        // }]
      });
     
 
@@ -360,100 +322,98 @@ $(function () {
 })
 
 //Date picker
-  $('#datepicker').datepicker({
-    // format: 'dd/mm/yyyy',
-    language: 'fr',
-    autoclose: true
-  })
+    $('#datepicker').datepicker({
+      // format: 'dd/mm/yyyy',
+      language: 'fr',
+      autoclose: true
+    });
 
   $('#datepicker').datepicker('update', new Date());
+    
+  })
 
-})
 
 let LOCAL_HOST = "http://localhost:8080"; 
 let REMOTE_HOST = "https://ebgsys.herokuapp.com"; 
 
-function find_prodprice() {
+/* Finds a Product based on its ID  */
+function find_prodcost() {
 
     $.ajax({
 				  type: "get",
-				  url: REMOTE_HOST + "/products/findproductpice/" + $("#product").val(),
+				  url: REMOTE_HOST + "/products/findproductcost/" + $("#product").val(),
 				  dataType: "json",
 				  cache: false,    
 				  //data:'product=' + $("#product").val(),
 				  success: function(response){
             if(response !== null) {
-              $('#productpriceunitraw').val(response[0]);
-              $('#productpricegrossraw').val(response[1]);
-              $('#productpriceunit').val(response[2]);
-              $('#productpricegross').val(response[3]);
+              
+              let cost_fmt = response.toLocaleString('fr-FR');
+              $('#productprice').val(cost_fmt);
 
               let qty = $('#quantity').val();
-              if(qty>0) {
+              if(qty > 0) {
                 show_total_prices(qty);
               } 
-              
             }
 				  },
-				  error: function(e){      
+				  error: function(e) {      
 				   	alert('Error while request.. : ' + e.statusText);
 				  }
 			});
+	}  
 
-	}
+  /*  */
+  function trimedprice(value) {
+    return value.replace(/\s+/g, '');
+  }
 
+  /* Calculate proce subtotal and show it */
   function show_total_prices(value) {
+
     let qty = $('#quantity').val();
-    let unitprc = $('#productpriceunitraw').val();
-    let grossprc = $('#productpricegrossraw').val();
+    let price = $('#productprice').val();
+    let trimed_price =  trimedprice(price);
 
     if (qty > 0) {
-      let totalunit = unitprc * qty;
-      let totalgross = grossprc * qty;
-      document.getElementById("totalprice_retail").innerHTML = totalunit.toLocaleString('fr-FR');
-      document.getElementById("totalprice_gross").innerHTML = totalgross.toLocaleString('fr-FR');
+      let totalprice = trimed_price * qty;
+      let totalprice_fmt = totalprice.toLocaleString('fr-FR')
+
+      document.getElementById("totalprice").innerHTML = totalprice.toLocaleString('fr-FR');
+
     } else {
       hide();
     }
-
   }
 
   function hide() {
     let qty = $('#quantity').val();
     if (qty==0) {
-      document.getElementById("totalprice_retail").style.display = "none";
-      document.getElementById("totalprice_gross").style.display = "none";
+      document.getElementById("totalprice").style.display = "none";
     } 
-    // else {
-    //   document.getElementById("totalprice_retail").style.display = "block";
-    //   document.getElementById("totalprice_gross").style.display = "block";
-    // }
   }
 
+  /* Add to shopping cart */
+  function addtopurchasecart() {
 
+			let prodId = $('#product').val();
+			let qty = $.trim( $('#quantity').val() );
 
-  function add2cart() {
-			var prodId = $('#product').val();
-			// var saleType = $('#saletypeRetail').val() ;
-			var qty = $.trim( $('#quantity').val() );
-
-      var saleType = 'WHOLESALE';
-      if($('#saletypeRetail').is(':checked')) {
-        saleType = 'RETAIL';
-      } 
+      let price = $('#productprice').val();
+      let trimed_price =  trimedprice(price);
 
       $.ajax({
 
         type: "get",
-				  url: REMOTE_HOST + "/sales/add2cart/" + prodId,
+				  url: REMOTE_HOST + "/purchases/addtopurchasecart/" + prodId,
 				  dataType: "json",
 				  cache: false,
-				  data:"prodId=" + prodId + '&cartType=ShoppingCartSell' + '&saleType=' + saleType + '&qty=' + qty,
+				  data:"prodId=" + prodId + '&qty=' + qty + '&price=' + trimed_price,
 				  success: function(response){
+
 					  var len = response.length;
 
             let shoptbl = 
-	                "<hr/>" +		
                   "<div class='box'>" +
                     "<div class='box-header'>" +
                       "<h3 class='box-title'>Panier des achats</h3>" +
@@ -462,7 +422,7 @@ function find_prodprice() {
                       "<table class='table table-hover'>" +
                         "<tr>" +
                           "<th>Produit | Référence</th>" +
-                          "<th>Prix Unitaire</th>" +
+                          "<th>Prix</th>" +
                           "<th>Quantité</th>" +
                           "<th>Sous Total</th>" +
                         "</tr>";
@@ -478,7 +438,7 @@ function find_prodprice() {
 
               shoptbl += 
                 "<tr>" +
-                  "<td><span class='label label-success'>"+cartElem.productName+ "&nbsp;  | &nbsp;" + cartElem.productReference + "</span></td>" +
+                  "<td><span class='label label-primary'>"+cartElem.productName+ "&nbsp;  | &nbsp;" + cartElem.productReference + "</span></td>" +
                   "<td>"+ unitPrice +"</td>" +
                   "<td>"+ cartElem.quantity +"</td>" +
                   "<td><b>"+ totalPrice +"</b></td>" +
@@ -491,30 +451,49 @@ function find_prodprice() {
                 "<td></td>" +
                 "<td></td>" +
                 "<td></td>" +
-                "<td><b style='background-color: #DAFDED;'>"+ sumView +"</b></td>" +
+                "<td><b style='background-color: #e6f2ff;'>"+ sumView +"</b></td>" +
               "</tr>" ;
 
             shoptbl += "</table>" ;
 
-            $('#shoptable').html(shoptbl);
+            $('#purchaseshoptable').html(shoptbl);
 
               /* clear form input */
               $('#product') .val('');
-              $('#productpriceunit').val('');
-              $('#productpricegross').val('');
+              $('#productprice').val('');
               $('#quantity').val('');
-              $('#payment').val('');
-              $('#totalprice_gross').text('');
-              $('#totalprice_retail').text('');
-              document.getElementById("saletypeRetail").checked = true;
+              $('#totalprice').text('');
           },
 
 				  error: function(e){      
 				   		alert('Error while request.. : ' + e);
 				  }
 
-
       });
+  }
+
+  /* Clears the form and the session */
+  function resetForm() {
+
+    $('#totalprice').text('');
+    document.getElementById("purchaseForm").reset();
+
+    $.ajax({
+				  type: "get",
+				  url: REMOTE_HOST + "/purchases/clearcartsession",
+				  dataType: "text",
+				  cache: false,    
+				  success: function(response){
+            console.log('Cleared cart session');
+            $('#purchaseshoptable').html('');
+				  },
+
+          error: function (request, status, error) {
+            alert('Error while request.. : ' + e.statusText + '; \nResponse text: ' + request.responseText);
+          }
+
+			});
+
   }
 
 

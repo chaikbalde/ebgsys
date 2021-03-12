@@ -19,7 +19,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     PurchaseRepository purchaseRepository;
 
     @Override
-    public Purchase createSale(Purchase purchase) {
+    public Purchase createPurchase(Purchase purchase) {
         return purchaseRepository.save(purchase);
     }
 

@@ -12,12 +12,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
@@ -87,6 +85,16 @@ public class ProductController {
         return new String[] {""+product.getUnitPrice(), ""+product.getGrossPrice(), ""+NUMBER_FORMAT.format(product.getUnitPrice()), ""+NUMBER_FORMAT.format(product.getGrossPrice())} ;
     }
 
+    /**
+     *
+     * */
+    @GetMapping("/findproductcost/{productId}")
+    public @ResponseBody String getProductCost(@PathVariable Long productId) {
+        Product product = productService.fetchProduct(productId);
+        log.debug("getProductCost() - Getting cost from Product : " + product.getName());
+
+        return ""+product.getCost();
+    }
 
     // HELPERS
     private void loadProducts(Model model) {

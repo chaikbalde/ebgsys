@@ -32,12 +32,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Controller
@@ -114,9 +112,6 @@ public class SaleController {
             loadCreditSales(model);
             return "salescredit";
         }
-
-        // [1] Get Sale Meta:
-        // REF, [Date], Customer, Total_amount, Rest_2_pay, Paid:?
 
         creditSale.setReference(creditSale.getNextReferenceView());
 
@@ -276,7 +271,7 @@ public class SaleController {
     }
 
     /**
-     *				  data:"prodId=" + prodId + '&saleType=' + saleType + '&qty=' + qty,
+     *
      * */
     @GetMapping("/add2cart/{productId}")
     public @ResponseBody String addToCart(
@@ -289,23 +284,14 @@ public class SaleController {
         Product product = productService.fetchProduct(productId);
         log.debug("addToCart() - Adding Product '"+product.getName()+"' to Cart");
 
-        List<ShopCartItem> cartItems = null;
-        if (EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_SELL.equals(cartType)) {
-            cartItems = (List<ShopCartItem>) request.getSession().getAttribute(EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_SELL);
-        } else {
-            cartItems = (List<ShopCartItem>) request.getSession().getAttribute(EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_BUY);
-        }
+        List<ShopCartItem> cartItems = (List<ShopCartItem>) request.getSession().getAttribute(EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_SELL);
 
         if (cartItems == null) {
             cartItems = new ArrayList<ShopCartItem>();
             ShopCartItem item = buildCartItem(product, saleType, qty);
             cartItems.add(item);
 
-            if (EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_SELL.equals(cartType)) {
-                request.getSession().setAttribute(EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_SELL, cartItems);
-            } else {
-                request.getSession().setAttribute(EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_BUY, cartItems);
-            }
+            request.getSession().setAttribute(EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_SELL, cartItems);
 
         }  else {
             ShopCartItem item = buildCartItem(product, saleType, qty);
@@ -328,11 +314,6 @@ public class SaleController {
     /**
      *
      * */
-    static final NumberFormat NUMBER_FORMAT = NumberFormat.getInstance(new Locale("fr", "FR"));
-
-    /**
-     *
-     * */
     private ShopCartItem buildCartItem(Product product, String saleType, int quantity) {
         ShopCartItem cartItem = new ShopCartItem();
         cartItem.setProductName(product.getName());
@@ -345,24 +326,10 @@ public class SaleController {
         cartItem.setTotalPrice(totalPrice);
 
         return cartItem;
-
     }
 
         ////////////////////////////////////////  END
 
-//    //
-//    private BigDecimal retrieveUnitPrice(Sale sale, Product product) {
-//        BigDecimal unitPrice = BigDecimal.ZERO;
-//        if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.RETAIL)) {
-//            unitPrice = product.getUnitPrice();
-//        } else  if (sale.getSaleType() != null && sale.getSaleType().equals(SaleType.WHOLESALE)) {
-//            unitPrice = product.getGrossPrice();
-//        }
-//
-//        return unitPrice;
-//    }
-
-    //
     private void loadSales(Model model) {
 
         loadCashSales(model);

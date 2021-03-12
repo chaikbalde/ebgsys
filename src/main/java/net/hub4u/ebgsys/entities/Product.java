@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,6 +36,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     List<SaleProduct> saleProducts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.PERSIST)
+    List<PurchaseProduct> purchaseProducts = new ArrayList<>();
 
     // Transient fields for the view
     @Transient

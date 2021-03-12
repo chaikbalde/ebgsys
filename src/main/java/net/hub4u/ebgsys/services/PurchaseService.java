@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PurchaseService {
 
-    Purchase createSale(Purchase purchase);
+    Purchase createPurchase(Purchase purchase);
 
     List<Purchase> fetchAllPurchases();
 
