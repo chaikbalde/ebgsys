@@ -81,7 +81,7 @@
 	                  <b>Prix total</b> <a class="pull-right" th:text="${#numbers.formatInteger(maxPurchase.amount,3,'WHITESPACE')}">1 222 950 000 </a>
 	                </li>
 	                <li class="list-group-item">
-	                  <b>Fournisseur</b> <a class="pull-right" th:text="${maxPurchase.supplier.name} ">MAXIM</a>
+	                  <b>Fournisseur</b> <a class="pull-right" th:text="${(maxPurchase.supplier != null) ? maxPurchase.supplier.name : ''} ">MAXIM</a>
 	                </li>
 	              </ul>
 	
