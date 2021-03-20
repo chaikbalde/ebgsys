@@ -116,7 +116,6 @@
               </tr>
                 </thead>
                 <tbody>
-                  <!-- <tr th:each="prod : ${products}" th:with="edit_prod_params=${prod.reference} + '/' + ${prod.name} + '/' + ${#numbers.formatInteger(prod.unitPrice,3,'WHITESPACE')} + '/' + ${prod.unitPrice} + '/' + ${#numbers.formatInteger(prod.grossPrice,3,'WHITESPACE')}  + '/' + ${prod.grossPrice} + '/' + ${#numbers.formatInteger(prod.cost,3,'WHITESPACE')} + '/' + ${prod.cost} + '/' + ${prod.description}"> -->
                   <tr th:each="prod : ${products}" th:with="edit_prod_params=${prod.reference} + '/' + ${prod.name} + '/' + ${#numbers.formatInteger(prod.unitPrice,3,'WHITESPACE')} + '/' + ${#numbers.formatInteger(prod.grossPrice,3,'WHITESPACE')}  + '/' + ${#numbers.formatInteger(prod.cost,3,'WHITESPACE')} + '/' + ${prod.description} + '/' + ${(prod.grossPriceQuantity < 100) ? prod.grossPriceQuantity : #numbers.formatInteger(prod.grossPriceQuantity,3,'WHITESPACE')} + '/' + ${(prod.minQuantity < 100) ? prod.minQuantity : #numbers.formatInteger(prod.minQuantity,3,'WHITESPACE')}">
                     <td th:text="${prod.reference}">CLEBG00267</td>
                     <td th:text="${prod.name}">PROD.NAME</td>

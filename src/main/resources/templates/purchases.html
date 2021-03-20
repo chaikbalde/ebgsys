@@ -342,7 +342,7 @@ function find_prodcost() {
 
     $.ajax({
 				  type: "get",
-				  url: LOCAL_HOST + "/products/findproductcost/" + $("#product").val(),
+				  url: REMOTE_HOST + "/products/findproductcost/" + $("#product").val(),
 				  dataType: "json",
 				  cache: false,    
 				  //data:'product=' + $("#product").val(),
@@ -406,7 +406,7 @@ function find_prodcost() {
       $.ajax({
 
         type: "get",
-				  url: LOCAL_HOST + "/purchases/addtopurchasecart/" + prodId,
+				  url: REMOTE_HOST + "/purchases/addtopurchasecart/" + prodId,
 				  dataType: "json",
 				  cache: false,
 				  data:"prodId=" + prodId + '&qty=' + qty + '&price=' + trimed_price,
@@ -481,7 +481,7 @@ function find_prodcost() {
 
     $.ajax({
 				  type: "get",
-				  url: LOCAL_HOST + "/purchases/clearcartsession",
+				  url: REMOTE_HOST + "/purchases/clearcartsession",
 				  dataType: "text",
 				  cache: false,    
 				  success: function(response){
