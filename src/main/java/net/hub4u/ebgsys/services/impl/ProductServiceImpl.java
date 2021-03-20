@@ -60,12 +60,14 @@ public class ProductServiceImpl implements ProductService {
         Product currentProduct = fetchProductByReference(product.getReference());
 
         currentProduct.setReference(product.getReference());
-        currentProduct.setCost(product.getCost());
-        currentProduct.setSaleProducts(product.getSaleProducts());
-        currentProduct.setDescription(product.getDescription());
-        currentProduct.setGrossPrice(product.getGrossPrice());
         currentProduct.setName(product.getName());
+        currentProduct.setDescription(product.getDescription());
+        currentProduct.setCost(product.getCost());
         currentProduct.setUnitPrice(product.getUnitPrice());
+        currentProduct.setGrossPrice(product.getGrossPrice());
+        currentProduct.setMinQuantity(product.getMinQuantity());
+        currentProduct.setGrossPriceQuantity(product.getGrossPriceQuantity());
+        currentProduct.setSaleProducts(product.getSaleProducts());
         currentProduct.setNextReferenceView(product.getNextReferenceView());
 
         return productRepository.save(currentProduct);

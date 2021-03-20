@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>EBG | Stocks</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.7 -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css" th:href="@{/bower_components/bootstrap/dist/css/bootstrap.min.css}" >
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" th:href="@{/bower_components/font-awesome/css/font-awesome.min.css}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css" th:href="@{/bower_components/Ionicons/css/ionicons.min.css}" >
+
+  <!-- Theme style -->
+  <link rel="stylesheet" href="dist/css/AdminLTE.min.css" th:href="@{/dist/css/AdminLTE.min.css}">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="dist/css/skins/_all-skins.min.css" th:href="@{/dist/css/skins/_all-skins.min.css}">
+
+  <!-- Google Font -->
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+  <div th:insert="fragments/header :: header"></div>
+
+  <!-- Left side column. contains the logo and sidebar -->
+  <div th:insert="fragments/aside :: aside"></div>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <h1>
+        <i class="fa fa-cubes"></i> &nbsp; Stocks
+        <small>Vue d'ensemble</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="/"><i class="fa fa-home"></i> Accueil</a></li>
+        <li class="active">Stocks</li>
+      </ol>
+    </section>
+    
+    <br/>
+    
+    <!-- Main content -->
+    <section class="content">
+      <!-- Info boxes -->
+      
+      <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="info-box">
+          <span class="info-box-icon bg-yellow">
+            <i class="fa fa-cubes"></i>
+          </span>
+  
+          <a href="/stocks">
+            <div class="info-box-content">
+              <span class="info-box-number" th:text="${(productsQtySum < 100) ? productsQtySum :  #numbers.formatInteger(productsQtySum,3,'WHITESPACE')}">666</span>
+              <span class="info-box-text">Articles en stocks</span>
+            </div>
+          <a href="#">
+          <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+      </div>
+      <!-- /.col -->
+
+      <div class="row">
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-red">
+                <i class="fa fa-bar-chart"></i>
+            </span>
+            
+            <a href="#">
+	            <div class="info-box-content">
+	              <span class="info-box-number">I</span>
+	              <span class="info-box-text">Inventaire</span> 
+	            </div>
+            </a>
+            
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+        <!-- fix for small devices only -->
+        <div class="clearfix visible-sm-block"></div>
+
+      </div>
+      <!-- /.row -->
+
+      <!-- /.row -->
+
+
+    </section>
+    <!-- /.content -->
+
+  </div>
+  <!-- /.content-wrapper -->
+
+  <div th:insert="fragments/footer :: footer"></div>
+  
+  <!-- Control Sidebar -->
+  <div th:insert="fragments/asidecontrol :: asidecontrol"></div>
+
+  <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+  <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<script src="bower_components/jquery/dist/jquery.min.js" th:src="@{/bower_components/jquery/dist/jquery.min.js}"></script>
+<!-- Bootstrap 3.3.7 -->
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js" th:src="@{/bower_components/bootstrap/dist/js/bootstrap.min.js}"></script>
+<!-- DataTables -->
+<script src="bower_components/datatables.net/js/jquery.dataTables.min.js" th:src="@{/bower_components/datatables.net/js/jquery.dataTables.min.js}"></script>
+<script src="bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js" th:src="@{/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js}"></script>
+
+<!-- bootstrap datepicker -->
+<script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js" th:src="@{/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+
+<!-- SlimScroll -->
+<script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js" th:src="@{/bower_components/jquery-slimscroll/jquery.slimscroll.min.js}"></script>
+<!-- FastClick -->
+<script src="bower_components/fastclick/lib/fastclick.js" th:src="@{/bower_components/fastclick/lib/fastclick.js}"></script>
+<!-- AdminLTE App -->
+<script src="dist/js/adminlte.min.js" th:src="@{/dist/js/adminlte.min.js}"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="dist/js/demo.js" th:src="@{/dist/js/demo.js}"></script>
+
+</body>
+</html>

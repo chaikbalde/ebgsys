@@ -106,22 +106,26 @@
                 <tr>
                   <th>Référence</th>
                   <th>Nom</th>
-                  <th>Prix Unitaire</th>
-                  <th>Prix en Gros</th>
-                  <th>Coût</th>
                   <th>Description</th>
+                  <th>Prix d'Achat</th>
+                  <th>Prix Unit.</th>
+                  <th>Prix en Gros</th>
+                  <th>Qté en Gros</th>
+                  <th>Qté min.</th>
                   <th><i class="fa fa-gear"></i> Action</th>
-                </tr>
+              </tr>
                 </thead>
                 <tbody>
                   <!-- <tr th:each="prod : ${products}" th:with="edit_prod_params=${prod.reference} + '/' + ${prod.name} + '/' + ${#numbers.formatInteger(prod.unitPrice,3,'WHITESPACE')} + '/' + ${prod.unitPrice} + '/' + ${#numbers.formatInteger(prod.grossPrice,3,'WHITESPACE')}  + '/' + ${prod.grossPrice} + '/' + ${#numbers.formatInteger(prod.cost,3,'WHITESPACE')} + '/' + ${prod.cost} + '/' + ${prod.description}"> -->
-                  <tr th:each="prod : ${products}" th:with="edit_prod_params=${prod.reference} + '/' + ${prod.name} + '/' + ${#numbers.formatInteger(prod.unitPrice,3,'WHITESPACE')} + '/' + ${#numbers.formatInteger(prod.grossPrice,3,'WHITESPACE')}  + '/' + ${#numbers.formatInteger(prod.cost,3,'WHITESPACE')} + '/' + ${prod.description}">
+                  <tr th:each="prod : ${products}" th:with="edit_prod_params=${prod.reference} + '/' + ${prod.name} + '/' + ${#numbers.formatInteger(prod.unitPrice,3,'WHITESPACE')} + '/' + ${#numbers.formatInteger(prod.grossPrice,3,'WHITESPACE')}  + '/' + ${#numbers.formatInteger(prod.cost,3,'WHITESPACE')} + '/' + ${prod.description} + '/' + ${(prod.grossPriceQuantity < 100) ? prod.grossPriceQuantity : #numbers.formatInteger(prod.grossPriceQuantity,3,'WHITESPACE')} + '/' + ${(prod.minQuantity < 100) ? prod.minQuantity : #numbers.formatInteger(prod.minQuantity,3,'WHITESPACE')}">
                     <td th:text="${prod.reference}">CLEBG00267</td>
                     <td th:text="${prod.name}">PROD.NAME</td>
+                    <td th:text="${prod.description}">PROD.DESC</td>
+                    <td th:text="${#numbers.formatInteger(prod.cost,3,'WHITESPACE')}">8888</td>
                     <td th:text="${#numbers.formatInteger(prod.unitPrice,3,'WHITESPACE')}">999</td>
                     <td th:text="${#numbers.formatInteger(prod.grossPrice,3,'WHITESPACE')}">9999</td>
-                    <td th:text="${#numbers.formatInteger(prod.cost,3,'WHITESPACE')}">8888</td>
-                    <td th:text="${prod.description}">PROD.DESC</td>
+                    <td th:text="${(prod.grossPriceQuantity < 100) ? prod.grossPriceQuantity : #numbers.formatInteger(prod.grossPriceQuantity,3,'WHITESPACE')}">1000</td>
+                    <td th:text="${(prod.minQuantity < 100) ? prod.minQuantity : #numbers.formatInteger(prod.minQuantity,3,'WHITESPACE')}">500</td>
                     <td align="center">
                       <a href="#modal-modifyproduct" data-toggle="modal" th:attr="data-id=${edit_prod_params}" class="open-EditProductDialog"  title="Editer" style="margin-right: 20px;"><i class="fa fa-pencil-square-o"></i></a> 
                       <a href="#" th:href="@{/products/delete/{id}(id=${prod.id})}" data-toggle="tooltip" data-placement="top" title="Supprimer"><i class="fa fa-trash"></i></a> 
@@ -132,10 +136,12 @@
                   <tr>
                     <th>Référence</th>
                     <th>Nom</th>
-                    <th>Prix Unitaire</th>
-                    <th>Prix en Gros</th>
-                    <th>Coût</th>
                     <th>Description</th>
+                    <th>Prix d'Achat</th>
+                    <th>Prix Unit.</th>
+                    <th>Prix en Gros</th>
+                    <th>Qté en Gros</th>
+                    <th>Qté min.</th>
                     <th><i class="fa fa-gear"></i> Action</th>
                   </tr>
                 </tr>
@@ -160,8 +166,8 @@
                   <span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Ajouter un produit</h4>
               </div>
+
               <div class="modal-body">
-                
                 <div class="form-group">
                   <input type="text" th:field="*{nextReferenceView}" class="form-control" id="reference_" placeholder="Référence" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
@@ -172,15 +178,22 @@
                   <input type="text" th:field="*{description}" class="form-control" id="description" placeholder="Description" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
                 <div class="form-group">
+                  <input type="text" th:field="*{cost}" class="form-control" id="cost" placeholder="Prix d'Achat" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
                   <input type="text" th:field="*{unitPrice}" class="form-control" id="unitprice" placeholder="Prix Unitaire de Vente" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
                 <div class="form-group">
                   <input type="text" th:field="*{grossPrice}" class="form-control" id="grossprice" placeholder="Prix en Gros de Vente" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
                 <div class="form-group">
-                  <input type="text" th:field="*{cost}" class="form-control" id="cost" placeholder="Prix d'Achat" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                  <input type="text" th:field="*{grossPriceQuantity}" class="form-control" id="grosspricequantity" placeholder="Quantité en Gros" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <input type="text" th:field="*{minQuantity}" class="form-control" id="minquantity" placeholder="Quantité min. Stock" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
               </div>
+
               <div class="modal-footer">
                 <button type="submit" class="btn btn-primary" style="float: left;">Sauvegarder <i class="fa fa-check"></i> </button>
                 <button type="reset" class="btn btn-default">Effacer <i class="fa fa-trash"></i> </button> 
@@ -220,6 +233,10 @@
                   <input type="text" th:field="*{description}" class="form-control" id="edit_description" placeholder="Description" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
                 <div class="form-group">
+                  <label for="edit_cost">Prix d'achat</label>
+                  <input type="text" th:field="*{cost}" class="form-control" id="edit_cost" placeholder="Prix d'Achat" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
                   <label for="edit_unitprice">Prix unitaire de vente</label>
                   <input type="text" th:field="*{unitPrice}" name="unitPrice" class="form-control" id="edit_unitprice" placeholder="Prix Unitaire de Vente" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
@@ -228,8 +245,12 @@
                   <input type="text" th:field="*{grossPrice}" class="form-control" id="edit_grossprice" placeholder="Prix en Gros de Vente" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
                 <div class="form-group">
-                  <label for="edit_cost">Prix d'achat</label>
-                  <input type="text" th:field="*{cost}" class="form-control" id="edit_cost" placeholder="Prix d'Achat" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                  <label for="grosspricequantity">Quantité en gros</label>
+                  <input type="text" th:field="*{grossPriceQuantity}" class="form-control" id="edit_grosspricequantity" placeholder="Quantité en Gros" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
+                </div>
+                <div class="form-group">
+                  <label for="minquantity">Quantité minimale en stock</label>
+                  <input type="text" th:field="*{minQuantity}" class="form-control" id="edit_minquantity" placeholder="Quantité min. Stock" style="width: 70%; background-color: #e6f2ff; font-weight: bold;"/>
                 </div>
               </div>
 
@@ -285,17 +306,14 @@
 <script src="dist/js/demo.js" th:src="@{/dist/js/demo.js}"></script>
 <!-- page script -->
 <script>
+
+  // [CB] : default value for input typ 'number' & radio btn value
+  document.getElementById("grosspricequantity").defaultValue = "";
+  document.getElementById("minquantity").defaultValue = "";
+
+
   $(function () {
-    $('#example1').DataTable()
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
-    })
-    
+
     
     $('#prodtable').DataTable({
 
@@ -349,7 +367,7 @@ $(function () {
   // EDIT Dialog
   $(document).on("click", ".open-EditProductDialog", function () {
 		     var myProductData = $(this).data('id');
-         // reference / name / unitPrice / grossPrice / cost / description
+         // reference / name / unitPrice / grossPrice / cost / description / grossPriceQuantity / minQuantity
 
 		    let res = myProductData.split("/");
 
@@ -359,6 +377,8 @@ $(function () {
 	      $(".modal-body #edit_grossprice").val(res[3]);
 	      $(".modal-body #edit_cost").val(res[4]);
 		    $(".modal-body #edit_description").val(res[5]);
+	      $(".modal-body #edit_grosspricequantity").val(res[6]);
+		    $(".modal-body #edit_minquantity").val(res[7]);
 
 		});
 

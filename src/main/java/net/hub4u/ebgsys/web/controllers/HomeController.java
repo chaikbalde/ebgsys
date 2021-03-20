@@ -8,6 +8,7 @@ import net.hub4u.ebgsys.entities.Product;
 import net.hub4u.ebgsys.entities.Purchase;
 import net.hub4u.ebgsys.entities.Sale;
 import net.hub4u.ebgsys.entities.SaleTxType;
+import net.hub4u.ebgsys.entities.StockItem;
 import net.hub4u.ebgsys.entities.Supplier;
 import net.hub4u.ebgsys.entities.Vehicle;
 import net.hub4u.ebgsys.services.CustomerService;
@@ -15,6 +16,7 @@ import net.hub4u.ebgsys.services.EmployeeService;
 import net.hub4u.ebgsys.services.ProductService;
 import net.hub4u.ebgsys.services.PurchaseService;
 import net.hub4u.ebgsys.services.SaleService;
+import net.hub4u.ebgsys.services.StockItemService;
 import net.hub4u.ebgsys.services.SupplierService;
 import net.hub4u.ebgsys.services.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,8 @@ public class HomeController {
     SaleService saleService;
     @Autowired
     PurchaseService purchaseService;
+    @Autowired
+    StockItemService stockItemService;
 
 
     @GetMapping("/settingsintro")
@@ -80,10 +84,8 @@ public class HomeController {
                 .filter(sale -> sale.getSaleTxType().equals(SaleTxType.CREDIT))
                 .collect(Collectors.toList());
 
-
         model.addAttribute("cashSales", cashSales);
         model.addAttribute("creditSales", creditSales);
-
         model.addAttribute("sidemenuSales", true);
         model.addAttribute("subSidemenuSalesIntro", true);
 
@@ -96,11 +98,22 @@ public class HomeController {
         List<Purchase> purchases = purchaseService.fetchAllPurchases();
 
         model.addAttribute("purchases", purchases);
-
-
         model.addAttribute("sidemenuPurchases", true);
         model.addAttribute("subSidemenuPurchasesIntro", true);
 
         return "purchasesintro";
+    }
+
+    @GetMapping("/stocksintro")
+    public String stockHome(Model model) {
+
+        List<StockItem> stockItems = stockItemService.fetchAllStockItems();
+        int productsQtySum = stockItems.stream().map(item -> item.getQuantity()).reduce(0, Integer::sum);
+
+        model.addAttribute("productsQtySum", productsQtySum);
+        model.addAttribute("sidemenuStocks", true);
+        model.addAttribute("subSidemenuStocksIntro", true);
+
+        return "stocksintro";
     }
 }

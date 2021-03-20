@@ -138,16 +138,16 @@
 
                         <tr th:each="pp : ${purchase.purchaseProducts}">
                           <td><span class="label label-primary" th:text="${pp.product.name}"> PROD.NAME</span></td>
-                          <td th:text="${#numbers.formatInteger(pp.unitPrice,3,'WHITESPACE')}">44 444</td>
+                          <td th:text="${#numbers.formatInteger(pp.unitPrice,3,'WHITESPACE')}" data-toggle="tooltip" data-placement="top" th:title="${'Qté Détail: ' + pp.product.grossPriceQuantity} ">44 444</td>
                           <td th:text="${pp.quantity}">11</td>
-                          <td><b th:text="${#numbers.formatInteger(pp.subTotalPrice,3,'WHITESPACE')}">444 888 000</b></td>
+                          <td th:text="${#numbers.formatInteger(pp.subTotalPrice,3,'WHITESPACE')}">444 888 000</td>
                         </tr>
 
                       </table>
                     </div>
     
                   </td>
-                  <td th:text="${#numbers.formatInteger(purchase.amount,3,'WHITESPACE')}">9 999 888 777</td>
+                  <td><b th:text="${#numbers.formatInteger(purchase.amount,3,'WHITESPACE')}">9 999 888 777</b></td>
                 </tr>
                 
                 </tbody>
@@ -210,7 +210,7 @@
 	                </div>
 
 	                <div class="form-group">
-                    <input type="text" class="form-control" id="productprice" onchange="show_total_prices(this.value)" placeholder="Prix" style="width: 60%; background-color: #e6f2ff; font-weight: bold;"/>
+                    <input type="text" class="form-control" id="productprice" onchange="show_total_prices(this.value)" placeholder="Prix (en Gros)" style="width: 60%; background-color: #e6f2ff; font-weight: bold;"/>
 	                </div>
                   
 	                <div class="form-group">
@@ -335,13 +335,14 @@ $(function () {
 
 let LOCAL_HOST = "http://localhost:8080"; 
 let REMOTE_HOST = "https://ebgsys.herokuapp.com"; 
+let DOCKER_HOST = "http://ebg-app-service:8080";
 
 /* Finds a Product based on its ID  */
 function find_prodcost() {
 
     $.ajax({
 				  type: "get",
-				  url: REMOTE_HOST + "/products/findproductcost/" + $("#product").val(),
+				  url: LOCAL_HOST + "/products/findproductcost/" + $("#product").val(),
 				  dataType: "json",
 				  cache: false,    
 				  //data:'product=' + $("#product").val(),
@@ -405,7 +406,7 @@ function find_prodcost() {
       $.ajax({
 
         type: "get",
-				  url: REMOTE_HOST + "/purchases/addtopurchasecart/" + prodId,
+				  url: LOCAL_HOST + "/purchases/addtopurchasecart/" + prodId,
 				  dataType: "json",
 				  cache: false,
 				  data:"prodId=" + prodId + '&qty=' + qty + '&price=' + trimed_price,
@@ -480,7 +481,7 @@ function find_prodcost() {
 
     $.ajax({
 				  type: "get",
-				  url: REMOTE_HOST + "/purchases/clearcartsession",
+				  url: LOCAL_HOST + "/purchases/clearcartsession",
 				  dataType: "text",
 				  cache: false,    
 				  success: function(response){

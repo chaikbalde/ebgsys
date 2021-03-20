@@ -1,0 +1,37 @@
+version: '3.3'
+
+services: 
+  # ebg db service. currently: mysql
+  ebg-db-service:
+    image: mysql:8.0.22
+    container_name: mysql-docker-db
+    environment: 
+      - MYSQL_ROOT_PASSWORD=
+      - MYSQL_USER=root    
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    ports: 
+      - "6033:3306"
+    restart: always
+  
+  ebg-app-service:
+    image: ebg-app-image
+    container_name: ebg-docker-service
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports: 
+      - "8080:8080"
+    restart: always
+
+    depends_on: 
+      - ebg-db-service
+    environment: 
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-docker-db:3306/ebgsysdb?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD:
+
+  prom-service:
+    image: prom/prometheus:v2.25.0
+     
+
+

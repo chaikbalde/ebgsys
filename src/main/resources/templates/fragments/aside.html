@@ -20,15 +20,12 @@
           </a>
           <ul class="treeview-menu">
             <li th:class="${subSidemenuPurchasesIntro != null ? 'active': ''}"><a href="/purchasesintro"><i class="fa fa-circle-o text-aqua"></i> Intro</a></li>
-            <li th:class="${subSidemenuPurchases != null ? 'active': ''}"><a href="/purchases"><i class="fa fa-tag text-aqua"></i> Achats</a></li>
-            <li><a href="#"><i class="fa fa-tag text-aqua"></i> Débit / Crédit</a></li>
+            <li th:class="${subSidemenuPurchases != null ? 'active': ''}"><a href="/purchases"><i class="fa fa-shopping-cart text-aqua"></i> Achats</a></li>
+            <li><a href="#"><i class="fa fa-shopping-cart text-aqua"></i> Débit / Crédit</a></li>
           </ul>
         </li>
 
-        <!-- <li><a href="payments.html"><i class="fa fa-money text-orange"></i> <span>Versements</span></a></li> -->
-
         <li th:class="${sidemenuSales != null ? 'active treeview menu-open' : 'treeview'}">
-        <!-- <li class="treeview"> -->
           <a href="#">
             <i class="fa fa-tags text-green"></i>
             <span>Ventes</span>
@@ -61,8 +58,7 @@
           </ul>
         </li>
 
-
-        <li class="treeview">
+        <li th:class="${sidemenuStocks != null ? 'active treeview menu-open' : 'treeview'}">
           <a href="#">
             <i class="fa fa-cubes text-yellow"></i> <span>Stocks</span>
             <span class="pull-right-container">
@@ -70,15 +66,9 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="stocksintro.html"><i class="fa fa-circle-o text-yellow"></i> Intro</a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> CKY - KALOUM</a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> CKY - MATAM</a></li>
-            <li><a href="stocks_matoto.html"><i class="fa fa-circle-o text-yellow"></i> CKY - MATOTO</a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> CKY - RATOMA</a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> BOKE</a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> KINDIA</a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> LABE</a></li>
-            <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> MAMOU</a></li>
+            <li th:class="${subSidemenuStocksIntro != null ? 'active': ''}"><a href="/stocksintro"><i class="fa fa-circle-o text-yellow"></i> Intro</a></li>
+            <li th:class="${subSidemenuStocks != null ? 'active': ''}"><a href="/stocks"><i class="fa fa-cubes text-yellow"></i> Stock</a></li>
+            <li><a href="#"><i class="fa fa-bar-chart text-yellow"></i> Inventaire</a></li>
           </ul>
         </li>
 
@@ -86,9 +76,6 @@
           <a href="#"></a>
         </li>
         
-
-        <!--${sidemenuSettings  ? 'active treeview menu-open' : 'treeview'}-->
-        <!-- <li class="active treeview menu-open"> -->
         <li th:class="${sidemenuSettings != null ? 'active treeview menu-open' : 'treeview'}">
           <a href="#">
             <i class="fa fa-gears"></i>

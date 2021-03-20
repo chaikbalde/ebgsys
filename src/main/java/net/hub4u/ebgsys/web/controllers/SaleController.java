@@ -14,10 +14,13 @@ import net.hub4u.ebgsys.entities.SaleProduct;
 import net.hub4u.ebgsys.entities.SaleTxType;
 import net.hub4u.ebgsys.entities.SaleType;
 import net.hub4u.ebgsys.entities.ShopCartItem;
+import net.hub4u.ebgsys.entities.StockItem;
+import net.hub4u.ebgsys.entities.StockItemStatus;
 import net.hub4u.ebgsys.frwk.EbgSysUtils;
 import net.hub4u.ebgsys.services.CustomerService;
 import net.hub4u.ebgsys.services.ProductService;
 import net.hub4u.ebgsys.services.SaleService;
+import net.hub4u.ebgsys.services.StockItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -49,6 +52,9 @@ public class SaleController {
 
     @Autowired
     SaleService saleService;
+    @Autowired
+    StockItemService stockItemService;
+
     @Autowired
     ProductService productService;
     @Autowired
@@ -172,12 +178,14 @@ public class SaleController {
             creditSale.setBalance(new BigDecimal("0"));
         }
 
-
         creditSale.setSaleTxType(SaleTxType.CREDIT);
         creditSale.setCreationDate(new Date());
 
         Sale createdSale = saleService.createSale(creditSale);
         log.info("createCreditSale() - Created sale '"+createdSale.getReference()+"' with Id '"+createdSale.getId()+"'");
+
+        // Synchronize with stock
+        synchronizeStock(createdSale);
 
         model.addAttribute("saleCreated", createdSale);
 
@@ -193,13 +201,57 @@ public class SaleController {
     /**
      *
      * */
+    private void synchronizeStock(Sale sale) {
+
+        List<StockItem> stockItems = sale.getSaleProducts().stream()
+                .map(saleProduct -> {
+                    Product product = saleProduct.getProduct();
+
+                    StockItem stockItem = product.getStockItem();
+                    if (stockItem != null) {
+                        stockItem.setProductReference(product.getReference());
+                        stockItem.setOutDate(sale.getSaleDate());
+
+                        // TODO - Base on 'saleType'
+                        int retailQuantity = saleProduct.getQuantity();
+                        if (saleProduct.getSaleType() == SaleType.WHOLESALE) {
+                            retailQuantity = saleProduct.getQuantity() * product.getGrossPriceQuantity();
+                        }
+                        stockItem.setOutQuantity(retailQuantity);
+
+                        int currentQuantity = stockItem.getQuantity() - retailQuantity;
+                        stockItem.setQuantity(currentQuantity);
+
+                        // Status based on the current quantity
+                        if (currentQuantity <= 0) {
+                            stockItem.setStatus(StockItemStatus.UNAVAILABLE);
+                        } else if (currentQuantity <= product.getMinQuantity()) {
+                            stockItem.setStatus(StockItemStatus.WARNING);
+                        } else {
+                            stockItem.setStatus(StockItemStatus.AVAILABLE);
+                        }
+
+                        stockItemService.updateStockItem(stockItem);
+
+                    } else {
+                        log.warn("synchronizeStock() - Product not yet stored in the warehouse! ");
+                    }
+
+                    return stockItem;
+
+                }).collect(Collectors.toList());
+
+        log.info("synchronizeStock() - Updated " +stockItems.size()+ " StockItems");
+    }
+
+    /**
+     *
+     * */
     @GetMapping("/credit/{saleId}")
     public String getCreditSaleDetails(@PathVariable Long saleId, Model model) {
 
         Sale sale = saleService.fetchSale(saleId);
-
         setCustomerNameView(sale);
-
         model.addAttribute("sale", sale);
 
         // Side menu

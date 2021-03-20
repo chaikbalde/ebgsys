@@ -203,18 +203,18 @@
 	                  <input type="text" th:field="*{nextReferenceView}" class="form-control" id="reference" placeholder="Référence de Vente" style="width: 60%; background-color: #DAFDED; font-weight: bold;"/>
 	                </div>
                   <div class="form-group">
-                    <select class="form-control select2" id="customer" th:field="*{customer.id}" style="width: 60%; background-color: #DAFDED; font-weight: bold;">
-                      <option value="">Client...</option>
-                      <option th:each="cust : ${customers}" th:value="${cust.id}" th:text="${( cust.customerType == T(net.hub4u.ebgsys.entities.CustomerType).COMPANY ) ?  cust.name : cust.lastName + ' ' + cust.firstName}"></option>
-                    </select>
-                  </div>
-                  <div class="form-group">
                     <div class="input-group date" style="width: 60%">
                       <div class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                       </div>
                       <input type="text"  th:field="*{saleDate}" value="" placeholder="Date de Vente" class="form-control pull-right" id="datepicker" style="background-color: #DAFDED; font-weight: bold;"/>
                     </div>
+                  </div>
+                  <div class="form-group">
+                    <select class="form-control select2" id="customer" th:field="*{customer.id}" style="width: 60%; background-color: #DAFDED; font-weight: bold;">
+                      <option value="">Client...</option>
+                      <option th:each="cust : ${customers}" th:value="${cust.id}" th:text="${( cust.customerType == T(net.hub4u.ebgsys.entities.CustomerType).COMPANY ) ?  cust.name : cust.lastName + ' ' + cust.firstName}"></option>
+                    </select>
                   </div>
   
                   <hr> 
@@ -372,12 +372,13 @@ $(function () {
 
 let LOCAL_HOST = "http://localhost:8080"; 
 let REMOTE_HOST = "https://ebgsys.herokuapp.com"; 
+let DOCKER_HOST = "http://ebg-app-service:8080";
 
 function find_prodprice() {
 
     $.ajax({
 				  type: "get",
-				  url: REMOTE_HOST + "/products/findproductpice/" + $("#product").val(),
+				  url: LOCAL_HOST + "/products/findproductpice/" + $("#product").val(),
 				  dataType: "json",
 				  cache: false,    
 				  //data:'product=' + $("#product").val(),
@@ -445,7 +446,7 @@ function find_prodprice() {
       $.ajax({
 
         type: "get",
-				  url: REMOTE_HOST + "/sales/add2cart/" + prodId,
+				  url: LOCAL_HOST + "/sales/add2cart/" + prodId,
 				  dataType: "json",
 				  cache: false,
 				  data:"prodId=" + prodId + '&cartType=ShoppingCartSell' + '&saleType=' + saleType + '&qty=' + qty,

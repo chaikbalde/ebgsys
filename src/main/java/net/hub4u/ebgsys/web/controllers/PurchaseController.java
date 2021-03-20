@@ -10,10 +10,13 @@ import net.hub4u.ebgsys.entities.Purchase;
 import net.hub4u.ebgsys.entities.PurchaseProduct;
 import net.hub4u.ebgsys.entities.Sale;
 import net.hub4u.ebgsys.entities.ShopCartItem;
+import net.hub4u.ebgsys.entities.StockItem;
+import net.hub4u.ebgsys.entities.StockItemStatus;
 import net.hub4u.ebgsys.entities.Supplier;
 import net.hub4u.ebgsys.frwk.EbgSysUtils;
 import net.hub4u.ebgsys.services.ProductService;
 import net.hub4u.ebgsys.services.PurchaseService;
+import net.hub4u.ebgsys.services.StockItemService;
 import net.hub4u.ebgsys.services.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,10 +46,15 @@ public class PurchaseController {
 
     @Autowired
     PurchaseService purchaseService;
+
     @Autowired
     ProductService productService;
+
     @Autowired
     SupplierService supplierService;
+
+    @Autowired
+    StockItemService stockItemService;
 
     @GetMapping
     public String getPurchasesHome(Model model) {
@@ -67,7 +76,7 @@ public class PurchaseController {
         }
 
         purchase.setReference(purchase.getNextReferenceView());
-
+        purchase.setCreationDate(new Date());
 
         List<ShopCartItem> cartItems = (List<ShopCartItem>) request.getSession().getAttribute(EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_BUY);
         if (cartItems != null) {
@@ -104,6 +113,9 @@ public class PurchaseController {
 
             Purchase createdPurchase = purchaseService.createPurchase(purchase);
 
+            // Synchronize with stock
+            synchronizeStock(createdPurchase);
+
             request.getSession().removeAttribute(EbgSysUtils.SESSION_SHOPPING_CART_PREFIX_BUY);
             log.debug("createPurchase()  - Cleared Purchase ShoppingCart ");
 
@@ -112,8 +124,6 @@ public class PurchaseController {
         } else {
             log.warn("createPurchase() - Shopping cart is empty. Add to cart first");
         }
-
-
 
         buildPurchasesModel(model);
 
@@ -174,6 +184,65 @@ public class PurchaseController {
         return ""+99;
     }
 
+    /**
+     *
+     * */
+    private void synchronizeStock(Purchase purchase) {
+
+        List<StockItem> stockItems = purchase.getPurchaseProducts().stream()
+                .map(purchaseProduct -> {
+
+                    Product product = purchaseProduct.getProduct();
+
+                    StockItem stockItem = product.getStockItem();
+                    if (stockItem != null) {
+
+                        stockItem.setProductReference(product.getReference());
+
+                        stockItem.setInDate(purchase.getPurchaseDate());
+
+                        int retailQuantity = purchaseProduct.getQuantity() * product.getGrossPriceQuantity();
+                        stockItem.setInQuantity(retailQuantity);
+
+                        int currentQuantity = stockItem.getQuantity() + retailQuantity;
+                        stockItem.setQuantity(currentQuantity);
+
+                        // Status based on the current quantity
+                        if (currentQuantity <= 0) {
+                            stockItem.setStatus(StockItemStatus.UNAVAILABLE);
+                        } else if (currentQuantity <= product.getMinQuantity()) {
+                            stockItem.setStatus(StockItemStatus.WARNING);
+                        } else {
+                            stockItem.setStatus(StockItemStatus.AVAILABLE);
+                        }
+
+                        stockItemService.updateStockItem(stockItem);
+
+                    } else {
+                        stockItem = new StockItem();
+                        stockItem.setProductReference(product.getReference());
+                        stockItem.setInDate(purchase.getPurchaseDate());
+
+                        int retailQuantity = purchaseProduct.getQuantity() * product.getGrossPriceQuantity();
+                        stockItem.setInQuantity(retailQuantity);
+                        stockItem.setQuantity(retailQuantity);
+
+                        int productMinQty = product.getMinQuantity();
+                        stockItem.setStatus((retailQuantity < productMinQty) ? StockItemStatus.WARNING : StockItemStatus.AVAILABLE);
+
+                        stockItem.setProduct(product);
+                        product.setStockItem(stockItem);
+
+                        stockItemService.createStockItem(stockItem);
+
+                    }
+
+                    return stockItem;
+
+                }).collect(Collectors.toList());
+
+        log.info("synchronizeStock() - Saved & updated " +stockItems.size()+ " StockItems");
+    }
 
     /**/
     private void buildPurchasesModel(Model model) {
